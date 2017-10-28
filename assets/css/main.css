@@ -2,6 +2,10 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:400,400italic,700,700italic|Source+Code+Pro:400");
 
 /*
+39A0ed
+*/
+
+/*
 	Read Only by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
@@ -1574,7 +1578,7 @@
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: #4acaa8 !important;
+			color: #39a0ed !important;
 		}
 
 	strong, b {
@@ -1726,7 +1730,7 @@
 	}
 
 	header.major h2 {
-		color: #4acaa8;
+		color: #39A0ed;
 		font-size: 3.5em;
 	}
 
@@ -1789,7 +1793,7 @@
 		input[type="email"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: #4acaa8;
+			border-color: #39A0ed;
 		}
 
 	.select-wrapper {
@@ -1899,7 +1903,7 @@
 
 		input[type="checkbox"]:focus + label:before,
 		input[type="radio"]:focus + label:before {
-			border-color: #4acaa8;
+			border-color: #39A0ed;
 		}
 
 	input[type="checkbox"] + label:before {
@@ -2092,7 +2096,7 @@
 				}
 
 				ul.feature-icons li:before {
-					background: #4acaa8;
+					background: #39A0ed;
 					border-radius: 100%;
 					color: #ffffff;
 					display: block;
@@ -2379,7 +2383,7 @@
 		input[type="reset"].special,
 		input[type="button"].special,
 		.button.special {
-			background-color: #4acaa8;
+			background-color: #39A0ed;
 			color: #ffffff !important;
 		}
 
@@ -2461,8 +2465,8 @@
 		-webkit-justify-content: space-between;
 		-ms-justify-content: space-between;
 		justify-content: space-between;
-		background: #4acaa8;
-		color: #d1f1e9;
+		background: #39a0ed;
+		color: #D1E9F9;
 		height: 100%;
 		overflow-y: auto;
 		position: fixed;
@@ -2481,11 +2485,11 @@
 			}
 
 		#header header p {
-			color: #b6e9dc;
+			color: #B6D9EC;
 		}
 
 		#header a {
-			color: #d1f1e9;
+			color: #D1E9F9;
 		}
 
 			#header a:hover {
@@ -2512,7 +2516,7 @@
 			}
 
 			#header > header p {
-				color: #d1f1e9;
+				color: #D1E9F9;
 				font-style: italic;
 				margin: 1em 0 0 0;
 			}
@@ -2533,7 +2537,7 @@
 			}
 
 				#header > footer .icons li a {
-					color: #b6e9dc;
+					color: #B6D9EC;
 				}
 
 		#header > nav {
@@ -2550,7 +2554,7 @@
 			}
 
 				#header > nav ul li {
-					border-top: solid 2px #5ccfb0;
+					border-top: solid 2px #39A0ED;
 					display: block;
 					padding: 0;
 				}
@@ -2569,7 +2573,7 @@
 
 						#header > nav ul li a.active {
 							background: #fff;
-							color: #4acaa8 !important;
+							color: #39A0ed !important;
 						}
 
 					#header > nav ul li:first-child {
@@ -2848,7 +2852,7 @@
 					}
 
 					#titleBar .toggle:before {
-						background: #4acaa8;
+						background: #39A0ed;
 						color: #ffffff;
 						content: '\f0c9';
 						display: block;
