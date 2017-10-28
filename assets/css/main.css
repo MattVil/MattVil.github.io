@@ -1551,7 +1551,7 @@
 /* Basic */
 
 	body {
-		background: #fff;
+		background: #2e3138;
 	}
 
 	body, input, select, textarea {
@@ -2561,7 +2561,7 @@
 						-ms-transition: none;
 						transition: none;
 						border: 0;
-						color: #ffffff !important;
+						color: #2e3138 !important;
 						display: block;
 						padding: 0.85em 0;
 						text-decoration: none;
