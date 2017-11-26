@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:400,400italic,700,700italic|Source+Code+Pro:400");
 
 /*
-39A0ed
+3f6699
 */
 
 /*
@@ -1578,7 +1578,7 @@
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: #39a0ed !important;
+			color: #3f6699 !important;
 		}
 
 	strong, b {
@@ -1730,7 +1730,7 @@
 	}
 
 	header.major h2 {
-		color: #39A0ed;
+		color: #3f6699;
 		font-size: 3.5em;
 	}
 
@@ -1793,7 +1793,7 @@
 		input[type="email"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: #39A0ed;
+			border-color: #3f6699;
 		}
 
 	.select-wrapper {
@@ -1903,7 +1903,7 @@
 
 		input[type="checkbox"]:focus + label:before,
 		input[type="radio"]:focus + label:before {
-			border-color: #39A0ed;
+			border-color: #3f6699;
 		}
 
 	input[type="checkbox"] + label:before {
@@ -2096,7 +2096,7 @@
 				}
 
 				ul.feature-icons li:before {
-					background: #39A0ed;
+					background: #3f6699;
 					border-radius: 100%;
 					color: #ffffff;
 					display: block;
@@ -2383,7 +2383,7 @@
 		input[type="reset"].special,
 		input[type="button"].special,
 		.button.special {
-			background-color: #39A0ed;
+			background-color: #3f6699;
 			color: #ffffff !important;
 		}
 
@@ -2465,7 +2465,7 @@
 		-webkit-justify-content: space-between;
 		-ms-justify-content: space-between;
 		justify-content: space-between;
-		background: #39a0ed;
+		background: #3f6699;
 		color: #D1E9F9;
 		height: 100%;
 		overflow-y: auto;
@@ -2554,7 +2554,7 @@
 			}
 
 				#header > nav ul li {
-					border-top: solid 2px #39A0ED;
+					border-top: solid 2px #3f6699;
 					display: block;
 					padding: 0;
 				}
@@ -2573,7 +2573,7 @@
 
 						#header > nav ul li a.active {
 							background: #fff;
-							color: #39A0ed !important;
+							color: #3f6699 !important;
 						}
 
 					#header > nav ul li:first-child {
@@ -2852,7 +2852,7 @@
 					}
 
 					#titleBar .toggle:before {
-						background: #39A0ed;
+						background: #3f6699;
 						color: #ffffff;
 						content: '\f0c9';
 						display: block;
