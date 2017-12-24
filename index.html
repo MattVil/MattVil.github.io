@@ -11,6 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src="./assets/js/header.js"></script>
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<link rel="shortcut icon" type="image/x-icon" href="./images/onglet.png" />
 	</head>
@@ -50,6 +51,10 @@
 						<!-- about -->
 							<section id="about">
 								<span class="image fit"><img src="images/landscape.jpg" alt="" /></span>
+								<!--<div id="large-header" class="large-header">
+								  <canvas id="demo-canvas"></canvas>
+								    <h1 class="main-title">BIENVENUE <span class="thin">WELCOME</span></h1>
+								</div>-->
 								<div class="container">
 									<header class="major">
 										<h2>About me</h2>
@@ -70,7 +75,7 @@
 							<section id="experience">
 								<div class="container">
 									<h3>Mon expérience</h3>
-									<center>
+									<!--<center>
 									<ul style="list-style-type:none; ">
 										<li><span class="image avatar"><img src="images/dexia.png" alt="" /></span></li>
 										<li><p style="margin:-5px;">Août 2017 - Job d'été </p> <p style="margin:-5px;"> Travail administratif - maintenance informatique</p></li>
@@ -81,8 +86,83 @@
 										<li><span class="image avatar"><img src="images/etis.png" alt="" /></span></li>
 										<li><p style="margin:-5px;">Juin 2016 - Stage de recherche sujet: Problème de recherche de sous matrice maximum</p> <p style="margin:-5px;">Algorithmitique - Application traitment d'images</p></li>
 									</ul>
-								</center>
+								</center>-->
+
+								<ul class="grid_layout">
+
+									<li>
+									<div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+										<div class="flipper">
+											<div class="front">
+												<span class="image fit"><img src="images/etis.png" alt="" /></span>
+											</div>
+											<div class="back">
+												<h4>Juin 2016 - Stage de recherche</h4>
+												<p>Sujet: Problème de recherche de sous matrice maximum</p>
+												<ul class="tags">
+													<li><a href="#competences" class="tag">Algorithmitique</a></li>
+													<li><a href="#competences" class="tag">Application traitement d'images</a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</li>
+
+								<li>
+								<div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+									<div class="flipper">
+										<div class="front">
+											<span class="image fit"><img src="images/etis.png" alt="" /></span>
+										</div>
+										<div class="back">
+											<h4>Juin 2017 - Stage de recherche</h4>
+											<p>Sujet : Application de l'apprentissage automatique</p>
+											<ul class="tags">
+												<li><a href="#competences" class="tag">Reconnaissance manuscrite</a></li>
+												<li><a href="#competences" class="tag">Traitement d'images</a></li>
+												<li><a href="#competences" class="tag">Réseaux neurones</a></li>
+												<li><a href="#competences" class="tag">Robotique</a></li>
+											</ul>
+										</div>
+									</div>
 								</div>
+							</li>
+
+									<li>
+									<div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+										<div class="flipper">
+											<div class="front">
+												<span class="image fit"><img src="images/startup1.png" alt="" /></span>
+											</div>
+											<div class="back">
+												<h4>Juillet 2017 : Mission auto-entrepreneur dans une start up</h4>
+												<ul class="tags">
+													<p>Sujet : Reconnaissance d'un jeu de dés</p>
+													<li><a href="#competences" class="tag">Machine learning</a></li>
+													<li><a href="#competences" class="tag">Traitement d'images</a></li>
+													<li><a href="#competences" class="tag">Robotique</a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</li>
+
+									<li>
+										<div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+										<div class="flipper">
+											<div class="front">
+												<span class="image fit"><img src="images/dexia.png" alt="" /></span>
+											</div>
+											<div class="back">
+												<h4>Août 2017</h4>
+												<p>Job d'été </p>
+												<p>Travail administratif - Maintenance informatique</p>
+											</div>
+										</div>
+									</div>
+								</li>
+
+								</ul>
 							</section>
 
 						<!-- competences -->
@@ -128,6 +208,10 @@
 													<li><a href="#competences" class="tag">Réseau</a></li>
 													<li><a href="#competences" class="tag">Traitement d'image</a></li>
 													<li><a href="#competences" class="tag">Machine learning</a></li>
+													<li><a href="#competences" class="tag">C</a></li>
+													<li><a href="#competences" class="tag">Python</a></li>
+													<li><a href="#competences" class="tag">Tensorflow</a></li>
+												</ul>
 											</div>
 										</article>
 										<article>
@@ -139,6 +223,11 @@
 												<ul class="icons">
 													<li><a href="https://github.com/QuentGrd/UrbanLifeSimulator" class="icon fa-github"><span class="label">Github</span></a></li>
 												</ul>
+												<ul class="tags">
+													<li><a href="#competences" class="tag">Java</a></li>
+													<li><a href="#competences" class="tag">Machine learning</a></li>
+													<li><a href="#competences" class="tag">Gestion de projet</a></li>
+												</ul>
 											</div>
 										</article>
 										<article>
@@ -148,6 +237,10 @@
 												<ul class="icons">
 													<li><a href="https://github.com/MattVil/Q-Learning" class="icon fa-github"><span class="label">Github</span> Q-Learning</a></li>
 													<li><a href="https://github.com/MattVil/A-star" class="icon fa-github"><span class="label">Github</span> A*</a></li>
+												</ul>
+												<ul class="tags">
+													<li><a href="#competences" class="tag">C</a></li>
+													<li><a href="#competences" class="tag">Java</a></li>
 												</ul>
 											</div>
 										</article>
@@ -161,6 +254,12 @@
 												<ul class="icons">
 													<li><a href="https://github.com/MattVil/Number_recognition_perceptron" class="icon fa-github"><span class="label">Github</span> Perceptron simple avec IHM</a></li>
 													<li><a href="https://github.com/MattVil/MLP_from_scratch_MNIST" class="icon fa-github"><span class="label">Github</span> MLP + vision + CNN</a></li>
+												</ul>
+												<ul class="tags">
+													<li><a href="#competences" class="tag">Traitement d'image</a></li>
+													<li><a href="#competences" class="tag">Machine learning</a></li>
+													<li><a href="#competences" class="tag">C</a></li>
+													<li><a href="#competences" class="tag">Tensorflow</a></li>
 												</ul>
 											</div>
 										</article>
