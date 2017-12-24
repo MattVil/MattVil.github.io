@@ -1741,6 +1741,51 @@
 			margin-top: -0.75em;
 		}
 
+/* Header */
+	.large-header {
+		position: relative;
+		width: 100%;
+		background: #333;
+		overflow: hidden;
+		background-size: cover;
+		background-position: center center;
+		z-index: 1;
+	}
+
+	#large-header {
+		/*background-image: url('http://cdn.paper4pc.com/images/blue-space-wallpaper-4.jpg');*/
+	  background-color: #3f6699;
+	}
+
+	.main-title {
+		position: absolute;
+		margin: 0;
+	  font-size: 50px;
+		padding: 0;
+		color: #f9f1e9;
+		text-align: center;
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translate3d(-50%,-50%,0);
+		transform: translate3d(-50%,-50%,0);
+	}
+
+	.demo-1 .main-title {
+		text-transform: uppercase;
+		font-size: 4.2em;
+		letter-spacing: 0.1em;
+	}
+
+	.main-title .thin {
+		font-weight: 200;
+	}
+
+	@media only screen and (max-width : 768px) {
+		.demo-1 .main-title {
+			font-size: 3em;
+		}
+	}
+
 /* Form */
 
 	form {
@@ -2000,9 +2045,9 @@
 }
 
 .tag {
-  background: #eee;
-  border-radius: 3px 0 0 3px;
-  color: #999;
+  background: #3f6699;
+  border-radius: 15px;
+  color: white;
   display: inline-block;
   height: 26px;
   line-height: 26px;
@@ -2027,9 +2072,6 @@
 
 .tag::after {
   background: #fff;
-  border-bottom: 13px solid transparent;
-  border-left: 10px solid #eee;
-  border-top: 13px solid transparent;
   content: '';
   position: absolute;
   right: 0;
@@ -2038,11 +2080,11 @@
 
 .tag:hover {
 	color: #fff;
-  background-color: #3f6699;
+  background-color: #ddd;
 }
 
 .tag:hover::after {
-   border-left-color: #3f6699;
+	color: green;
 }
 
 /* Image */
@@ -3151,3 +3193,61 @@
 			}
 
 	}
+
+	/* entire container, keeps perspective */
+.flip-container {
+	perspective: 1000px;
+}
+	/* flip the pane when hovered */
+	.flip-container:hover .flipper, .flip-container.hover .flipper {
+		transform: rotateY(180deg);
+	}
+
+.flip-container, .front, .back {
+	width: 320px;
+	height: 200px;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+	backface-visibility: hidden;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+	font-size: 85%;
+	transform: rotateY(180deg);
+}
+
+
+/*Grid*/
+
+.grid_layout {
+	list-style:none;
+  display: grid;
+  /* Display as a Grid */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* repeat = as many times as you can fit */
+  /* auto-fit = fit as many items on the line as possible, go bigger if you need to */
+  /*minmax = (min size, max size) = the minimum size the column should be is 200px, but if there's space then give them all 1fr of that width. */
+  grid-gap: 1.5em;
+}
