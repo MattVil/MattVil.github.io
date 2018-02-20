@@ -19,6 +19,24 @@ body {
 	width: 40%;
 }
 
+.img-back {
+
+	background-image: url(../img/stmartin.jpg);
+	background-size: 9999px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-attachment: fixed;
+}
+
+.small-marge {
+margin-left: 10px;
+}
+
+
+.marge {
+margin-left: 4em;
+}
+
 .parallax {
 	position: absolute;
 	overflow: hidden;
@@ -125,7 +143,7 @@ header {
 	width: 100%;
 	color: white;
 	background: rgba(28, 36, 65, 0.93);
-	background: url('../img/header.jpg');
+	background: url('../img/background2.jpg');
 	background-size: cover;
 }
 
@@ -303,7 +321,7 @@ section {
 	content: ' ';
 	position: absolute;
 	z-index: 1;
-	top: -80px;
+	top: -00px;
 	left: 0;
 	width: 0;
 	height: 0;
@@ -315,12 +333,12 @@ section {
 	content: ' ';
 	position: absolute;
 	z-index: 1;
-	bottom: -80px;
+	bottom: -00px;
 	left: 0;
 	width: 0;
 	height: 0;
 	border-bottom: 80px solid transparent;
-	border-left: 30px solid white;
+	border-left: 50px solid white;
 }
 
 .intro-tables {
@@ -717,7 +735,7 @@ section {
 
 footer {
 	padding: 140px 0 40px;
-	background: url('../img/footer.jpg');
+	background: url('../img/footer2.jpg');
 	-webkit-background-size: cover;
 	background-size: cover;
 }
