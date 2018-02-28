@@ -21,11 +21,13 @@ body {
 
 .img-back {
 
-	background-image: url(../img/stmartin.jpg);
-	background-size: 9999px;
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-attachment: fixed;
+	background: url(../img/space.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100%;
+		width: 100%;
 }
 
 .small-marge {
@@ -143,7 +145,7 @@ header {
 	width: 100%;
 	color: white;
 	background: rgba(28, 36, 65, 0.93);
-	background: url('../img/background2.jpg');
+	background: url('../img/back2.png');
 	background-size: cover;
 }
 
@@ -628,7 +630,7 @@ section {
 /* Pricing */
 
 #pricing {
-	background: #00a8ff url('../img/pricing1.jpg') no-repeat center center;
+	background: #00a8ff url('../img/space.png') no-repeat center center;
 	-webkit-background-size: cover;
 	background-size: cover;
 	-webkit-transition: background-image 0.6s linear 0.3s;
