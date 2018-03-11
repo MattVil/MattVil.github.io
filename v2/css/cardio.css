@@ -22,7 +22,13 @@ body {
 .img-back {
 
 	background: url(../img/space.jpg) no-repeat center center;
-    -webkit-background-size: cover;
+		/*filter: brightness(50%);
+		-webkit-filter: brightness(50%);
+		-moz-filter: brightness(50%);
+		-o-filter: brightness(50%);
+		-ms-filter: brightness(50%);*/
+
+		-webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
@@ -631,6 +637,11 @@ section {
 
 #pricing {
 	background: #00a8ff url('../img/space.png') no-repeat center center;
+	filter: grayscale(1);
+  -webkit-filter: grayscale(1);
+  -moz-filter: grayscale(1);
+  -o-filter: grayscale(1);
+  -ms-filter: grayscale(1);
 	-webkit-background-size: cover;
 	background-size: cover;
 	-webkit-transition: background-image 0.6s linear 0.3s;
