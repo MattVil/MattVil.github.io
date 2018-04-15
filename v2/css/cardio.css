@@ -12,6 +12,10 @@ body {
 	padding: 10px 50px 10px 50px;
 }
 
+.space_top {
+	padding-top: 550px;
+}
+
 .space_light {
 	padding: 0px 20px 0px 20px;
 }
