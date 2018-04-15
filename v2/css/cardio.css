@@ -159,6 +159,10 @@ ul.white-list li:before {
 	background: white;
 }
 
+table {
+	text-align: left;
+}
+
 header {
 	position: relative;
 	width: 100%;
