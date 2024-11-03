@@ -1,0 +1,36 @@
+/* Style de la section d'accueil */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 2.5rem;
+}
+
+/* Style des sections */
+section {
+  padding: 50px;
+  background-color: #f4f4f4;
+}
+
+section h2 {
+  margin-bottom: 20px;
+}
