@@ -3,20 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
+    <title>Home - Matthieu Vilain</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="hero-section">
-        <img src="images/hero-image.jpg" alt="Hero Image" class="hero-image">
+        <img src="images/c0bb27d2-a5e3-4aed-bea5-62b6e7620182.webp" alt="Hero Image" class="hero-image">
         <div class="hero-overlay">
-            <h1>Bienvenue sur mon Portfolio</h1>
+            <div class="text-container">
+                <h1 id="animated-text"><span class="cursor">|</span></h1>
+            </div>
+        </div>
+        <div class="scroll-arrow">
+            <a href="#personal-info">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 3v18m0 0l-7-7m7 7l7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
         </div>
     </div>
 
     <section class="personal-info" id="personal-info">
-        <h2>Informations personnelles</h2>
-        <p>Cette section contiendra vos détails personnels et des informations supplémentaires.</p>
+        <h2>Personal information</h2>
+        <div class="info-container">
+            <div class="photo-section">
+                <img src="images/photo.jpg" alt="Photo de profil" class="profile-photo">
+            </div>
+            <div class="carousel-section">
+                <div class="carousel-content" id="carousel-content">
+                    <div class="carousel-item active">Détails personnels...</div>
+                    <div class="carousel-item">Compétences...</div>
+                    <div class="carousel-item">Expérience...</div>
+                    <!-- <div class="carousel-item">Formation...</div> -->
+                </div>
+                <div class="carousel-buttons">
+                    <button onclick="showCarouselItem(0)">About me</button>
+                    <button onclick="showCarouselItem(1)">Education</button>
+                    <button onclick="showCarouselItem(2)">Experience</button>
+                    <!-- <button onclick="showCarouselItem(3)">Skills</button> -->
+                </div>
+            </div>
+        </div>
     </section>
 
     <section class="projects" id="projects">
