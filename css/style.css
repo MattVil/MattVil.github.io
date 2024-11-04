@@ -24,19 +24,13 @@ body {
   color: #333; /* Optionnel : couleur de texte par défaut */
 }
 
-h1, h2, p, button, .personal-info, .carousel-content, .console-input {
+h1, h2, h3, p, button, .personal-info, .carousel-content, .console-input {
   font-family: 'Montserrat', sans-serif; /* Assure l'application de la police aux éléments spécifiques */
 }
 
 a {
   color: inherit; /* Garde la couleur du texte parent par défaut */
   text-decoration: underline;
-}
-
-a:hover,
-a:focus {
-  color: #b7a700; /* Couleur de survol (bleu clair, à ajuster selon vos besoins) */
-  text-decoration: none; /* Supprime le soulignement */
 }
 
 /* Style de la section d'accueil */
@@ -175,7 +169,7 @@ a:focus {
 
 .personal-info h2 {
   font-size: 2rem;
-  margin-bottom: 5%;
+  margin-bottom: 3%;
   color: #222;
   text-align: center; /* Centre le titre */
 }
@@ -187,11 +181,18 @@ a:focus {
   justify-content: center; /* Centre les éléments horizontalement */
 }
 
-.photo-section {
+/* .photo-section {
   display: flex;
   justify-content: center;
   align-items: top;
   max-width: 100%; 
+} */
+
+.photo-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centre la flèche sous la photo */
 }
 
 .profile-photo {
@@ -203,23 +204,6 @@ a:focus {
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
 }
-
-/* .photo-section {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; 
-  height: auto; 
-  max-height: 40%; 
-}
-
-.profile-photo {
-  width: auto; 
-  max-width: 100%; 
-  height: 30vh; 
-  object-fit: cover; 
-  border-radius: 10px; 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
-} */
 
 .carousel-section {
   display: flex;
@@ -234,7 +218,7 @@ a:focus {
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   /* Retire la hauteur fixe et flex: 1 */
 }
 
@@ -249,25 +233,28 @@ a:focus {
 .carousel-buttons {
   display: flex;
   justify-content: center;
-  margin-top: 5%;
-  margin-bottom: 10%;
+  margin: 20px 0; /* Ajoute de l'espace au-dessus et en dessous des boutons */
+  margin-left: 22%;
+  gap: 15px; /* Espace entre les boutons */
 }
 
 .carousel-buttons button {
-  margin: 0 5px;
-  padding: 10px;
+  padding: 10px 20px; /* Ajuste la taille des boutons */
+  font-size: 1rem; /* Taille de la police */
   border: none;
-  background-color: #ddd;
+  background-color: #ddd; /* Couleur de fond */
+  /*color: #fff;  Couleur du texte */
+  border-radius: 5px; /* Coins arrondis */
   cursor: pointer;
-  border-radius: 5px;
   transition: background-color 0.3s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .carousel-buttons button:hover {
   background-color: #bbb;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
 
 .panel-content-education,
 .panel-content-experience {
@@ -297,20 +284,23 @@ a:focus {
 .panel-content-me .links {
   display: flex;
   justify-content: center; /* Centre les liens horizontalement */
-  margin-top: 50px; /* Ajoute un espace au-dessus des liens */
+  margin-top: 10px; /* Ajoute un espace au-dessus des liens */
   gap: 15px; /* Espace entre les liens */
   flex-wrap: wrap; /* Permet le retour à la ligne si nécessaire */
 }
 
-.panel-content-me .links a {
+.panel-content-me .links a,
+.panel-content-me a{
   color: inherit; /* Couleur des liens */
   text-decoration: underline; /* Souligne les liens */
   font-size: 1rem; /* Taille de la police */
   transition: color 0.3s; /* Transition pour l'effet de survol */
 }
 
-.panel-content-me .links a:hover {
-  color: #b7a700; /* Couleur au survol */
+.panel-content-me .links a:hover,
+.panel-content-me a:hover {
+  color: #2e6d3a; /* Couleur au survol */
+  text-decoration: none;
 }
 
 .education-entry {
@@ -349,10 +339,17 @@ a:focus {
   font-size: 1rem;
 }
 
+.panel-content-education h3,
+.panel-content-experience h3 {
+  margin-top: 20px;
+  margin-bottom: 20px; 
+}
+
 .next-page-arrow {
-  position: absolute; /* La flèche est positionnée par rapport à .hero-section */
-  bottom: 30px; /* Ajuste la position verticale */
-  left: 50%; /* Centre horizontalement */
+  /* position: absolute; 
+  bottom: 30px; */
+  margin-left: 10%;  
+  margin-top: 15%;
   transform: translateX(-50%);
   font-size: 2rem;
   color: rgb(49, 48, 48);
@@ -361,12 +358,14 @@ a:focus {
   animation: bounce 2s infinite;
 }
 
+
+
 .next-page-arrow svg {
   animation-delay: 0s; /* Démarre l'animation immédiatement */
 }
 
 .next-page-arrow:hover svg path {
-  stroke: #b7a700; /* Change la couleur au survol */
+  stroke: #2e6d3a; /* Change la couleur au survol */
 }
 
 

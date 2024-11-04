@@ -119,11 +119,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <h3>Matthieu Vilain</h3>
         <p>PhD student in machine learning at <a href="https://www.ims-bordeaux.fr/">IMS Laboratory</a>, Bordeaux, France</p>
         <p>My research subjects are 3D computer vision, image matching, 3D scene understanding and camera pose estimation. I am particularly interested in using machine learning to better understand the physical world and facilitate human interaction with the digital world.</p>
+        <p>Images and videos capture a ton of information about the complexity of our physical world and on the dynamics that constitute it. Future digital systems will need to percive, extract information, understand, plan actions or simulate, be critic and interact with our physical world.</p>
         <div class="links">
             <a href="https://www.linkedin.com/in/matthieu-vilain-a81a4b139" target="_blank">LinkedIn</a>
             <a href="https://github.com/MattVil" target="_blank">GitHub</a>
             <a href="mailto:matthieu.vilain@u-bordeaux.fr">matthieu.vilain@u-bordeaux.fr</a>
-            <a href="assets/CV-Matthieu-Vilain.pdf" target="_blank">Download CV</a>
+            <a href="assets/CV-Matthieu-Vilain.pdf" target="_blank">Resume</a>
         </div>    
     </div>
   `;

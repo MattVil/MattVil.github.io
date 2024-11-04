@@ -28,9 +28,19 @@
 
     <section class="personal-info" id="personal-info">
         <h2>Personal information</h2>
+        <div class="carousel-buttons">
+            <button onclick="showCarouselItem(0)">About me</button>
+            <button onclick="showCarouselItem(1)">Education</button>
+            <button onclick="showCarouselItem(2)">Experience</button>
+        </div>
         <div class="info-container">
             <div class="photo-section">
                 <img src="images/photo.jpg" alt="Photo de profil" class="profile-photo">
+                <a href="#projects" class="next-page-arrow">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 3v18m0 0l-7-7m7 7l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
             </div>
             <div class="carousel-section">
                 <div class="carousel-content" id="carousel-content">
@@ -38,19 +48,8 @@
                     <div class="carousel-item"></div>
                     <div class="carousel-item"></div>
                 </div>
-                <div class="carousel-buttons">
-                    <button onclick="showCarouselItem(0)">About me</button>
-                    <button onclick="showCarouselItem(1)">Education</button>
-                    <button onclick="showCarouselItem(2)">Experience</button>
-                </div>
             </div>
         </div>
-        <!-- Assurez-vous que cette flèche est dans la section "personal-info" -->
-        <a href="#projects" class="next-page-arrow">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 3v18m0 0l-7-7m7 7l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </a>
     </section>
 
     <section class="projects" id="projects">
