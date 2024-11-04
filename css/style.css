@@ -76,7 +76,7 @@ a:focus {
 
 .text-container {
   width: 100%; /* Limite la largeur du bloc de texte à 50% de l'overlay */
-  margin-left: 0; /* Positionne le bloc à gauche */
+  margin-left: 10px; /* Positionne le bloc à gauche */
   display: flex;
   justify-content: center; /* Centre le texte à l'intérieur du bloc */
   align-items: center; /* Centre le texte verticalement */
@@ -147,7 +147,24 @@ a:focus {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .personal-info {
+  position: relative; /* Assure que les éléments positionnés absolument à l'intérieur se basent sur cette section */
   min-height: 100vh;
   display: flex;
   flex-direction: column; /* Aligne le contenu de haut en bas */
@@ -158,7 +175,7 @@ a:focus {
 
 .personal-info h2 {
   font-size: 2rem;
-  margin-bottom: 100px;
+  margin-bottom: 5%;
   color: #222;
   text-align: center; /* Centre le titre */
 }
@@ -166,39 +183,59 @@ a:focus {
 .info-container {
   display: flex;
   width: 70%; /* Limite la largeur totale à 70% */
-  gap: 20px;
+  gap: 3%;
   justify-content: center; /* Centre les éléments horizontalement */
 }
 
-.photo-section,
-.carousel-section {
-  flex: 1; /* Les deux sections prennent la même largeur */
+.photo-section {
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  max-width: 100%; 
 }
 
 .profile-photo {
-  max-width: 100%;
-  height: 500px; /* Ajuste la hauteur pour contrôler la partie visible */
-  object-fit: cover; /* Coupe l'image pour qu'elle remplisse l'espace */
-  object-position: center; /* Centre l'image horizontalement et verticalement */
-  border-radius: 10px; /* Optionnel : pour arrondir les coins */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  width: 20vw; 
+  /* height: auto; */
+  max-width: 20vw;
+  max-height: 60vh; 
+  object-fit: cover; 
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
 }
 
+/* .photo-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  height: auto; 
+  max-height: 40%; 
+}
+
+.profile-photo {
+  width: auto; 
+  max-width: 100%; 
+  height: 30vh; 
+  object-fit: cover; 
+  border-radius: 10px; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
+} */
+
 .carousel-section {
-  flex: 2;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* Assure que le contenu reste aligné au début */
 }
 
 .carousel-content {
+  display: block; /* Permet à l'élément de s'adapter à son contenu */
+  overflow: visible; /* Assure que le contenu s'affiche pleinement */
   position: relative;
-  overflow: hidden;
-  height: 350px; /* Ajuste la hauteur selon tes besoins */
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* Retire la hauteur fixe et flex: 1 */
 }
 
 .carousel-item {
@@ -212,7 +249,8 @@ a:focus {
 .carousel-buttons {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 5%;
+  margin-bottom: 10%;
 }
 
 .carousel-buttons button {
@@ -231,21 +269,32 @@ a:focus {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.panel-content {
-  width: 80%; /* Limite la largeur à 70% du parent */
-  margin: 20px auto; /* Centre le contenu et ajoute des marges en haut et en bas */
-  padding: 20px; /* Optionnel : ajoute du padding interne */
+.panel-content-education,
+.panel-content-experience {
+  width: 95%; /* Uniformisez la largeur des panels */
+  margin: 0 auto; /* Centre le contenu */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espace entre les éléments */
+}
+.panel-content-me {
+  width: 75%;
+  margin: 0 auto; /* Centre le contenu */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espace entre les éléments */
 }
 
-.panel-content h3 {
-  margin-bottom: 20px; /* Espacement sous le titre */
+.panel-content-me h3 {
+  margin-top: 20px;
+  margin-bottom: 20px; 
 }
 
-.panel-content p {
-  margin-bottom: 15px; /* Espacement entre les paragraphes */
+.panel-content-me p {
+  margin-bottom: 15px; 
 }
 
-.panel-content .links {
+.panel-content-me .links {
   display: flex;
   justify-content: center; /* Centre les liens horizontalement */
   margin-top: 50px; /* Ajoute un espace au-dessus des liens */
@@ -253,23 +302,15 @@ a:focus {
   flex-wrap: wrap; /* Permet le retour à la ligne si nécessaire */
 }
 
-.panel-content .links a {
+.panel-content-me .links a {
   color: inherit; /* Couleur des liens */
   text-decoration: underline; /* Souligne les liens */
   font-size: 1rem; /* Taille de la police */
   transition: color 0.3s; /* Transition pour l'effet de survol */
 }
 
-.panel-content .links a:hover {
+.panel-content-me .links a:hover {
   color: #b7a700; /* Couleur au survol */
-}
-
-.panel-content-education {
-  width: 95%; /* Limite la largeur à 70% du parent */
-  margin: 0 auto; /* Centre le contenu */
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* Espace entre chaque entrée */
 }
 
 .education-entry {
@@ -288,4 +329,189 @@ a:focus {
 .education-description {
   flex: 1; /* La description prend le reste de l'espace disponible */
   font-size: 1rem;
+}
+
+.experience-entry {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espace entre l'image et la description */
+}
+
+.experience-logo {
+  width: 90px; /* Ajuste la taille de l'image */
+  height: 90px;
+  border-radius: 50%; /* Rend l'image circulaire */
+  object-fit: cover;
+}
+
+.experience-description {
+  flex: 1; /* La description prend le reste de l'espace disponible */
+  font-size: 1rem;
+}
+
+.next-page-arrow {
+  position: absolute; /* La flèche est positionnée par rapport à .hero-section */
+  bottom: 30px; /* Ajuste la position verticale */
+  left: 50%; /* Centre horizontalement */
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: rgb(49, 48, 48);
+  text-decoration: none;
+  cursor: pointer;
+  animation: bounce 2s infinite;
+}
+
+.next-page-arrow svg {
+  animation-delay: 0s; /* Démarre l'animation immédiatement */
+}
+
+.next-page-arrow:hover svg path {
+  stroke: #b7a700; /* Change la couleur au survol */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.projects {
+  padding: 50px 0; /* Ajoute de l'espace autour de la section */
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.projects h2 {
+  font-size: 2rem;
+  margin-bottom: 5%;
+  color: #222;
+  text-align: center; /* Centre le titre */
+}
+
+.project-container {
+  max-width: 70%; /* Ajustez cette valeur selon vos besoins */
+  margin: 0 auto; /* Centre le conteneur sur la page */
+  padding: 0 20px; /* Optionnel : ajoute un padding pour les petits écrans */
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Affiche un maximum de 3 tuiles par ligne */
+  gap: 50px; /* Espace entre les tuiles */
+  justify-items: center; /* Centre les tuiles horizontalement */
+}
+
+/* .project-tile {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+} */
+
+.project-tile {
+  position: relative;
+  width: 100%; /* La largeur s'adapte à la grille */
+  padding-top: 60%; /* Définit la hauteur comme 60 % de la largeur */
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.project-tile img,
+.project-hover-description,
+.project-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* L'image et le contenu remplissent la tuile */
+  object-fit: cover; /* Maintient les proportions de l'image */
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+
+.project-title {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: auto; /* Empêche le titre de s'étendre sur toute la largeur */
+  color: white;
+  font-size: 1.2rem; /* Taille de la police */
+  background-color: var(--project-color, rgba(0, 0, 0, 0.5)); /* Utilise la couleur de projet */
+  padding: 5px 10px; /* Ajuste le padding pour contrôler la hauteur */
+  line-height: 1.2; /* Ajuste la hauteur de ligne pour un meilleur contrôle */
+  border-radius: 5px;
+  z-index: 2;
+  width: auto; /* Permet au titre de s'ajuster à sa taille naturelle */
+  height: auto; /* Assure que la hauteur s'ajuste automatiquement */
+  display: inline-block; /* Permet au titre de prendre seulement la place nécessaire */
+}
+
+.project-title {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 1.2rem;
+  background-color: var(--project-color, rgba(0, 0, 0, 0.5)); /* Utilise la même couleur que le hover */
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.project-hover-description {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--project-color, rgba(0, 0, 0, 0.6)); /* Utilise la même couleur que le titre */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 10px;
+}
+
+.project-tile:hover img {
+  transform: scale(1.05);
+}
+
+.project-tile:hover .project-hover-description {
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+.page-footer {
+  background-color: #333; /* Dark background color */
+  color: #fff; /* White text */
+  text-align: center; /* Center the text */
+  padding: 20px 0; /* Add some padding for spacing */
+  font-size: 0.9rem; /* Slightly smaller font size */
+  margin-top: 50px; /* Add space above the footer */
 }
