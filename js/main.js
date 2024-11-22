@@ -190,7 +190,7 @@ function populatePanels() {
                 <a href="https://www.linkedin.com/in/matthieu-vilain-a81a4b139" target="_blank">LinkedIn</a>
                 <a href="https://github.com/MattVil" target="_blank">GitHub</a>
                 <a href="mailto:matthieu.vilain@u-bordeaux.fr">matthieu.vilain@u-bordeaux.fr</a>
-                <a href="assets/CV-Matthieu-Vilain.pdf" target="_blank">Resume</a>
+                <a href="assets/Matthieu_Vilain_CV.pdf" target="_blank">Resume</a>
             </div>    
         </div>
     `;
