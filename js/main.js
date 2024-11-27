@@ -186,6 +186,7 @@ function populatePanels() {
             <p>PhD student in machine learning at <a href="https://www.ims-bordeaux.fr/" target="_blank">IMS Laboratory</a>, Bordeaux, France</p>
             <p>My research focuses on 3D computer vision, image matching, 3D scene understanding, and camera pose estimation. I am particularly interested in leveraging machine learning to deepen our understanding of the physical world and to enhance human interaction with the digital world.</p>
             <p>Images and videos capture vast amounts of information about the complexity of our physical world and the dynamics that shape it. Future digital systems will need to perceive, extract information, understand, plan actions or perform simulation, evaluate critically, and interact with our physical environment.</p>
+            <p><b>★ NEW blog post!</b> <a><i>Machine Learning: A Keystone for Enhancing Interactions Between the Physical and Digital Worlds – The case study of augmented reality</a></i><br>Thanks to insightful feedback, updates are underway — coming back soon!</p>
             <div class="links">
                 <a href="https://www.linkedin.com/in/matthieu-vilain-a81a4b139" target="_blank">LinkedIn</a>
                 <a href="https://github.com/MattVil" target="_blank">GitHub</a>
