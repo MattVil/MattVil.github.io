@@ -7,19 +7,85 @@ const projectData = {
     project1: {
         title: "PerceptU",
         description: "Description détaillée du projet PerceptU. Ce projet se concentre sur ...",
-        image: "images/project1.png",
+        image: "images/projects/perceptU.png",
         tags: ["augmented reality", "machine learning"]
     },
     project2: {
         title: "FaceKey",
         description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
-        image: "images/project2.png",
+        image: "images/projects/facekey/facekeyposter3.jpg",
         tags: ["augmented reality"]
     },
     project3: {
         title: "HCI2K50",
         description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
-        image: "images/project3.png",
+        image: "images/projects/HCI2K50_1.jpg",
+        tags: ["machine learning"]
+    },
+    project4: {
+        title: "Multi-camera tracking",
+        description: "Description détaillée du projet PerceptU. Ce projet se concentre sur ...",
+        image: "images/projects/multiCamTracking.png",
+        tags: ["augmented reality", "machine learning"]
+    },
+    project5: {
+        title: "ARIEL",
+        description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
+        image: "images/projects/ariel2.png",
+        tags: ["augmented reality"]
+    },
+    project6: {
+        title: "Social media stock",
+        description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
+        image: "images/projects/project3.png",
+        tags: ["machine learning"]
+    },
+    project7: {
+        title: "ENSEHACK 2020",
+        description: "Description détaillée du projet PerceptU. Ce projet se concentre sur ...",
+        image: "images/projects/ensehack_team.jpg",
+        tags: ["augmented reality", "machine learning"]
+    },
+    project8: {
+        title: "RushHourMobility 2019",
+        description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
+        image: "images/projects/glasses2.jpg",
+        tags: ["augmented reality"]
+    },
+    project9: {
+        title: "SFHacks 2019",
+        description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
+        image: "images/projects/sfhacks2.png",
+        tags: ["machine learning"]
+    },
+    project10: {
+        title: "Spiking Neural Network",
+        description: "Description détaillée du projet PerceptU. Ce projet se concentre sur ...",
+        image: "images/projects/snn/spikingNN.png",
+        tags: ["augmented reality", "machine learning"]
+    },
+    project11: {
+        title: "Gated Networks",
+        description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
+        image: "images/projects/ae.png",
+        tags: ["augmented reality"]
+    },
+    project12: {
+        title: "UrbanLifeSimulator",
+        description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
+        image: "images/projects/ULS2.png",
+        tags: ["machine learning"]
+    },
+    project13: {
+        title: "FootBot",
+        description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
+        image: "images/projects/footbot2.jpg",
+        tags: ["augmented reality"]
+    },
+    project14: {
+        title: "Machine Learning Zoo",
+        description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
+        image: "images/projects/project3.png",
         tags: ["machine learning"]
     }
 };
@@ -200,9 +266,9 @@ function populatePanels() {
     panel2.innerHTML = `
         <div class="panel-content-education">
             <h3>Education :</h3>
-            ${createEducationEntry("ub.png", "2021-2024", "PhD in machine learning at Université de Bordeaux, FRANCE", "My thesis, titled <i>\"Attention Mechanism in Deep Learning for Image Matching,\"</i> was supervised by Guillaume Bourmaud and Rémi Giraud. Our primary research areas included 3D computer vision, image matching, and camera pose estimation, with a consistent focus on leveraging the advantages of the attention mechanism.")}
-            ${createEducationEntry("cy.png", "2015-2020", "Master in Machine learning and data science at Université Cergy-Paris, FRANCE", "My curriculum primarily consisted of three initial years focused on mathematics and software engineering, followed by two years specializing in machine learning. Thanks to my robotics teacher who took the time to introduce me to machine learning during my first year, I developed a passion for the subject. This early interest led me to engage in various academic, personal, and professional projects, allowing me to build a solid foundation in the field.")}
-            ${createEducationEntry("sf.png", "2019", "Study abroad at San Francisco State University, USA", "I had the opportunity the study in the US through the selective MICEFA program. At SF-State, my studies primarily focused on artificial intelligence, software engineering, neuroscience and search engines.")}
+            ${createEducationEntry("logos/ub.png", "2021-2024", "PhD in machine learning at Université de Bordeaux, FRANCE", "My thesis, titled <i>\"Attention Mechanism in Deep Learning for Image Matching,\"</i> was supervised by Guillaume Bourmaud and Rémi Giraud. Our primary research areas included 3D computer vision, image matching, and camera pose estimation, with a consistent focus on leveraging the advantages of the attention mechanism.")}
+            ${createEducationEntry("logos/cy.png", "2015-2020", "Master in Machine learning and data science at Université Cergy-Paris, FRANCE", "My curriculum primarily consisted of three initial years focused on mathematics and software engineering, followed by two years specializing in machine learning. Thanks to my robotics teacher who took the time to introduce me to machine learning during my first year, I developed a passion for the subject. This early interest led me to engage in various academic, personal, and professional projects, allowing me to build a solid foundation in the field.")}
+            ${createEducationEntry("logos/sf.png", "2019", "Study abroad at San Francisco State University, USA", "I had the opportunity the study in the US through the selective MICEFA program. At SF-State, my studies primarily focused on artificial intelligence, software engineering, neuroscience and search engines.")}
         </div>
     `;
 
@@ -210,13 +276,13 @@ function populatePanels() {
     panel3.innerHTML = `
         <div class="panel-content-experience">
             <h3>Experience :</h3>
-            ${createExperienceEntry("thales.svg", "Jul 2020 - Dec 2020", "Machine learning R&D Intern at Thales, Palaiseau, FRANCE", "Research and development of machine learning algorithms focused on analyzing the user's body, hands, gestures, and actions to enable interaction with an augmented reality headset interface. These algorithms were designed for real-time use on an embedded board.")}
-            ${createExperienceEntry("gamemaister.png", "Jul 2019 - Aug 2019", "Machine learning Developer freelance at GAMEMAISTER, Paris, FRANCE", "Development of machine learning algorithms for augmented reality board games, including computer vision algorithms for perceiving physical game elements and user interactions, as well as algorithms to enhance game engine intelligence.")}
-            ${createExperienceEntry("xxii.jpg", "May 2018 - Sep 2018", "Machine learning R&D Intern at XXII, Paris, FRANCE", "Research and development of novel machine learning algorithms for neural architecture search tailored to specific application contexts. This work involves supervised learning, reinforcement learning, and genetic algorithms.")}
-            ${createExperienceEntry("dexia.svg", "Aug 2017 - Aug 2017", "Performance service assistant at Dexia, Paris, FRANCE", "Working on automating various back-office banking processes.")}
-            ${createExperienceEntry("gamemaister.png", "Jul 2017 - Jul 2017", "Machine learning Developer freelance at GAMEMAISTER, Paris, FRANCE", "Participated in the creation of a mixed reality board game startup, primarily contributing to the development of perception algorithms and process automation, including data augmentation.")}
-            ${createExperienceEntry("etis.png", "May 2017 - Jun 2017", "Research Assistant Intern at ETIS laboratory, Pontoise, FRANCE", "Development of reinforcement learning algorithms (Q-learning) and deep learning algorithms (Deep Q-Network) for controlling a robotic arm.")}
-            ${createExperienceEntry("etis.png", "May 2016 - Jun 2016", "Research Assistant Intern at ETIS laboratory, Pontoise, FRANCE", "Research on algorithms for the <i>\"maximum submatrix problem,\"</i> focusing on mathematical formulation, algorithm design, and parallelization of the solution.")}
+            ${createExperienceEntry("logos/thales.svg", "Jul 2020 - Dec 2020", "Machine learning R&D Intern at Thales, Palaiseau, FRANCE", "Research and development of machine learning algorithms focused on analyzing the user's body, hands, gestures, and actions to enable interaction with an augmented reality headset interface. These algorithms were designed for real-time use on an embedded board.")}
+            ${createExperienceEntry("logos/gamemaister.png", "Jul 2019 - Aug 2019", "Machine learning Developer freelance at GAMEMAISTER, Paris, FRANCE", "Development of machine learning algorithms for augmented reality board games, including computer vision algorithms for perceiving physical game elements and user interactions, as well as algorithms to enhance game engine intelligence.")}
+            ${createExperienceEntry("logos/xxii.jpg", "May 2018 - Sep 2018", "Machine learning R&D Intern at XXII, Paris, FRANCE", "Research and development of novel machine learning algorithms for neural architecture search tailored to specific application contexts. This work involves supervised learning, reinforcement learning, and genetic algorithms.")}
+            ${createExperienceEntry("logos/dexia.svg", "Aug 2017 - Aug 2017", "Performance service assistant at Dexia, Paris, FRANCE", "Working on automating various back-office banking processes.")}
+            ${createExperienceEntry("logos/gamemaister.png", "Jul 2017 - Jul 2017", "Machine learning Developer freelance at GAMEMAISTER, Paris, FRANCE", "Participated in the creation of a mixed reality board game startup, primarily contributing to the development of perception algorithms and process automation, including data augmentation.")}
+            ${createExperienceEntry("logos/etis.png", "May 2017 - Jun 2017", "Research Assistant Intern at ETIS laboratory, Pontoise, FRANCE", "Development of reinforcement learning algorithms (Q-learning) and deep learning algorithms (Deep Q-Network) for controlling a robotic arm.")}
+            ${createExperienceEntry("logos/etis.png", "May 2016 - Jun 2016", "Research Assistant Intern at ETIS laboratory, Pontoise, FRANCE", "Research on algorithms for the <i>\"maximum submatrix problem,\"</i> focusing on mathematical formulation, algorithm design, and parallelization of the solution.")}
         </div>
     `;
 }
