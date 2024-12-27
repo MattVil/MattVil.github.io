@@ -1,7 +1,8 @@
 const tags = {
     "augmented reality": "rgb(238, 129, 182)", // couleur rose
     "machine learning": "rgb(138, 182, 178)",   // couleur bleu-vert
-    "software engineering" : "rgb(28, 172, 112)"
+    "software engineering" : "rgb(28, 172, 112)",
+    "cryptography" : "rgb(182,34,123)",
 };
 
 const projectData = {
@@ -23,9 +24,16 @@ const projectData = {
     },
     project2: {
         title: "FaceKey",
-        description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
+        description: "<p>FaceKey is an innovative password manager that leverages facial recognition to simplify and secure web authentication. The process is seamless: users navigate to a login page, activate the FaceKey browser plugin, which launches the webcam for facial recognition, and encrypted credentials are exchanged to unlock the site.</p>\
+        <p>For this project, we built a custom user database and trained a convolutional neural network. The architecture was designed to be highly discriminative for accurate identification, robust to various usage conditions, and easily extensible for adding new users.</p>\
+        <p>The neural network is deployed using TensorFlowJS, RSA encryption is utilized for secure data handling, and the plugin was developed in JavaScript.</p>",
         image: "images/projects/facekey/facekeyposter3.jpg",
-        tags: ["augmented reality"]
+        mediaTitle: "Poster of the project",
+        links: {
+            "GitHub": "https://github.com/MattVil/Face_Key"
+        },
+        technologies: ["Python", "Tensorflow", "TensorflowJS", "RSA", "JavaScript", "MongoDB", "Docker", "Git"],
+        tags: ["machine learning", 'cryptography']
     },
     project3: {
         title: "HCI2K50",
