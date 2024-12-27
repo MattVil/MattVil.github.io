@@ -1,14 +1,25 @@
 const tags = {
     "augmented reality": "rgb(238, 129, 182)", // couleur rose
-    "machine learning": "rgb(138, 182, 178)"   // couleur bleu-vert
+    "machine learning": "rgb(138, 182, 178)",   // couleur bleu-vert
+    "software engineering" : "rgb(28, 172, 112)"
 };
 
 const projectData = {
     project1: {
         title: "PerceptU",
-        description: "Description détaillée du projet PerceptU. Ce projet se concentre sur ...",
-        image: "images/projects/perceptU.png",
-        tags: ["augmented reality", "machine learning"]
+        description: "<p>PerceptU is a smart TV interface that combines gesture control and emotional analysis to deliver a seamless and intuitive user experience. Designed for applications such as virtual clothing catalogs, the system allows users to navigate content naturally using gestures, while providing businesses with real-time feedback on user emotions regarding their products.</p>\
+        <p>The project integrates three machine learning algorithms:</p>\
+        <ul><li>A 3D convolutional neural network processes live camera feeds to recognize user gestures for interaction.</li>\
+        <li>A combination of Haar Cascade and gradient histograms identifies faces and classifies facial emotions using a multilayer perceptron.</li>\
+        <li>MFCCs (Mel Frequency Cepstral Coefficients) extracted from microphone input enable voice emotion classification via a multilayer perceptron.</li></ul>\
+        <p>The architecture leverages Kafka for parallel processing of the algorithms and React for a smooth front-end interface. Connected to a MongoDB database, the system associates the detected emotions with the content the user is viewing.</p>",
+        video: "https://drive.google.com/file/d/1UTZtLRj4p4R5kn_K7fNHoVbHIe0IIn1o/preview",
+        mediaTitle: "Gesture recognition demo :</br>(unfortunately, I didn’t record a video of the final project...)",
+        links: {
+            "GitHub": "https://github.com/MattVil/PerceptU"
+        },
+        technologies: ["Python", "PyTorch", "Keras", "Kafka", "MQTT", "JavaScript", "React", "MongoDB", "Docker", "Git"],
+        tags: ["machine learning", "augmented reality", "software engineering"]
     },
     project2: {
         title: "FaceKey",
@@ -19,7 +30,7 @@ const projectData = {
     project3: {
         title: "HCI2K50",
         description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
-        image: "images/projects/HCI2K50_1.jpg",
+        video: "https://drive.google.com/file/d/1jylqXtHi3t8eSn7ir5JlxamII0l59122/preview",
         tags: ["machine learning"]
     },
     project4: {
@@ -376,21 +387,57 @@ function openModal(projectId) {
             return `<span class="project-tag" style="background-color: ${color};">${tag}</span>`;
         }).join(" ");
 
-        // Afficher le modal
-        modal.style.display = 'block';
-        pageContent.classList.add('page-blur');
+        // Créer le contenu multimédia
+        let mediaContent = "";
+        if (project.video) {
+            mediaContent = `
+                <h3 class="media-title" style="color: ${tileColor};">${project.mediaTitle || "Project Demonstration"}</h3>
+                <iframe src="${project.video}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="width: 100%; height: 400px; border-radius: 10px;"></iframe>
+            `;
+        } else if (project.image) {
+            mediaContent = `
+                <h3 class="media-title" style="color: ${tileColor};">${project.mediaTitle || "Project Snapshot"}</h3>
+                <img src="${project.image}" alt="${project.title}" style="width: 100%; border-radius: 10px;">
+            `;
+        }
+
+        // Créer la liste des technologies utilisées
+        const technologiesHTML = project.technologies ? `
+            <h3 style="color: ${tileColor};">Technologies Used:</h3>
+            <ul class="technologies-list">
+                ${project.technologies.map(tech => `<li>${tech}</li>`).join("")}
+            </ul>
+        ` : "";
+
+        // Créer les liens dynamiques
+        const linksHTML = project.links ? `
+            <h3 style="color: ${tileColor};">Links:</h3>
+            <ul class="project-links">
+                ${Object.entries(project.links).map(([key, value]) =>
+                    `<li><a href="${value}" target="_blank">${key}</a></li>`).join("")}
+            </ul>
+        ` : "";
 
         // Remplir le contenu du modal
         modalBody.innerHTML = `
             <h2 style="color: ${tileColor};">${project.title}</h2>
             <div class="project-tags">${tagsHTML}</div>
-            <p>${project.description}</p>
-            <img src="${project.image}" alt="${project.title}" style="width: 100%; border-radius: 10px;">
+            ${project.description}
+            ${mediaContent}
+            ${technologiesHTML}
+            ${linksHTML}
         `;
+
+        // Afficher le modal
+        modal.style.display = 'block';
+        pageContent.classList.add('page-blur');
     } else {
         console.error("Projet introuvable :", projectId);
     }
 }
+
+
+
 
 function closeModal() {
     const modal = document.getElementById('project-modal');
