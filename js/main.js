@@ -3,11 +3,13 @@ const tags = {
     "machine learning": "rgb(138, 182, 178)",   // couleur bleu-vert
     "software engineering" : "rgb(28, 172, 112)",
     "cryptography" : "rgb(182,34,123)",
+    "hackathon" : "rgb(212, 182, 23)"
 };
 
 const projectData = {
     project1: {
         title: "PerceptU",
+        year: "2018",
         description: "<p>PerceptU is a smart TV interface that combines gesture control and emotional analysis to deliver a seamless and intuitive user experience. Designed for applications such as virtual clothing catalogs, the system allows users to navigate content naturally using gestures, while providing businesses with real-time feedback on user emotions regarding their products.</p>\
         <p>The project integrates three machine learning algorithms:</p>\
         <ul><li>A 3D convolutional neural network processes live camera feeds to recognize user gestures for interaction.</li>\
@@ -24,6 +26,7 @@ const projectData = {
     },
     project2: {
         title: "FaceKey",
+        year: "2017",
         description: "<p>FaceKey is an innovative password manager that leverages facial recognition to simplify and secure web authentication. The process is seamless: users navigate to a login page, activate the FaceKey browser plugin, which launches the webcam for facial recognition, and encrypted credentials are exchanged to unlock the site.</p>\
         <p>For this project, we built a custom user database and trained a convolutional neural network. The architecture was designed to be highly discriminative for accurate identification, robust to various usage conditions, and easily extensible for adding new users.</p>\
         <p>The neural network is deployed using TensorFlowJS, RSA encryption is utilized for secure data handling, and the plugin was developed in JavaScript.</p>",
@@ -32,8 +35,8 @@ const projectData = {
         links: {
             "GitHub": "https://github.com/MattVil/Face_Key"
         },
-        technologies: ["Python", "Tensorflow", "TensorflowJS", "RSA", "JavaScript", "MongoDB", "Docker", "Git"],
-        tags: ["machine learning", 'cryptography']
+        technologies: ["Python", "Tensorflow", "TensorflowJS", "C/C++", "RSA", "JavaScript", "MongoDB", "Docker", "Git"],
+        tags: ["machine learning", 'cryptography', 'software engineering']
     },
     project3: {
         title: "HCI2K50",
@@ -61,21 +64,41 @@ const projectData = {
     },
     project7: {
         title: "ENSEHACK 2020",
-        description: "Description détaillée du projet PerceptU. Ce projet se concentre sur ...",
+        year: "2020",
+        description: "<p>At the ENSEA school hackathon, focused on urban ecology, we developed an innovative solution combining a smart pin and a collaborative platform to monitor city pollution.</p>\
+        <p>The smart pin is equipped with sensors to measure CO₂ levels, particulates, and noise pollution using a microphone. The collected data is sent to the user’s phone and anonymously shared on an online collaborative map. This map provides a real-time view of urban pollution levels and allows users to report other types of pollution by uploading photos.</p>\
+        <p>To ensure the reliability of the data, we designed a statistical algorithm to filter out potential false reports. While our functional prototype did not yet take the form of a pin, it earned us the second place in the competition!</p>",
         image: "images/projects/ensehack_team.jpg",
-        tags: ["augmented reality", "machine learning"]
+        mediaTitle: "Our team !",
+        technologies: ["C", "Java", "JavaScript", "Arduino", "Android", "Communication", "Electronics"],
+        tags: ["hackathon"]
     },
     project8: {
         title: "RushHourMobility 2019",
-        description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
+        year: "2019",
+        description: "<p>During the Rush Hour Mobility hackathon, organized by Renault and focused on creating digital tools for the future of urban transportation, we developed a pair of custom-built smart glasses that provide real-time navigation assistance. These glasses alert users to disruptions on their route, recalculate the optimal path, and display information directly, eliminating the need to check a phone.</p>\
+        <p>Our solution offers personalized routing options based on user preferences: fastest, most eco-friendly, comfortable, or economical. To achieve this, we designed a multi-heuristic variation of the A* algorithm tailored to individual preferences and real-time traffic disruptions, sourced from REST APIs provided by a simulated connected city.</p>\
+        <p>The hardware includes a heads-up display built with an Arduino, a screen, and a setup of mirrors and transparent plastic for projection. The glasses are connected to a mobile application that receives city data and computes routes accordingly.</p>\
+        <p>We successfully tested our functional prototype on the city model created by the organizers, and our demonstration earned us the second place in the competition!</p>",
         image: "images/projects/glasses2.jpg",
-        tags: ["augmented reality"]
+        mediaTitle: "Our team !",
+        links: {
+            "Blog organizer" : "https://medium.com/renault-digital/rush-mobility-hackathon-insider-bff36d1f866c",
+            "Story from another team" : "https://medium.com/xorum-io/sleepless-weekend-rush-hour-mobility-hackathon-85aacefdec14",
+            "Story from another team " : "https://www.epita.fr/2020/02/13/rush-hour-mobility-hackathon-renault-digital-2020/",
+        },
+        technologies: ["C/C++", "Java", "Arduino", "Android", "AI", "REST"],
+        tags: ["hackathon"]
     },
     project9: {
         title: "SFHacks 2019",
-        description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
+        year: "2019",
+        description: "<p>At the SFHacks hackathon in San Francisco, we developed an innovative mobile application that allows users to analyze their eye health independently using machine learning.</p>\
+        <p>The app is paired with an affordable magnifying lens that attaches to the phone's camera. Once the user takes a picture of their eye, the image is processed by a pre-trained convolutional neural network designed to detect eye diseases such as glaucoma and age-related macular degeneration (AMD).</p>\
+        <p>Unfortunately, due to insufficient reliability in the results for images taken with our lens, our project was not awarded. However, it served as a valuable exploration into integrating machine learning with low-cost diagnostic solutions.</p>",
         image: "images/projects/sfhacks2.png",
-        tags: ["machine learning"]
+        technologies: ["python", "Java", "TensorflowLite", "Android", "ONNX"],
+        tags: ["hackathon", "machine learning"]
     },
     project10: {
         title: "Spiking Neural Network",
@@ -426,8 +449,12 @@ function openModal(projectId) {
             </ul>
         ` : "";
 
+        const yearHTML = project.year ? `<p class="project-year">${project.year}</p>` : "";
+
+
         // Remplir le contenu du modal
         modalBody.innerHTML = `
+            ${yearHTML}
             <h2 style="color: ${tileColor};">${project.title}</h2>
             <div class="project-tags">${tagsHTML}</div>
             ${project.description}
