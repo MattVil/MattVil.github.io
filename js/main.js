@@ -3,7 +3,8 @@ const tags = {
     "machine learning": "rgb(138, 182, 178)",   // couleur bleu-vert
     "software engineering" : "rgb(28, 172, 112)",
     "cryptography" : "rgb(182,34,123)",
-    "hackathon" : "rgb(212, 182, 23)"
+    "hackathon" : "rgb(212, 182, 23)",
+    "science" : "rgb(27, 213, 42)",
 };
 
 const projectData = {
@@ -52,9 +53,18 @@ const projectData = {
     },
     project5: {
         title: "ARIEL",
-        description: "Description détaillée du projet FaceKey, centré sur la reconnaissance faciale ...",
+        year: "2022",
+        description: "<p>ARIEL is a telescope from the European Space Agency (ESA) set to launch in 2029, with the mission of observing over 1,000 exoplanets to analyze their atmospheres. In 2022, University College London launched a data challenge aimed at leveraging machine learning to determine the chemical composition of exoplanet atmospheres based on simulated observations from ARIEL.</p>\
+        <p>In collaboration with astrophysics researchers from the French Agency of Space Study (CNES), we tackled this challenge by identifying key areas where machine learning could enhance astrophysics research. Our work focused on unsupervised learning and the development of methods using neural networks to predict Gaussian mixture densities, incorporating uncertainty estimation into the analyses.</p>\
+        <p>This project aimed to establish an initial collaboration between CNES astrophysicists and machine learning researchers. As a result, the CNES is now a major contributor to the ARIEL data challenge.</p>",
         image: "images/projects/ariel2.png",
-        tags: ["augmented reality"]
+        links: {
+            "ARIEL Challenge": "https://www.ariel-datachallenge.space/",
+            "GitHub2022": "https://github.com/MattVil/ARIEL2022",
+            "GitHub2023": "https://github.com/MattVil/ARIEL2023",
+        },
+        technologies: ["Python", "Pytorch", "Math", "Physics"],
+        tags: ["machine learning", "science"]
     },
     project6: {
         title: "Social media stock",
@@ -126,8 +136,27 @@ const projectData = {
     },
     project14: {
         title: "Machine Learning Zoo",
-        description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
-        image: "images/projects/project3.png",
+        year: "∞",
+        description: "<p>A deep understanding of the fundamentals is crucial to grasp the rapid advancements in the field of machine learning and to foster creativity in designing new solutions. With this in mind, I implemented various foundational machine learning algorithms from scratch to delve into the subtle details of their inner workings.</p>\
+        <p>This iterative approach allows me to deepen my understanding of core concepts, analyze their performance, and explore the critical nuances necessary for adapting these algorithms to specific contexts or creating new variations. It is a continuous process to refine and expand my skills in machine learning.</p>\
+        <p>Unorganized list : </p>\
+        <ul><li>Feed Forward Network and CNN + Backpropagation and optimization</li>\
+        <li>TD-learning and Q-Learning</li>\
+        <li>Deep-Q-Learning</li>\
+        <li>A* and variants</li>\
+        <li>Attention and Transfromer architecture</li>\
+        <li>Contrastive learning</li>\
+        <li>Naive Bayes</li>\
+        <li>Gated Networks (GRU, LSTM and BiLSTM)</li>\
+        <li>SVM</li>\
+        <li>Kohonen Maps</li>\
+        <li>Statitics for fairness training and evaluation of neural networks</li>\
+        <li>Spiking Neural Network</li>\
+        <li>Clusturing algorithms (K-mean, Mean-shift, ...)</li></ul>",
+        // image: "images/projects/project3.png",
+        links:{
+            "Most of the implementations can be found on my GitHub": "https://github.com/MattVil"
+        },
         tags: ["machine learning"]
     }
 };
@@ -291,7 +320,7 @@ function populatePanels() {
     panel1.innerHTML = `
         <div class="panel-content-me">
             <h3>Matthieu Vilain</h3>
-            <p>PhD student in machine learning at <a href="https://www.ims-bordeaux.fr/" target="_blank">IMS Laboratory</a>, Bordeaux, France</p>
+            <p>PhD student in machine learning at <a href="https://www.ims-bordeaux.fr/" target="_blank">IMS Laboratory</a>, Bordeaux, France. <b>★ Thesis successfully defended on 16 dec 2024 !</b></p>
             <p>My research focuses on 3D computer vision, image matching, 3D scene understanding, and camera pose estimation. I am particularly interested in leveraging machine learning to deepen our understanding of the physical world and to enhance human interaction with the digital world.</p>
             <p>Images and videos capture vast amounts of information about the complexity of our physical world and the dynamics that shape it. Future digital systems will need to perceive, extract information, understand, plan actions or perform simulation, evaluate critically, and interact with our physical environment.</p>
             <p><b>★ NEW blog post!</b> <a><i>Machine Learning: A Keystone for Enhancing Interactions Between the Physical and Digital Worlds – The case study of augmented reality</a></i><br>Thanks to insightful feedback, updates are underway — coming back soon!</p>
