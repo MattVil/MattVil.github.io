@@ -42,7 +42,7 @@ const projectData = {
     project3: {
         title: "HCI2K50",
         description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
-        video: "https://drive.google.com/file/d/1jylqXtHi3t8eSn7ir5JlxamII0l59122/preview",
+        video: "https://drive.google.com/file/d/1jylqXtHi3t8eSn7ir5JlxamII0l59122g/preview",
         tags: ["machine learning"]
     },
     project4: {
