@@ -2,6 +2,7 @@ const tags = {
     "augmented reality": "rgb(238, 129, 182)", // couleur rose
     "machine learning": "rgb(138, 182, 178)",   // couleur bleu-vert
     "software engineering" : "rgb(28, 172, 112)",
+    "NLP-LLM" : "rgb(74, 34, 182)",
     "cryptography" : "rgb(182,34,123)",
     "hackathon" : "rgb(212, 182, 23)",
     "science" : "rgb(27, 213, 42)",
@@ -68,9 +69,21 @@ const projectData = {
     },
     project6: {
         title: "Social media stock",
-        description: "Description détaillée du projet HCI2K50, abordant les interfaces homme-machine ...",
-        image: "images/projects/project3.png",
-        tags: ["machine learning"]
+        description: "<p>Developed a full machine learning pipeline to predict short-term stock price movements based on live social media sentiment signals.</p>\
+        <ul><li>Built custom web scrapers and REST API interfaces to collect historical and live data from Twitter, Reddit, and news articale headlines.</li>\
+        <li>Preprocessed noisy text using NLP techniques: tokenization, lemmatization, named entity recognition (NER), and filtering of spam/bots.</li>\
+        <li>Use Word2Vec and fine-tuned transformer-based language model (e.g. BERT) to assess the polarity of posts related to a specific company.</li>\
+        <li>Designed and trained a regression head to estimate stock movement based on aggregated sentiment features over time windows.</li>\
+        <li>Integrated the trained model into a real-time streaming pipeline using tools like FastAPI / Flask, with live data ingestion and prediction</li>\
+        <li>Evaluated the system using real market data with metrics like F1-score, accuracy, and precision</li></ul>\
+        <p>This project strengthened my skills in applied NLP, real-time data engineering, and taught me how to handle noisy, unstructured data to build actionable ML insights in a high-variability domain. \
+        Social media data looks to be a strong signal to predict stocks movements eventhough it not sufficient and stock prediction still very multimodal.</p>",
+        image: "images/projects/socialmediastock.png",
+        tags: ["machine learning", "software engineering", "NLP-LLM"],
+        links: {
+            "GitHub": "https://github.com/MattVil/Social_media_stock"
+        },
+        technologies: ["Python", "Scikit-learn", "Pandas", "Tweepy", "PRAW", "newsapi", "Yahoo! finance", "BeautifulSoup", "Flask/FastAPI", "MongoDB", "Git"],
     },
     project7: {
         title: "ENSEHACK 2020",
