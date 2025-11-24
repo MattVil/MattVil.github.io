@@ -1,5 +1,5 @@
 // ==========================================
-// 1. SYSTÈME DE PARTICULES (SPHÈRE 3D)
+// 1. 3D PARTICLE SPHERE SYSTEM
 // ==========================================
 const canvas = document.getElementById('particle-canvas');
 const ctx = canvas.getContext('2d');
@@ -8,7 +8,7 @@ let particles = [];
 let width, height;
 let globeRadius; 
 
-// Interaction Souris / Doigt
+// Interaction Mouse / Finger
 let mouseX = null;
 let mouseY = null;
 const interactionRadius = 80; 
@@ -43,7 +43,7 @@ class Particle3D {
         this.x = 0; this.y = 0; this.z = 0;
         this.size = Math.random() * 1.5 + 1;
         
-        // Gradient bleu-violet
+        // Blue-Violet Gradient
         const position = Math.random(); 
         const r = Math.floor(66 + (155 - 66) * position);
         const g = Math.floor(133 + (114 - 133) * position);
@@ -141,7 +141,7 @@ initParticles();
 animate();
 
 // ==========================================
-// 2. LOGIQUE UI (TOGGLE & NAVIGATION)
+// 2. UI LOGIC (TOGGLE & NAVIGATION)
 // ==========================================
 
 const toggleBtn = document.getElementById('period-toggle');
@@ -155,15 +155,15 @@ toggleBtn.classList.add('text-daily');
 toggleBtn.addEventListener('click', () => {
     if (toggleBtn.classList.contains('flip-out') || toggleBtn.classList.contains('flip-in')) return;
 
-    // 1. Sortie
+    // 1. Out animation
     toggleBtn.classList.add('flip-out');
 
     setTimeout(() => {
-        // 2. Changement de données
+        // 2. Data change
         isDailyMode = !isDailyMode;
         toggleBtn.innerText = isDailyMode ? "Daily" : "Yearly";
         
-        // Changement de couleur
+        // Color change
         if (isDailyMode) {
             toggleBtn.classList.replace('text-yearly', 'text-daily');
         } else {
@@ -172,10 +172,10 @@ toggleBtn.addEventListener('click', () => {
         
         toggleBtn.classList.remove('flip-out');
         
-        // 3. Entrée
+        // 3. In animation
         toggleBtn.classList.add('flip-in');
 
-        // 4. Panels
+        // 4. Panel switch
         if (isDailyMode) {
             tasksPanel.classList.remove('hidden-panel');
             tasksPanel.classList.add('active-panel');
@@ -197,97 +197,181 @@ toggleBtn.addEventListener('click', () => {
 
 
 // ==========================================
-// 3. LOGIQUE TASKS (Affichage & Progression)
+// 3. QUEST LOGIC (Display & Progress)
 // ==========================================
 
-const taskList = document.getElementById('taskList');
+const questList = document.getElementById('questList'); 
 const progressBarFill = document.getElementById('progressBarFill');
 const progressEmoji = document.getElementById('progressEmoji');
 
 
-// Fonction pour créer une tâche visuelle
-function displayTask(text, isDone = false) {
+// Function to create a visual quest item
+function displayQuest(title, isDone = false, type = 'DAILY_ONLY') {
     const li = document.createElement('li');
-    li.className = `task-item ${isDone ? 'completed' : ''}`;
+    li.className = `quest-item ${isDone ? 'completed' : ''}`;
     
+    // Set type color class
+    let typeClass = 'daily-type';
+    if (type === 'WEEKLY') {
+        typeClass = 'weekly-type';
+    } else if (type === 'MONTHLY') {
+        typeClass = 'monthly-type';
+    } else if (type === 'RECURRING') {
+        typeClass = 'daily-type'; // Treat recurring like daily for color
+    }
+    li.classList.add(typeClass);
+
     li.innerHTML = `
-        <span class="task-text">${text}</span>
+        <span class="quest-text">${title}</span>
         <button class="check-btn"></button>
     `;
 
-    // Événement : Clic pour simuler la validation 
+    // Event: Click to simulate completion 
     const checkBtn = li.querySelector('.check-btn');
     checkBtn.addEventListener('click', () => {
         li.classList.toggle('completed');
         updateProgress();
     });
 
-    taskList.prepend(li);
+    questList.prepend(li);
     updateProgress();
 }
 
-// Fonction qui calcule et met à jour la barre de progression et l'emoji
+// Function that calculates and updates the progress bar and emoji
 function updateProgress() {
-    const allTasks = taskList.querySelectorAll('.task-item');
-    if (allTasks.length === 0) {
+    const allQuests = questList.querySelectorAll('.quest-item');
+    if (allQuests.length === 0) {
         progressBarFill.style.width = '0%';
         progressEmoji.innerText = '😴'; 
         return;
     }
 
-    const completedTasks = taskList.querySelectorAll('.task-item.completed').length;
-    const totalTasks = allTasks.length;
-    const percentage = Math.round((completedTasks / totalTasks) * 100);
+    const completedQuests = questList.querySelectorAll('.quest-item.completed').length;
+    const totalQuests = allQuests.length;
+    const percentage = Math.round((completedQuests / totalQuests) * 100);
 
-    // 1. Mise à jour de la barre
+    // 1. Update bar width
     progressBarFill.style.width = `${percentage}%`;
 
-    // 2. Mise à jour de l'emoji (Set final)
+    // 2. Update emoji (Final Set)
     let emoji = '';
     if (percentage === 100) {
-        emoji = '🏆'; // Trophée
+        emoji = '🏆'; // Trophy
     } else if (percentage >= 80) {
-        emoji = '🚀'; // Décollage
+        emoji = '🚀'; // Liftoff
     } else if (percentage >= 60) {
-        emoji = '💪'; // Force
+        emoji = '💪'; // Strength
     } else if (percentage >= 40) {
-        emoji = '🔥'; // En feu
+        emoji = '🔥'; // On fire
     } else if (percentage >= 20) {
-        emoji = '🌱'; // Croissance
+        emoji = '🌱'; // Growth
     } else {
-        emoji = '💧'; // Départ
+        emoji = '💧'; // Start
     }
     progressEmoji.innerText = emoji;
 }
 
 
-// --- DÉMO : Affichage de tâches fixes pour tester le design ---
-setTimeout(() => displayTask("Lancer le projet Daily Quest", true), 100);
-setTimeout(() => displayTask("Tester l'ergonomie mobile"), 300);
-setTimeout(() => displayTask("Définir la structure de la base de données"), 500);
+// --- DEMO: Fixed quests for design testing ---
+setTimeout(() => displayQuest("Implement persistence layer", true), 100);
+setTimeout(() => displayQuest("Review responsive layout", false, 'WEEKLY'), 300);
+setTimeout(() => displayQuest("Define data structure", false, 'MONTHLY'), 500);
 
-
-if (taskList.children.length === 0) {
+if (questList.children.length === 0) {
     updateProgress();
 }
 
 // ==========================================
-// 4. LOGIQUE UI : AJOUT DE TÂCHE (Formulaire Modale)
+// 4. UI LOGIC: ADD QUEST FORM
 // ==========================================
 
 const desktopToggleFormBtn = document.getElementById('desktopToggleFormBtn');
 const taskForm = document.getElementById('taskForm');
 const closeFormBtn = document.getElementById('closeFormBtn'); 
+const desktopAddBtnArea = document.getElementById('desktopAddBtnArea');
+const questAddForm = document.getElementById('questAddForm');
+const questTypeRadios = document.querySelectorAll('input[name="questType"]');
+const recurrenceOptions = document.getElementById('recurrenceOptions');
+const questDateInput = document.getElementById('questDate'); 
+const submitQuestBtn = document.getElementById('submitQuestBtn'); 
+
+
+// Set today's date as default
+questDateInput.valueAsDate = new Date();
+
+
+// Function to handle recurrence options visibility AND button color
+function handleRecurrenceToggle() {
+    const selectedType = document.querySelector('input[name="questType"]:checked').value;
+    
+    // 1. Recurrence Options Visibility
+    if (selectedType === 'RECURRING') {
+        recurrenceOptions.classList.remove('hidden-recurrence');
+    } else {
+        recurrenceOptions.classList.add('hidden-recurrence');
+    }
+
+    // 2. Button Color Logic
+    let colorClass = '';
+    if (selectedType === 'WEEKLY') {
+        colorClass = 'weekly-type-btn';
+    } else if (selectedType === 'MONTHLY') {
+        colorClass = 'monthly-type-btn';
+    } else {
+        // DAILY_ONLY and RECURRING use the daily color (Blue)
+        colorClass = 'daily-type-btn';
+    }
+
+    // Remove all color classes and add the correct one
+    submitQuestBtn.classList.remove('daily-type-btn', 'weekly-type-btn', 'monthly-type-btn');
+    submitQuestBtn.classList.add(colorClass);
+    
+    // On doit aussi mettre à jour la couleur du bouton statique desktop (fermée)
+    desktopToggleFormBtn.classList.remove('daily-type-btn', 'weekly-type-btn', 'monthly-type-btn');
+    desktopToggleFormBtn.classList.add(colorClass);
+}
 
 function toggleForm() {
-    // 1. Basculer la visibilité du formulaire
     taskForm.classList.toggle('open');
     const isOpen = taskForm.classList.contains('open');
 
-    // 2. Mettre à jour le texte du bouton statique
+    // Update the static button text
     desktopToggleFormBtn.innerText = isOpen ? 'Close Form' : 'New Quest';
+    
+    // Optional: Hide/Show the static button area for animation purposes 
+    if (!isOpen) {
+        desktopAddBtnArea.style.opacity = '1';
+        desktopAddBtnArea.style.pointerEvents = 'auto';
+    }
 }
 
-// 3. Attacher la fonction de bascule aux boutons
+// Attach listeners
 desktopToggleFormBtn.addEventListener('click', toggleForm);
 closeFormBtn.addEventListener('click', toggleForm);
+
+questTypeRadios.forEach(radio => {
+    radio.addEventListener('change', handleRecurrenceToggle);
+});
+
+// Ensure initial color is set on load
+handleRecurrenceToggle(); 
+
+// Demo Submission 
+questAddForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const title = document.getElementById('questTitle').value;
+    const type = document.querySelector('input[name="questType"]:checked').value;
+    const date = questDateInput.value;
+    
+    console.log(`Submitting Quest: ${title}, Type: ${type}, Date: ${date}`);
+    
+    // Add the new quest to the list for immediate visual feedback
+    displayQuest(title, false, type); 
+    
+    // Clear form and close
+    questAddForm.reset();
+    questDateInput.valueAsDate = new Date(); // Reset date to today
+    handleRecurrenceToggle(); // Reset button color to default (Daily)
+    toggleForm(); 
+});

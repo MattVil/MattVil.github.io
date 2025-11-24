@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Daily Quest</title>
+    <title>Daily Quests</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -28,25 +28,70 @@
                 </div>
             </div>
 
-            <ul id="taskList" class="task-list">
+            <ul id="questList" class="quest-list">
                 </ul>
             
             <div id="desktopAddBtnArea" class="desktop-btn-area">
-                <button id="desktopToggleFormBtn" class="new-quest-btn">New Quest</button>
+                <button id="desktopToggleFormBtn" class="new-quest-btn daily-type-btn">New Quest</button>
             </div>
             
         </div>
 
         <div id="summary-panel" class="content-panel hidden-panel">
-            <div class="placeholder-text">Zone Résumé (Yearly)</div>
+            <div class="placeholder-text">Yearly Summary Area</div>
         </div>
     </main>
     
     <div id="taskForm" class="task-form">
         <div class="task-form-content">
             <button id="closeFormBtn" class="close-form-btn">×</button>
-            <h2>Ajouter une nouvelle Quête</h2>
-            <div class="form-placeholder">Le formulaire sera construit ici (ex: input, bouton de soumission)</div>
+            <h2>Add New Quest</h2>
+            
+            <form id="questAddForm" class="quest-form">
+                
+                <div class="input-group-form">
+                    <label for="questTitle">Quest Title</label>
+                    <input type="text" id="questTitle" required placeholder="Ex: Drink 2L of water..." class="form-input-pill">
+                </div>
+
+                <div class="input-group-form">
+                    <label for="questDate">Target Date</label>
+                    <input type="date" id="questDate" class="form-input-pill">
+                </div>
+                
+                <div class="quest-type-selector">
+                    <label>Frequency:</label>
+                    <div class="type-options">
+                        
+                        <input type="radio" name="questType" id="typeDaily" value="DAILY_ONLY" checked>
+                        <label for="typeDaily" class="type-label-pill daily-type-pill">Daily</label>
+
+                        <input type="radio" name="questType" id="typeRecurring" value="RECURRING">
+                        <label for="typeRecurring" class="type-label-pill daily-type-pill">Periodic</label>
+                        
+                        <input type="radio" name="questType" id="typeWeekly" value="WEEKLY">
+                        <label for="typeWeekly" class="type-label-pill weekly-type-pill">Weekly</label>
+                        
+                        <input type="radio" name="questType" id="typeMonthly" value="MONTHLY">
+                        <label for="typeMonthly" class="type-label-pill monthly-type-pill">Monthly</label>
+                    </div>
+                </div>
+
+                <div id="recurrenceOptions" class="recurrence-options hidden-recurrence">
+                    <label>Specific Days:</label>
+                    <div class="day-selector">
+                        <input type="checkbox" id="day1" value="1" class="day-input"><label for="day1" class="day-label-pill">Mon</label>
+                        <input type="checkbox" id="day2" value="2" class="day-input"><label for="day2" class="day-label-pill">Tue</label>
+                        <input type="checkbox" id="day3" value="3" class="day-input"><label for="day3" class="day-label-pill">Wed</label>
+                        <input type="checkbox" id="day4" value="4" class="day-input"><label for="day4" class="day-label-pill">Thu</label>
+                        <input type="checkbox" id="day5" value="5" class="day-input"><label for="day5" class="day-label-pill">Fri</label>
+                        <input type="checkbox" id="day6" value="6" class="day-input"><label for="day6" class="day-label-pill">Sat</label>
+                        <input type="checkbox" id="day7" value="7" class="day-input"><label for="day7" class="day-label-pill">Sun</label>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitQuestBtn" class="new-quest-btn submit-form-btn daily-type-btn">Add Quest</button>
+            </form>
         </div>
     </div>
 

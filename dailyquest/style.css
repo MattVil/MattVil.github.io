@@ -144,7 +144,7 @@ body {
 }
 
 /* =========================================
-   5. UI DAILY : LISTE DES TÂCHES
+   5. UI DAILY : LISTE DES QUÊTES
    ========================================= */
 
 /* --- Styles Barre de Progression --- */
@@ -193,8 +193,8 @@ body {
     align-items: center; 
 }
 
-/* --- Liste des Tâches --- */
-.task-list {
+/* --- Liste des Quêtes --- */
+.quest-list { 
     list-style: none;
     width: 100%;
     max-width: 450px;
@@ -204,7 +204,8 @@ body {
     gap: 12px;
 }
 
-.task-item {
+/* --- QUÊTES INDIVIDUELLES --- */
+.quest-item { 
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8px);
     padding: 16px 24px;
@@ -225,7 +226,7 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.task-text {
+.quest-text { 
     font-size: 1rem;
     font-weight: 400;
     color: #202124;
@@ -233,6 +234,23 @@ body {
     word-break: break-word;
     margin-right: 15px;
 }
+
+/* --- DIFFÉRENCIATION DES COULEURS PAR TYPE DE QUÊTE (Border-Left) --- */
+.daily-type { /* Daily / Recurring */
+    border-left: 5px solid #4285F4; /* Blue */
+    padding-left: 19px; 
+}
+
+.weekly-type {
+    border-left: 5px solid #9B72CB; /* Violet */
+    padding-left: 19px;
+}
+
+.monthly-type {
+    border-left: 5px solid #FF80AB; /* Rose/Magenta */
+    padding-left: 19px;
+}
+
 
 /* Le bouton rond de validation */
 .check-btn {
@@ -250,21 +268,20 @@ body {
     border-color: #4285F4;
 }
 
-/* --- État "Validé" (Check) --- */
-.task-item.completed {
+/* --- État "Completed" (Check) --- */
+.quest-item.completed {
     background: rgba(245, 245, 245, 0.6);
     box-shadow: none;
     border-color: transparent;
-    
     order: 1; 
 }
 
-.task-item.completed .task-text {
+.quest-item.completed .quest-text {
     text-decoration: line-through;
     color: #9aa0a6;
 }
 
-.task-item.completed .check-btn {
+.quest-item.completed .check-btn {
     background: #34A853;
     border-color: #34A853;
     color: white;
@@ -277,12 +294,12 @@ body {
     display: none;
 }
 
-.task-item.completed .check-btn::after {
+.quest-item.completed .check-btn::after {
     display: block;
 }
 
 /* =========================================
-   6. BOUTON STATIQUE & RESPONSIVE
+   6. BOUTON STATIQUE & MODAL CENTRÉ
    ========================================= */
 
 /* --- Bouton Statique Desktop (Seul Trigger) --- */
@@ -292,19 +309,32 @@ body {
     padding-top: 20px;
     text-align: right; 
     z-index: 10;
+    transition: opacity 0.3s, pointer-events 0.3s; 
 }
 
 .new-quest-btn {
     padding: 10px 20px;
     border-radius: 50px;
-    background-color: #4285F4;
     color: white;
     border: none;
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    /* Transition de couleur pour le bouton de soumission */
+    transition: background-color 0.2s; 
 }
+
+/* --- CLASSES DE COULEUR POUR LE BOUTON D'AJOUT --- */
+.daily-type-btn {
+    background-color: #4285F4; /* Blue */
+}
+.weekly-type-btn {
+    background-color: #9B72CB; /* Violet */
+}
+.monthly-type-btn {
+    background-color: #FF80AB; /* Rose/Magenta */
+}
+
 
 /* --- Formulaire Modale (Centrage simple) --- */
 .task-form {
@@ -329,13 +359,13 @@ body {
 .task-form.open {
     opacity: 1;
     pointer-events: auto; 
-    /* MODIFIÉ : Opacité réduite de 0.95 à 0.85 */
+    /* Opacité réduite */
     background: rgba(255, 255, 255, 0.85); 
 }
 
 /* Contenu du formulaire centré */
 .task-form-content {
-    position: relative; /* Ancre pour le bouton de fermeture */
+    position: relative; 
     background: white;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     border-radius: 16px;
@@ -347,6 +377,12 @@ body {
     transform: translateY(20px);
     transition: transform 0.3s ease-out;
 }
+
+/* ESPACEMENT SOUS LE TITRE DU FORMULAIRE (NEW) */
+.task-form-content h2 {
+    margin-bottom: 20px; 
+}
+
 
 .task-form.open .task-form-content {
     transform: translateY(0);
@@ -371,6 +407,129 @@ body {
     color: #333;
 }
 
+/* --- Styles NOUVEAUX : Formulaire d'Ajout (Pills) --- */
+
+.quest-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.input-group-form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+/* Style spécifique pour le Date input (NEW) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5); /* Assurez-vous que l'icône est visible */
+}
+
+.form-input-pill {
+    width: 100%;
+    padding: 12px 18px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-input-pill:focus {
+    border-color: #4285F4;
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+}
+
+/* --- Sélecteurs Pill (Type de Quête et Jours) --- */
+
+.quest-type-selector .type-options,
+.recurrence-options .day-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px; /* RÉDUCTION D'ESPACEMENT: de 8px à 4px */
+    margin-top: 5px;
+}
+
+/* Masquer les inputs radio/checkbox natifs */
+.quest-type-selector input[type="radio"],
+.recurrence-options input[type="checkbox"] {
+    display: none;
+}
+
+/* Style des labels comme des boutons pill */
+.type-label-pill {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    color: #555;
+    user-select: none;
+}
+
+.day-label-pill {
+    /* RÉDUCTION DE TAILLE ET D'ESPACEMENT */
+    padding: 6px 8px; /* Réduit le padding */
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    font-size: 0.8rem; /* Réduit la taille de la police */
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    color: #555;
+    user-select: none;
+    line-height: 1; /* Assure que le texte ne prend qu'une seule hauteur */
+}
+
+/* État sélectionné par défaut pour les checkboxes (jours) */
+.recurrence-options input[type="checkbox"]:checked + label {
+    background-color: #4285F4;
+    border-color: #4285F4;
+    color: white;
+}
+
+/* --- COULEURS SPÉCIFIQUES POUR LA FRÉQUENCE (Radio Buttons) --- */
+
+/* Daily / Periodic (Blue) */
+.quest-type-selector #typeDaily:checked + label,
+.quest-type-selector #typeRecurring:checked + label {
+    background-color: #4285F4; 
+    border-color: #4285F4;
+    color: white;
+}
+
+/* Weekly (Violet) */
+.quest-type-selector #typeWeekly:checked + label {
+    background-color: #9B72CB;
+    border-color: #9B72CB;
+    color: white;
+}
+
+/* Monthly (Rose/Magenta) */
+.quest-type-selector #typeMonthly:checked + label {
+    background-color: #FF80AB;
+    border-color: #FF80AB;
+    color: white;
+}
+
+
+/* Options de Récurrence (Masqué par défaut) */
+.recurrence-options {
+    overflow: hidden;
+    max-height: 100px;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.recurrence-options.hidden-recurrence {
+    max-height: 0;
+    opacity: 0;
+}
+
 
 /* =========================================
    7. RESPONSIVE
@@ -380,7 +539,7 @@ body {
         font-size: 2.5rem;
     }
     
-    .task-list {
+    .quest-list {
         max-width: 100%; 
         padding: 0 5px; 
     }
