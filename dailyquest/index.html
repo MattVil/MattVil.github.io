@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <main class="hero-section">
+        <h1 class="hero-title">
+            <span id="period-toggle" class="text-daily">Daily</span> 
+            <span class="static-text">Quests</span>
+        </h1>
+
+        <div id="tasks-panel" class="content-panel active-panel">
+            <div class="placeholder-text">Zone Tâches (Daily)</div>
+        </div>
+
+        <div id="summary-panel" class="content-panel hidden-panel">
+            <div class="placeholder-text">Zone Résumé (Yearly)</div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

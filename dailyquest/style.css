@@ -1,0 +1,141 @@
+/* --- Reset & Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #ffffff;
+    color: #202124;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Le Canvas en fond */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Ancré en haut */
+    padding-top: 80px; 
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+}
+
+/* --- Titre et Layout Grid (Stabilité) --- */
+.hero-title {
+    font-size: 3rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    margin-bottom: 60px;
+    user-select: none;
+    
+    /* GRID : Sépare l'écran en deux moitiés égales */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;       /* Espace central fixe */
+    align-items: center;
+    width: 100%;
+    
+    /* 3D : Profondeur pour la rotation */
+    perspective: 500px; 
+}
+
+/* Le texte statique ("Quests") */
+.static-text {
+    color: #202124;
+    justify-self: start; /* Collé à gauche de sa colonne (vers le centre) */
+    white-space: nowrap;
+}
+
+/* Le texte dynamique ("Daily" / "Yearly") */
+#period-toggle {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    
+    justify-self: end; /* Collé à droite de sa colonne (vers le centre) */
+    
+    transform-origin: center center;
+    transform-style: preserve-3d; 
+    transition: color 0.3s ease;
+}
+
+#period-toggle:hover {
+    opacity: 0.8;
+}
+
+/* --- Couleurs --- */
+.text-daily { color: #4285F4; } /* Bleu */
+.text-yearly { color: #9B72CB; } /* Violet */
+
+/* --- Animations Flip (Panneau Aéroport) --- */
+.flip-out {
+    animation: rotateOutDown 0.25s forwards ease-in;
+}
+
+.flip-in {
+    animation: rotateInDown 0.25s forwards ease-out;
+}
+
+@keyframes rotateOutDown {
+    from { transform: rotateX(0deg); opacity: 1; }
+    to { transform: rotateX(90deg); opacity: 0; }
+}
+
+@keyframes rotateInDown {
+    from { transform: rotateX(-90deg); opacity: 0; }
+    to { transform: rotateX(0deg); opacity: 1; }
+}
+
+/* --- Panels de Contenu --- */
+.content-panel {
+    width: 100%;
+    max-width: 600px;
+    min-height: 200px;
+    border-radius: 16px;
+    border: 2px dashed #e0e0e0; /* Temporaire pour visualiser */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-style: italic;
+}
+
+.hidden-panel { display: none; }
+
+.active-panel {
+    display: flex;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+}
