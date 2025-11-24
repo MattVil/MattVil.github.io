@@ -1,4 +1,6 @@
-/* --- Reset & Base --- */
+/* =========================================
+   1. RESET & BASE
+   ========================================= */
 * {
     margin: 0;
     padding: 0;
@@ -16,7 +18,7 @@ body {
     flex-direction: column;
 }
 
-/* Le Canvas en fond */
+/* Le Canvas en fond (particules) */
 #particle-canvas {
     position: fixed;
     top: 0;
@@ -27,7 +29,9 @@ body {
     pointer-events: none;
 }
 
-/* --- Hero Section --- */
+/* =========================================
+   2. HERO SECTION (Layout Global)
+   ========================================= */
 .hero-section {
     flex: 1;
     display: flex;
@@ -40,16 +44,18 @@ body {
     text-align: center;
 }
 
-/* --- Titre et Layout Grid (Stabilité) --- */
+/* =========================================
+   3. TITRE & ANIMATION 3D (Flip)
+   ========================================= */
 .hero-title {
     font-size: 3rem;
     line-height: 1.1;
     letter-spacing: -0.02em;
     font-weight: 600;
-    margin-bottom: 60px;
+    margin-bottom: 60px; /* Espace avant les panels */
     user-select: none;
     
-    /* GRID : Sépare l'écran en deux moitiés égales */
+    /* GRID : Sépare l'écran en deux pour une stabilité parfaite */
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;       /* Espace central fixe */
@@ -63,7 +69,7 @@ body {
 /* Le texte statique ("Quests") */
 .static-text {
     color: #202124;
-    justify-self: start; /* Collé à gauche de sa colonne (vers le centre) */
+    justify-self: start; /* Collé à GAUCHE de sa colonne */
     white-space: nowrap;
 }
 
@@ -72,8 +78,7 @@ body {
     cursor: pointer;
     position: relative;
     display: inline-block;
-    
-    justify-self: end; /* Collé à droite de sa colonne (vers le centre) */
+    justify-self: end; /* Collé à DROITE de sa colonne */
     
     transform-origin: center center;
     transform-style: preserve-3d; 
@@ -84,11 +89,11 @@ body {
     opacity: 0.8;
 }
 
-/* --- Couleurs --- */
+/* Couleurs */
 .text-daily { color: #4285F4; } /* Bleu */
 .text-yearly { color: #9B72CB; } /* Violet */
 
-/* --- Animations Flip (Panneau Aéroport) --- */
+/* Animations Flip (Panneau Aéroport) */
 .flip-out {
     animation: rotateOutDown 0.25s forwards ease-in;
 }
@@ -107,18 +112,25 @@ body {
     to { transform: rotateX(0deg); opacity: 1; }
 }
 
-/* --- Panels de Contenu --- */
+/* =========================================
+   4. GESTION DES PANELS (General)
+   ========================================= */
 .content-panel {
     width: 100%;
     max-width: 600px;
-    min-height: 200px;
+    /* On utilise min-height pour que le panneau ne s'écrase pas complètement */
+    min-height: 200px; 
     border-radius: 16px;
-    border: 2px dashed #e0e0e0; /* Temporaire pour visualiser */
+    
+    /* Style temporaire pour le panel Summary */
+    border: 2px dashed #e0e0e0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: #aaa;
+}
+
+.placeholder-text {
     font-style: italic;
+    color: #aaa;
 }
 
 .hidden-panel { display: none; }
@@ -133,9 +145,123 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive */
+/* =========================================
+   5. UI DAILY : LISTE DES TÂCHES
+   ========================================= */
+
+/* Conteneur principal du panel Daily */
+#tasks-panel {
+    flex-direction: column; /* Empilement vertical */
+    justify-content: flex-start;
+    gap: 20px;
+    padding-bottom: 50px; /* Espace pour le scroll */
+    border: none; /* On enlève le style de test temporaire */
+}
+
+/* --- Liste des Tâches --- */
+.task-list {
+    list-style: none;
+    width: 100%;
+    max-width: 450px;
+    
+    /* CRUCIAL pour utiliser 'order' */
+    display: flex;
+    flex-direction: column; 
+    
+    gap: 12px;
+}
+
+.task-item {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    padding: 16px 24px;
+    border-radius: 50px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid #f1f3f4;
+    
+    /* NOUVEAU : Animation de position et d'état */
+    transition: all 0.4s ease-in-out;
+    order: 0; /* Ordre par défaut (reste en haut) */
+
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.task-text {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #202124;
+    transition: color 0.3s;
+    word-break: break-word;
+    margin-right: 15px;
+}
+
+/* Le bouton rond de validation */
+.check-btn {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2px solid #dadce0;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.check-btn:hover {
+    border-color: #4285F4;
+}
+
+/* --- État "Validé" (Check) --- */
+.task-item.completed {
+    background: rgba(245, 245, 245, 0.6);
+    box-shadow: none;
+    border-color: transparent;
+    
+    /* NOUVEAU : Déplace la tâche à la fin de la liste */
+    order: 1; 
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: #9aa0a6;
+}
+
+.task-item.completed .check-btn {
+    background: #34A853;
+    border-color: #34A853;
+    color: white;
+}
+
+/* Petit "V" dans le rond quand validé */
+.check-btn::after {
+    content: '✓';
+    font-size: 14px;
+    font-weight: bold;
+    display: none;
+}
+
+.task-item.completed .check-btn::after {
+    display: block;
+}
+
+/* =========================================
+   6. RESPONSIVE
+   ========================================= */
 @media (max-width: 600px) {
     .hero-title {
         font-size: 2.5rem;
+    }
+    
+    .task-list {
+        max-width: 100%; /* Pleine largeur sur mobile */
+        padding: 0 5px; /* Petit padding pour les bords */
     }
 }

@@ -195,3 +195,36 @@ toggleBtn.addEventListener('click', () => {
 
     }, 250);
 });
+
+
+// ==========================================
+// 3. LOGIQUE TASKS (Affichage de Démo)
+// ==========================================
+
+// Référence à la liste 
+const taskList = document.getElementById('taskList');
+
+// Fonction pour créer une tâche visuelle
+function displayTask(text, isDone = false) {
+    const li = document.createElement('li');
+    li.className = `task-item ${isDone ? 'completed' : ''}`;
+    
+    li.innerHTML = `
+        <span class="task-text">${text}</span>
+        <button class="check-btn"></button>
+    `;
+
+    // Événement : Clic pour simuler la validation (pour le design)
+    const checkBtn = li.querySelector('.check-btn');
+    checkBtn.addEventListener('click', () => {
+        li.classList.toggle('completed');
+    });
+
+    taskList.prepend(li);
+}
+
+
+// --- DÉMO : Affichage de tâches fixes pour tester le design ---
+setTimeout(() => displayTask("Lancer le projet Daily Quest", true), 100);
+setTimeout(() => displayTask("Tester l'ergonomie mobile"), 300);
+setTimeout(() => displayTask("Définir la structure de la base de données"), 500);
