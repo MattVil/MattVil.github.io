@@ -22,22 +22,33 @@
         <div id="tasks-panel" class="content-panel active-panel">
             
             <div class="progress-container">
-                <span id="progressEmoji" class="progress-emoji">✨</span>
+                <span id="progressEmoji" class="progress-emoji">😴</span>
                 <div class="progress-bar-bg">
                     <div id="progressBarFill" class="progress-bar-fill"></div>
                 </div>
-                
             </div>
 
             <ul id="taskList" class="task-list">
                 </ul>
-
+            
+            <div id="desktopAddBtnArea" class="desktop-btn-area">
+                <button id="desktopToggleFormBtn" class="new-quest-btn">New Quest</button>
+            </div>
+            
         </div>
 
         <div id="summary-panel" class="content-panel hidden-panel">
             <div class="placeholder-text">Zone Résumé (Yearly)</div>
         </div>
     </main>
+    
+    <div id="taskForm" class="task-form">
+        <div class="task-form-content">
+            <button id="closeFormBtn" class="close-form-btn">×</button>
+            <h2>Ajouter une nouvelle Quête</h2>
+            <div class="form-placeholder">Le formulaire sera construit ici (ex: input, bouton de soumission)</div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

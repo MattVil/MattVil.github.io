@@ -150,7 +150,6 @@ const summaryPanel = document.getElementById('summary-panel');
 
 let isDailyMode = true; 
 
-// Initialisation de la couleur
 toggleBtn.classList.add('text-daily');
 
 toggleBtn.addEventListener('click', () => {
@@ -202,7 +201,6 @@ toggleBtn.addEventListener('click', () => {
 // ==========================================
 
 const taskList = document.getElementById('taskList');
-// NOUVEAU : Références à la barre de progression
 const progressBarFill = document.getElementById('progressBarFill');
 const progressEmoji = document.getElementById('progressEmoji');
 
@@ -221,12 +219,10 @@ function displayTask(text, isDone = false) {
     const checkBtn = li.querySelector('.check-btn');
     checkBtn.addEventListener('click', () => {
         li.classList.toggle('completed');
-        // NOUVEAU : Mise à jour de la progression après le changement d'état
         updateProgress();
     });
 
     taskList.prepend(li);
-    // NOUVEAU : Mise à jour initiale après l'ajout de la tâche
     updateProgress();
 }
 
@@ -235,7 +231,7 @@ function updateProgress() {
     const allTasks = taskList.querySelectorAll('.task-item');
     if (allTasks.length === 0) {
         progressBarFill.style.width = '0%';
-        progressEmoji.innerText = '😴'; // MODIFIÉ: Visage endormi
+        progressEmoji.innerText = '😴'; 
         return;
     }
 
@@ -266,12 +262,32 @@ function updateProgress() {
 
 
 // --- DÉMO : Affichage de tâches fixes pour tester le design ---
-// (Le démo appelle updateProgress automatiquement maintenant)
 setTimeout(() => displayTask("Lancer le projet Daily Quest", true), 100);
 setTimeout(() => displayTask("Tester l'ergonomie mobile"), 300);
 setTimeout(() => displayTask("Définir la structure de la base de données"), 500);
 
-// NOUVEAU : Si la liste est vide (ce qui ne devrait pas arriver avec la démo)
+
 if (taskList.children.length === 0) {
     updateProgress();
 }
+
+// ==========================================
+// 4. LOGIQUE UI : AJOUT DE TÂCHE (Formulaire Modale)
+// ==========================================
+
+const desktopToggleFormBtn = document.getElementById('desktopToggleFormBtn');
+const taskForm = document.getElementById('taskForm');
+const closeFormBtn = document.getElementById('closeFormBtn'); 
+
+function toggleForm() {
+    // 1. Basculer la visibilité du formulaire
+    taskForm.classList.toggle('open');
+    const isOpen = taskForm.classList.contains('open');
+
+    // 2. Mettre à jour le texte du bouton statique
+    desktopToggleFormBtn.innerText = isOpen ? 'Close Form' : 'New Quest';
+}
+
+// 3. Attacher la fonction de bascule aux boutons
+desktopToggleFormBtn.addEventListener('click', toggleForm);
+closeFormBtn.addEventListener('click', toggleForm);

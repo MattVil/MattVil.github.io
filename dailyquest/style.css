@@ -170,7 +170,7 @@ body {
 .progress-bar-fill {
     height: 100%;
     width: 0%; 
-    /* MODIFIÉ : Gradient Violet -> Bleu */
+    /* Gradient Violet -> Bleu */
     background: linear-gradient(90deg, #9B72CB, #4285F4);
     transition: width 0.5s ease-in-out; 
 }
@@ -282,7 +282,98 @@ body {
 }
 
 /* =========================================
-   6. RESPONSIVE
+   6. BOUTON STATIQUE & RESPONSIVE
+   ========================================= */
+
+/* --- Bouton Statique Desktop (Seul Trigger) --- */
+.desktop-btn-area {
+    width: 100%;
+    max-width: 450px; 
+    padding-top: 20px;
+    text-align: right; 
+    z-index: 10;
+}
+
+.new-quest-btn {
+    padding: 10px 20px;
+    border-radius: 50px;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* --- Formulaire Modale (Centrage simple) --- */
+.task-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 998; 
+    
+    /* Cache le formulaire */
+    background: rgba(255, 255, 255, 0); 
+    opacity: 0;
+    pointer-events: none; 
+    transition: opacity 0.3s ease-out;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.task-form.open {
+    opacity: 1;
+    pointer-events: auto; 
+    /* MODIFIÉ : Opacité réduite de 0.95 à 0.85 */
+    background: rgba(255, 255, 255, 0.85); 
+}
+
+/* Contenu du formulaire centré */
+.task-form-content {
+    position: relative; /* Ancre pour le bouton de fermeture */
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-radius: 16px;
+    padding: 30px;
+    width: 90%;
+    max-width: 450px;
+    
+    /* Animation d'arrivée */
+    transform: translateY(20px);
+    transition: transform 0.3s ease-out;
+}
+
+.task-form.open .task-form-content {
+    transform: translateY(0);
+}
+
+/* Style du bouton de fermeture dans le formulaire */
+.close-form-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #888;
+    cursor: pointer;
+    z-index: 105; 
+    line-height: 1; 
+    padding: 0;
+    transition: color 0.2s;
+}
+.close-form-btn:hover {
+    color: #333;
+}
+
+
+/* =========================================
+   7. RESPONSIVE
    ========================================= */
 @media (max-width: 600px) {
     .hero-title {
@@ -292,5 +383,11 @@ body {
     .task-list {
         max-width: 100%; 
         padding: 0 5px; 
+    }
+
+    .task-form-content {
+        /* Pleine largeur sur mobile */
+        width: 100%;
+        margin: 10px;
     }
 }
