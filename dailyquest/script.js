@@ -198,11 +198,14 @@ toggleBtn.addEventListener('click', () => {
 
 
 // ==========================================
-// 3. LOGIQUE TASKS (Affichage de Démo)
+// 3. LOGIQUE TASKS (Affichage & Progression)
 // ==========================================
 
-// Référence à la liste 
 const taskList = document.getElementById('taskList');
+// NOUVEAU : Références à la barre de progression
+const progressBarFill = document.getElementById('progressBarFill');
+const progressEmoji = document.getElementById('progressEmoji');
+
 
 // Fonction pour créer une tâche visuelle
 function displayTask(text, isDone = false) {
@@ -214,17 +217,61 @@ function displayTask(text, isDone = false) {
         <button class="check-btn"></button>
     `;
 
-    // Événement : Clic pour simuler la validation (pour le design)
+    // Événement : Clic pour simuler la validation 
     const checkBtn = li.querySelector('.check-btn');
     checkBtn.addEventListener('click', () => {
         li.classList.toggle('completed');
+        // NOUVEAU : Mise à jour de la progression après le changement d'état
+        updateProgress();
     });
 
     taskList.prepend(li);
+    // NOUVEAU : Mise à jour initiale après l'ajout de la tâche
+    updateProgress();
+}
+
+// Fonction qui calcule et met à jour la barre de progression et l'emoji
+function updateProgress() {
+    const allTasks = taskList.querySelectorAll('.task-item');
+    if (allTasks.length === 0) {
+        progressBarFill.style.width = '0%';
+        progressEmoji.innerText = '😴'; // MODIFIÉ: Visage endormi
+        return;
+    }
+
+    const completedTasks = taskList.querySelectorAll('.task-item.completed').length;
+    const totalTasks = allTasks.length;
+    const percentage = Math.round((completedTasks / totalTasks) * 100);
+
+    // 1. Mise à jour de la barre
+    progressBarFill.style.width = `${percentage}%`;
+
+    // 2. Mise à jour de l'emoji (Set final)
+    let emoji = '';
+    if (percentage === 100) {
+        emoji = '🏆'; // Trophée
+    } else if (percentage >= 80) {
+        emoji = '🚀'; // Décollage
+    } else if (percentage >= 60) {
+        emoji = '💪'; // Force
+    } else if (percentage >= 40) {
+        emoji = '🔥'; // En feu
+    } else if (percentage >= 20) {
+        emoji = '🌱'; // Croissance
+    } else {
+        emoji = '💧'; // Départ
+    }
+    progressEmoji.innerText = emoji;
 }
 
 
 // --- DÉMO : Affichage de tâches fixes pour tester le design ---
+// (Le démo appelle updateProgress automatiquement maintenant)
 setTimeout(() => displayTask("Lancer le projet Daily Quest", true), 100);
 setTimeout(() => displayTask("Tester l'ergonomie mobile"), 300);
 setTimeout(() => displayTask("Définir la structure de la base de données"), 500);
+
+// NOUVEAU : Si la liste est vide (ce qui ne devrait pas arriver avec la démo)
+if (taskList.children.length === 0) {
+    updateProgress();
+}

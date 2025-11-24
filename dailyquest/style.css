@@ -118,12 +118,10 @@ body {
 .content-panel {
     width: 100%;
     max-width: 600px;
-    /* On utilise min-height pour que le panneau ne s'écrase pas complètement */
     min-height: 200px; 
     border-radius: 16px;
     
-    /* Style temporaire pour le panel Summary */
-    border: 2px dashed #e0e0e0;
+    border: 2px dashed #e0e0e0; /* Temporaire pour le Summary */
     display: flex;
     align-items: center;
 }
@@ -149,13 +147,50 @@ body {
    5. UI DAILY : LISTE DES TÂCHES
    ========================================= */
 
+/* --- Styles Barre de Progression --- */
+.progress-container {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-top: 10px;
+}
+
+.progress-bar-bg {
+    flex-grow: 1;
+    height: 10px;
+    background-color: #f1f3f4;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%; 
+    /* MODIFIÉ : Gradient Violet -> Bleu */
+    background: linear-gradient(90deg, #9B72CB, #4285F4);
+    transition: width 0.5s ease-in-out; 
+}
+
+.progress-emoji {
+    font-size: 1.5rem;
+    width: 30px; 
+    text-align: center;
+}
+
+
 /* Conteneur principal du panel Daily */
 #tasks-panel {
-    flex-direction: column; /* Empilement vertical */
+    flex-direction: column;
     justify-content: flex-start;
     gap: 20px;
-    padding-bottom: 50px; /* Espace pour le scroll */
-    border: none; /* On enlève le style de test temporaire */
+    padding-bottom: 50px;
+    border: none;
+    
+    align-items: center; 
 }
 
 /* --- Liste des Tâches --- */
@@ -164,10 +199,8 @@ body {
     width: 100%;
     max-width: 450px;
     
-    /* CRUCIAL pour utiliser 'order' */
     display: flex;
     flex-direction: column; 
-    
     gap: 12px;
 }
 
@@ -182,10 +215,8 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     border: 1px solid #f1f3f4;
     
-    /* NOUVEAU : Animation de position et d'état */
     transition: all 0.4s ease-in-out;
-    order: 0; /* Ordre par défaut (reste en haut) */
-
+    order: 0;
     animation: slideIn 0.3s ease-out;
 }
 
@@ -225,7 +256,6 @@ body {
     box-shadow: none;
     border-color: transparent;
     
-    /* NOUVEAU : Déplace la tâche à la fin de la liste */
     order: 1; 
 }
 
@@ -240,7 +270,6 @@ body {
     color: white;
 }
 
-/* Petit "V" dans le rond quand validé */
 .check-btn::after {
     content: '✓';
     font-size: 14px;
@@ -261,7 +290,7 @@ body {
     }
     
     .task-list {
-        max-width: 100%; /* Pleine largeur sur mobile */
-        padding: 0 5px; /* Petit padding pour les bords */
+        max-width: 100%; 
+        padding: 0 5px; 
     }
 }
