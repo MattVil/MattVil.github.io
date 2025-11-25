@@ -3,7 +3,7 @@
 // ==========================================
 
 // TA CHAÎNE CRYPTÉE (fournie par l'utilisateur)
-const ENCRYPTED_CONFIG = "U2FsdGVkX18F8Ppeh2sKQ/WaeBmIzEPfzOQKTGCTlYbCiszus8i/42WIXRATVAn0A3iIgM+B1WxWHBzL9KBE8kbzfY9ZEKNKQ739DUb2kBSlEcIUp50WXuC+VT4xhkm0MMutu7gUu7cWjDlY6zXIXhKJ3BySA75b3LKqT8vkukKQx6CuxV8oJXHrT7EskK4GxEhd1gknCHJ7QdGNgQgakpUi/mcqQvf+4C7bOEkLNlL6UvoWHNIARkB5J1y/JiGNBIeJZI7oG9VkRclHIIcos2bsgAnQ0jNm0SpgmuCx8nvT/nDAkR4QWwTYZ+Lw51OEDIj4mxbLFT4IxdN+oEHiQijl57Z/yopUVHDndQPSgo5yX5rpWxES8CqTy2I4EEyMKA687AMfVyt5HPl14WQnmP2G0amm/HKzf35qVABPCKfgD99Zhr9DHK6tDNdiB/FT"; 
+const ENCRYPTED_CONFIG = "U2FsdGVkX1+9qOeXFwGxREnpDIPRZk9BoY9Dc/YR66FSQQPD9GevJaO/2fFE2loSPZWaPVK/FxiAR7ufW2Wm7Tmh9FZMwHaVZrsbz3Pl3CaUDfeP8yIoEtLLSkj7GNuc3Wi43ex3IVmFrDv9yI6smU3dYtL4et0GkXbvSMxS1EZg8hoybnVluealPUtn36TdKz+V5TW+JvrlrcgmeMmjELEuOBnWUJGaXqbjX6Gh1jRgwvN539OcmfPf+DKnmB7INeIS7I2wvqdykdoV8Bsq9aPqnGu8MDt7mxAaU9pBw3kSe4OOSl7jNu7CAFo0cKU8I2IcVRr/ndm9BS7OIxz+WKK2EeP8dgmbhJUQ4hAk3nNPZ5h0jGz/dG7Qyaz0BwAfQX1RhMkX6xcxYJS0jryTc/wK60+equijuILZ4idaTWAaMOMGI1ECMvex+l6pDedh";
 
 // Variables globales qui seront définies après le décryptage
 let db;
@@ -11,7 +11,7 @@ let getTodayTimestamp, getDayOfWeek, formatDateString;
 
 // Variables d'état pour le mode Édition
 let currentEditTemplateId = null;
-let currentEditTemplateData = null; // Pour gérer la logique Série/Instance unique
+let currentEditTemplateData = null; 
 
 // Éléments UI du Login
 const loginOverlay = document.getElementById('loginOverlay');
@@ -108,7 +108,7 @@ passwordInput.addEventListener('keypress', (e) => {
 function startVisualsAndLogic() {
     
     // ==========================================
-    // 1. 3D PARTICLE SPHERE SYSTEM
+    // 1. 3D PARTICLE SPHERE SYSTEM (Inchangé)
     // ==========================================
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
@@ -250,7 +250,7 @@ function startVisualsAndLogic() {
     animate();
 
     // ==========================================
-    // 2. UI LOGIC (TOGGLE & NAVIGATION)
+    // 2. UI LOGIC (TOGGLE & NAVIGATION) (Inchangé)
     // ==========================================
 
     const toggleBtn = document.getElementById('period-toggle');
@@ -337,7 +337,7 @@ function startVisualsAndLogic() {
             <button class="check-btn"></button>
         `;
 
-        // 1. Logique de Complétion (Écriture dans Firestore)
+        // 1. Logique de Complétion/Dé-validation
         const checkBtn = li.querySelector('.check-btn');
         checkBtn.addEventListener('click', async (e) => {
             e.stopPropagation(); 
@@ -345,10 +345,31 @@ function startVisualsAndLogic() {
             const isCurrentlyCompleted = li.classList.contains('completed');
             
             if (isCurrentlyCompleted) {
-                console.warn("La dé-validation n'est pas encore implémentée dans Firestore.");
+                // DÉ-VALIDATION (DELETE INSTANCE)
+                try {
+                    // Trouver l'instance complétée pour aujourd'hui
+                    const instanceQuery = await db.collection('quest_instances')
+                        .where('template_id', '==', id)
+                        .where('date', '==', getTodayTimestamp())
+                        .limit(1)
+                        .get();
+                    
+                    if (!instanceQuery.empty) {
+                        const instanceDocId = instanceQuery.docs[0].id;
+                        await db.collection('quest_instances').doc(instanceDocId).delete();
+                        
+                        // Mise à jour de l'UI
+                        li.classList.remove('completed');
+                        updateProgress();
+                    }
+                    
+                } catch (error) {
+                    console.error("Erreur lors de la dé-validation:", error);
+                }
                 return;
             }
 
+            // Validation (ADD INSTANCE)
             const questInstance = {
                 template_id: id, 
                 date: getTodayTimestamp(),
@@ -358,21 +379,17 @@ function startVisualsAndLogic() {
             
             try {
                 await db.collection('quest_instances').add(questInstance);
-                
                 li.classList.add('completed');
                 updateProgress();
-                
             } catch (error) {
-                console.error("Erreur lors de la validation de la quête:", error);
-                alert("Erreur lors de la validation de la quête.");
+                console.error("Erreur lors de la validation:", error);
             }
         });
         
-        // 2. Logique d'Édition (Clic sur le reste de la ligne)
+        // 2. Logique d'Édition
         li.addEventListener('click', () => {
             handleEditClick(id);
         });
-
 
         questList.appendChild(li); 
         updateProgress();
@@ -386,10 +403,10 @@ function startVisualsAndLogic() {
         const today = new Date();
         const todayDayOfWeek = getDayOfWeek(today); 
         const todayTimestamp = getTodayTimestamp();
-        const todayString = formatDateString(today); // Pour check l'exception
+        const todayString = formatDateString(today); 
         
         try {
-            // 1. Récupération des templates de quête actifs
+            // 1. Récupération des templates
             const templatesSnapshot = await db.collection('quest_templates')
                 .where('is_active', '==', true)
                 .get();
@@ -401,7 +418,7 @@ function startVisualsAndLogic() {
 
             const templates = templatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             
-            // 2. Récupération des instances complétées pour aujourd'hui
+            // 2. Récupération des instances (complétées)
             const instancesSnapshot = await db.collection('quest_instances')
                 .where('date', '==', todayTimestamp)
                 .where('is_completed', '==', true)
@@ -411,15 +428,17 @@ function startVisualsAndLogic() {
                 instancesSnapshot.docs.map(doc => doc.data().template_id)
             );
             
-
-            // 3. Logique de calcul et d'affichage pour aujourd'hui
+            // 3. Logique de calcul et d'affichage
             templates.forEach(template => {
+                const isCompleted = completedTemplateIds.has(template.id);
                 
-                if (completedTemplateIds.has(template.id)) {
+                // Si la quête est complétée, on l'affiche directement.
+                if (isCompleted) {
+                    displayQuest(template.id, template.title, true, template.type);
                     return;
                 }
 
-                // Check pour les exceptions sur les quêtes récurrentes
+                // Check exceptions (pour les non-complétées)
                 if (template.type === 'RECURRING' && template.exception_dates && template.exception_dates.includes(todayString)) {
                     return;
                 }
@@ -430,13 +449,11 @@ function startVisualsAndLogic() {
                     case 'DAILY_ONLY':
                         shouldDisplay = true;
                         break;
-                        
                     case 'RECURRING':
                         if (template.recurrence_rule && template.recurrence_rule.daysOfWeek) {
                             shouldDisplay = template.recurrence_rule.daysOfWeek.includes(todayDayOfWeek);
                         }
                         break;
-                        
                     case 'WEEKLY':
                     case 'MONTHLY':
                         shouldDisplay = true;
@@ -448,15 +465,14 @@ function startVisualsAndLogic() {
                 }
             });
         } catch (error) {
-            console.error("Erreur critique lors du chargement initial des quêtes:", error);
-            alert("Erreur lors du chargement initial des quêtes. Vérifiez vos règles Firestore.");
+            console.error("Erreur lors du chargement des quêtes:", error);
         }
 
         updateProgress();
     }
 
 
-    // Function qui calcule et met à jour la barre de progression et l'emoji
+    // Function qui calcule et met à jour la barre de progression
     function updateProgress() {
         const allQuests = questList.querySelectorAll('.quest-item');
         if (allQuests.length === 0) {
@@ -469,30 +485,21 @@ function startVisualsAndLogic() {
         const totalQuests = allQuests.length;
         const percentage = Math.round((completedQuests / totalQuests) * 100);
 
-        // 1. Update bar width
         progressBarFill.style.width = `${percentage}%`;
 
-        // 2. Update emoji (Final Set)
         let emoji = '';
-        if (percentage === 100) {
-            emoji = '🏆'; // Trophy
-        } else if (percentage >= 80) {
-            emoji = '🚀'; // Liftoff
-        } else if (percentage >= 60) {
-            emoji = '💪'; // Strength
-        } else if (percentage >= 40) {
-            emoji = '🔥'; // On fire
-        } else if (percentage >= 20) {
-            emoji = '🌱'; // Growth
-        } else {
-            emoji = '💧'; // Start
-        }
+        if (percentage === 100) { emoji = '🏆'; } 
+        else if (percentage >= 80) { emoji = '🚀'; } 
+        else if (percentage >= 60) { emoji = '💪'; } 
+        else if (percentage >= 40) { emoji = '🔥'; } 
+        else if (percentage >= 20) { emoji = '🌱'; } 
+        else { emoji = '💧'; }
         progressEmoji.innerText = emoji;
     }
 
 
     // ==========================================
-    // 4. UI LOGIC: ADD/EDIT/DELETE QUEST FORM (MODIFIÉ)
+    // 4. UI LOGIC: ADD/EDIT/DELETE QUEST FORM
     // ==========================================
 
     const desktopToggleFormBtn = document.getElementById('desktopToggleFormBtn');
@@ -503,23 +510,20 @@ function startVisualsAndLogic() {
     const questTypeRadios = document.querySelectorAll('input[name="questType"]');
     const recurrenceOptions = document.getElementById('recurrenceOptions');
     const questDateInput = document.getElementById('questDate'); 
-    const questNotesInput = document.getElementById('questNotes'); // NOUVEAU
+    const questNotesInput = document.getElementById('questNotes'); 
     const submitQuestBtn = document.getElementById('submitQuestBtn'); 
     const deleteQuestBtn = document.getElementById('deleteQuestBtn'); 
 
-    // Éléments pour le Scope d'édition (Instance vs Série)
     const editScopeContainer = document.getElementById('editScopeContainer'); 
     const editScopeCheckbox = document.getElementById('editScopeCheckbox'); 
 
 
-    // Set today's date as default
     questDateInput.valueAsDate = new Date();
 
 
-    // Fonction pour réinitialiser le formulaire au mode Création
     function resetFormToCreateMode() {
         currentEditTemplateId = null;
-        currentEditTemplateData = null; // Reset
+        currentEditTemplateData = null; 
         document.getElementById('questAddForm').reset();
         document.getElementById('questDate').valueAsDate = new Date();
         
@@ -527,11 +531,8 @@ function startVisualsAndLogic() {
         
         submitQuestBtn.innerText = 'Add Quest';
         deleteQuestBtn.classList.add('hidden-action-btn');
-        
-        // Reset des notes
         questNotesInput.value = '';
 
-        // Reset scope controls
         if (editScopeContainer && editScopeCheckbox) {
             editScopeContainer.classList.add('hidden-scope'); 
             editScopeCheckbox.checked = false; 
@@ -542,7 +543,6 @@ function startVisualsAndLogic() {
     }
 
 
-    // Fonction pour gérer l'ouverture/fermeture et le reset du formulaire
     function toggleForm() {
         taskForm.classList.toggle('open');
         const isOpen = taskForm.classList.contains('open');
@@ -552,7 +552,6 @@ function startVisualsAndLogic() {
         if (!isOpen) {
             desktopAddBtnArea.style.opacity = '1';
             desktopAddBtnArea.style.pointerEvents = 'auto';
-            
             resetFormToCreateMode(); 
         } else {
             if (currentEditTemplateId === null) {
@@ -562,7 +561,6 @@ function startVisualsAndLogic() {
     }
 
 
-    // Fonction pour gérer l'affichage de la récurrence ET la couleur du bouton
     function handleRecurrenceToggle() {
         const selectedType = document.querySelector('input[name="questType"]:checked').value;
         
@@ -583,28 +581,22 @@ function startVisualsAndLogic() {
 
         submitQuestBtn.classList.remove('daily-type-btn', 'weekly-type-btn', 'monthly-type-btn');
         submitQuestBtn.classList.add(colorClass);
-        
         desktopToggleFormBtn.classList.remove('daily-type-btn', 'weekly-type-btn', 'monthly-type-btn');
         desktopToggleFormBtn.classList.add(colorClass);
     }
 
 
-    /**
-     * Gère le clic sur une quête pour ouvrir le formulaire en mode édition.
-     */
     async function handleEditClick(templateId) {
         try {
             const doc = await db.collection('quest_templates').doc(templateId).get(); 
-            
             if (!doc.exists) return;
 
             const template = doc.data();
             currentEditTemplateId = templateId; 
-            currentEditTemplateData = template; // Stocke pour la logique de soumission
+            currentEditTemplateData = template;
 
-            // 1. Remplir les champs du formulaire
             document.getElementById('questTitle').value = template.title;
-            questNotesInput.value = template.notes || ''; // Remplir les notes
+            questNotesInput.value = template.notes || '';
             
             let dateValue = '';
             if (template.start_date && template.start_date.toDate) {
@@ -612,12 +604,10 @@ function startVisualsAndLogic() {
             }
             document.getElementById('questDate').value = dateValue;
 
-            // Type
             const typeId = `type${template.type.charAt(0).toUpperCase() + template.type.slice(1).toLowerCase()}`;
             const radio = document.getElementById(typeId);
             if (radio) radio.checked = true;
             
-            // Jours de récurrence
             document.querySelectorAll('.day-selector input[type="checkbox"]').forEach(cb => cb.checked = false);
             if (template.type === 'RECURRING' && template.recurrence_rule && template.recurrence_rule.daysOfWeek) {
                 template.recurrence_rule.daysOfWeek.forEach(day => {
@@ -626,13 +616,11 @@ function startVisualsAndLogic() {
                 });
             }
             
-            // 2. Mettre à jour l'UI du formulaire en mode Édition
             handleRecurrenceToggle(); 
             document.querySelector('.task-form-content h2').innerText = 'Edit Quest';
             submitQuestBtn.innerText = 'Save';
             deleteQuestBtn.classList.remove('hidden-action-btn');
 
-            // Afficher la portée d'édition si c'est une quête récurrente
             if (template.type === 'RECURRING') {
                 editScopeContainer.classList.remove('hidden-scope');
                 editScopeCheckbox.checked = false; 
@@ -640,29 +628,25 @@ function startVisualsAndLogic() {
                 editScopeContainer.classList.add('hidden-scope');
             }
 
-            // 3. Ouvrir le modal
             toggleForm();
 
         } catch (error) {
-            console.error("Erreur détaillée lors du chargement de la quête:", error);
-            alert("Erreur lors du chargement de la quête pour modification. (Voir la console pour plus de détails)"); 
+            console.error("Erreur chargement quête:", error);
         }
     }
 
 
-    // Attacher les écouteurs de base
     desktopToggleFormBtn.addEventListener('click', toggleForm);
     closeFormBtn.addEventListener('click', toggleForm);
     questTypeRadios.forEach(radio => {
         radio.addEventListener('change', handleRecurrenceToggle);
     });
+    
+    // --- SUPPRESSION : RETRAIT DU CONFIRM() ---
     deleteQuestBtn.addEventListener('click', async () => {
         if (!currentEditTemplateId) return;
 
-        if (!confirm("Are you sure you want to delete this quest permanently? This will delete the recurring rule (Delete All).")) {
-            return;
-        }
-
+        // ON SUPPRIME DIRECTEMENT SANS CONFIRMATION
         try {
             await db.collection('quest_templates').doc(currentEditTemplateId).delete();
             console.log(`Template deleted: ${currentEditTemplateId}`);
@@ -671,20 +655,20 @@ function startVisualsAndLogic() {
             await loadAndDisplayQuests();
 
         } catch (error) {
-            console.error("Erreur lors de la suppression de la quête:", error);
-            alert("An error occurred while deleting the quest.");
+            console.error("Erreur suppression:", error);
+            // Pas d'alerte non plus
         }
     });
 
 
-    // Logique de Soumission: Gère l'ADD et l'UPDATE
+    // Logique de Soumission (ADD/UPDATE)
     questAddForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const title = document.getElementById('questTitle').value;
         const type = document.querySelector('input[name="questType"]:checked').value;
         const dateString = document.getElementById('questDate').value;
-        const notes = questNotesInput.value; // Récupération des notes
+        const notes = questNotesInput.value; 
         
         const targetDate = new Date(dateString);
         const recurrenceDays = Array.from(document.querySelectorAll('.day-selector input[type="checkbox"]:checked'))
@@ -692,7 +676,7 @@ function startVisualsAndLogic() {
 
         const templateData = {
             title: title,
-            notes: notes, // Ajout des notes
+            notes: notes, 
             type: type,
             is_active: true,
             start_date: isNaN(targetDate.getTime()) ? null : firebase.firestore.Timestamp.fromDate(targetDate), 
@@ -704,19 +688,17 @@ function startVisualsAndLogic() {
         
         try {
             if (currentEditTemplateId) {
-                // MODE EDITION
+                // UPDATE
                 const isRecurringOriginal = currentEditTemplateData && currentEditTemplateData.type === 'RECURRING';
                 const editScope = editScopeCheckbox.checked ? 'SERIES' : 'SINGLE'; 
 
                 if (isRecurringOriginal && editScope === 'SINGLE') {
                     const todayString = formatDateString(new Date()); 
                     
-                    // 1. Créer une exception sur le template original
                     await db.collection('quest_templates').doc(currentEditTemplateId).update({
                         exception_dates: firebase.firestore.FieldValue.arrayUnion(todayString)
                     });
 
-                    // 2. Créer une nouvelle quête de type DAILY_ONLY pour cette instance modifiée
                     const newQuestData = {...templateData};
                     newQuestData.type = 'DAILY_ONLY';
                     newQuestData.recurrence_rule = {}; 
@@ -724,39 +706,33 @@ function startVisualsAndLogic() {
                     delete newQuestData.exception_dates;
                     
                     await db.collection('quest_templates').add(newQuestData);
-                    console.log("Exception created: Splitting recurrence");
+                    console.log("Exception created");
                 } 
                 else {
-                    // Update Series (ou quête non récurrente)
                     delete templateData.exception_dates; 
                     delete templateData.created_at; 
                     await db.collection('quest_templates').doc(currentEditTemplateId).update(templateData);
-                    console.log(`Quest Template updated: ${currentEditTemplateId}`);
                 }
-                alert('Quest updated successfully!');
             } else {
-                // MODE CREATION
+                // CREATE
                 templateData.created_at = firebase.firestore.FieldValue.serverTimestamp();
                 delete templateData.exception_dates;
                 await db.collection('quest_templates').add(templateData);
-                console.log(`New Quest Template created: ${title}`);
-                alert('Quest created successfully!');
             }
             
             await loadAndDisplayQuests(); 
             toggleForm(); 
             
         } catch (error) {
-            console.error(`Error during quest ${currentEditTemplateId ? 'update' : 'creation'}:`, error);
-            alert(`An error occurred while ${currentEditTemplateId ? 'updating' : 'adding'} the quest.`);
+            console.error("Erreur lors de la sauvegarde:", error);
         }
     });
 
 
     // ==========================================
-    // 5. BOOTSTRAP (Lancement des fonctions initiales)
+    // 5. BOOTSTRAP
     // ==========================================
 
     handleRecurrenceToggle(); 
     loadAndDisplayQuests();
-} // Fin de startVisualsAndLogic()
+}
