@@ -1,4 +1,32 @@
 /* =========================================
+   0. LOGIN
+   ========================================= */
+
+/* --- LOGIN OVERLAY --- */
+.login-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #ffffff; /* Fond blanc opaque pour cacher l'app */
+    z-index: 9999; /* Au-dessus de tout */
+    display: flex; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 90%; max-width: 350px;
+    border: 1px solid #eee;
+}
+
+.login-box h2 { margin-bottom: 10px; color: #202124; }
+.login-box p { margin-bottom: 20px; color: #666; font-size: 0.9rem; }
+.hidden-overlay { opacity: 0; pointer-events: none; }
+
+
+/* =========================================
    1. RESET & BASE
    ========================================= */
 * {
