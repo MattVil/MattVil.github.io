@@ -20,7 +20,6 @@
         </h1>
 
         <div id="tasks-panel" class="content-panel active-panel">
-            
             <div class="progress-container">
                 <span id="progressEmoji" class="progress-emoji">😴</span>
                 <div class="progress-bar-bg">
@@ -28,13 +27,11 @@
                 </div>
             </div>
 
-            <ul id="questList" class="quest-list">
-                </ul>
+            <ul id="questList" class="quest-list"></ul>
             
             <div id="desktopAddBtnArea" class="desktop-btn-area">
                 <button id="desktopToggleFormBtn" class="new-quest-btn daily-type-btn">New Quest</button>
             </div>
-            
         </div>
 
         <div id="summary-panel" class="content-panel hidden-panel">
@@ -62,7 +59,6 @@
                 <div class="quest-type-selector">
                     <label>Frequency:</label>
                     <div class="type-options">
-                        
                         <input type="radio" name="questType" id="typeDaily" value="DAILY_ONLY" checked>
                         <label for="typeDaily" class="type-label-pill daily-type-pill">Daily</label>
 
@@ -90,11 +86,30 @@
                     </div>
                 </div>
 
-                <button type="submit" id="submitQuestBtn" class="new-quest-btn submit-form-btn daily-type-btn">Add Quest</button>
+                <div class="input-group-form">
+                    <label for="questNotes">Notes</label>
+                    <textarea id="questNotes" rows="2" placeholder="Add details, instructions..." class="form-input-pill"></textarea>
+                </div>
+
+                <div class="form-actions-group">
+                    
+                    <div id="editScopeContainer" class="scope-checkbox-wrapper hidden-scope">
+                        <input type="checkbox" id="editScopeCheckbox">
+                        <label for="editScopeCheckbox">Apply to all</label>
+                    </div>
+
+                    <div class="action-buttons-wrapper">
+                        <button type="button" id="deleteQuestBtn" class="new-quest-btn delete-btn hidden-action-btn">Delete</button>
+                        <button type="submit" id="submitQuestBtn" class="new-quest-btn submit-form-btn daily-type-btn">Add Quest</button>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

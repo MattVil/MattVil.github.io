@@ -219,6 +219,9 @@ body {
     transition: all 0.4s ease-in-out;
     order: 0;
     animation: slideIn 0.3s ease-out;
+    
+    /* Rend la quête cliquable pour l'édition */
+    cursor: pointer; 
 }
 
 @keyframes slideIn {
@@ -313,15 +316,15 @@ body {
 }
 
 .new-quest-btn {
-    padding: 10px 20px;
+    padding: 8px 18px; /* Taille réduite */
     border-radius: 50px;
     color: white;
     border: none;
-    font-size: 1rem;
+    font-size: 0.95rem; /* Taille réduite */
     font-weight: 500;
     cursor: pointer;
     /* Transition de couleur pour le bouton de soumission */
-    transition: background-color 0.2s; 
+    transition: background-color 0.2s, opacity 0.2s; 
 }
 
 /* --- CLASSES DE COULEUR POUR LE BOUTON D'AJOUT --- */
@@ -378,7 +381,7 @@ body {
     transition: transform 0.3s ease-out;
 }
 
-/* ESPACEMENT SOUS LE TITRE DU FORMULAIRE (NEW) */
+/* ESPACEMENT SOUS LE TITRE DU FORMULAIRE */
 .task-form-content h2 {
     margin-bottom: 20px; 
 }
@@ -407,7 +410,7 @@ body {
     color: #333;
 }
 
-/* --- Styles NOUVEAUX : Formulaire d'Ajout (Pills) --- */
+/* --- Styles Formulaire d'Ajout (Pills) --- */
 
 .quest-form {
     display: flex;
@@ -424,9 +427,9 @@ body {
     font-size: 0.95rem;
 }
 
-/* Style spécifique pour le Date input (NEW) */
+/* Style spécifique pour le Date input */
 input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.5); /* Assurez-vous que l'icône est visible */
+    filter: invert(0.5); 
 }
 
 .form-input-pill {
@@ -451,7 +454,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .recurrence-options .day-selector {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px; /* RÉDUCTION D'ESPACEMENT: de 8px à 4px */
+    gap: 4px; 
     margin-top: 5px;
 }
 
@@ -474,16 +477,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .day-label-pill {
-    /* RÉDUCTION DE TAILLE ET D'ESPACEMENT */
-    padding: 6px 8px; /* Réduit le padding */
+    /* RÉDUCTION DE TAILLE ET D'ESPACEMENT pour tenir sur une ligne */
+    padding: 6px 8px; 
     border: 1px solid #ddd;
     border-radius: 50px;
-    font-size: 0.8rem; /* Réduit la taille de la police */
+    font-size: 0.8rem; 
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
     color: #555;
     user-select: none;
-    line-height: 1; /* Assure que le texte ne prend qu'une seule hauteur */
+    line-height: 1; 
 }
 
 /* État sélectionné par défaut pour les checkboxes (jours) */
@@ -530,9 +533,75 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     opacity: 0;
 }
 
+/* Style spécifique pour la zone de texte Notes */
+textarea.form-input-pill {
+    resize: vertical; /* L'utilisateur peut agrandir la hauteur */
+    min-height: 60px;
+    border-radius: 20px; /* Coins un peu moins ronds que les inputs ligne */
+    font-family: 'Outfit', sans-serif;
+}
 
 /* =========================================
-   7. RESPONSIVE
+   7. ACTIONS & SCOPE
+   ========================================= */
+
+.form-actions-group {
+    display: flex;
+    align-items: center; /* Alignement vertical */
+    margin-top: 10px;
+    width: 100%; /* S'assurer que le conteneur prend toute la largeur */
+}
+
+/* Checkbox Scope (à gauche) */
+.scope-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #555;
+    cursor: pointer;
+    user-select: none;
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    transition: opacity 0.3s;
+}
+
+.scope-checkbox-wrapper input {
+    cursor: pointer;
+    width: 16px; height: 16px;
+    accent-color: #202124; 
+}
+
+.hidden-scope {
+    display: none !important;
+}
+
+/* Wrapper pour les boutons (à droite) */
+.action-buttons-wrapper {
+    display: flex;
+    gap: 10px;
+    
+    /* Cela pousse le bloc tout à droite, que la checkbox soit présente ou non à gauche */
+    margin-left: auto; 
+}
+
+.delete-btn {
+    background-color: #DB4437; 
+}
+
+.delete-btn:hover {
+    background-color: #c5372d;
+}
+
+.hidden-action-btn {
+    display: none !important;
+}
+
+
+/* =========================================
+   8. RESPONSIVE
    ========================================= */
 @media (max-width: 600px) {
     .hero-title {
@@ -548,5 +617,27 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         /* Pleine largeur sur mobile */
         width: 100%;
         margin: 10px;
+    }
+    
+    .form-actions-group {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch; /* Étire les enfants sur mobile */
+    }
+    
+    .scope-checkbox-wrapper {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 5px;
+    }
+    
+    .action-buttons-wrapper {
+        width: 100%;
+        /* Sur mobile, on annule le margin-left: auto pour garder le layout flex column propre */
+        margin-left: 0; 
+    }
+    
+    .action-buttons-wrapper button {
+        flex: 1; /* Les boutons prennent 50% chacun */
     }
 }
