@@ -350,7 +350,7 @@ body {
 .new-quest-btn {
     padding: 8px 18px; 
     border-radius: 50px;
-    color: white;
+    color: rgb(247, 12, 12);
     border: none;
     font-size: 0.95rem; 
     font-weight: 500;
@@ -632,41 +632,17 @@ textarea.form-input-pill {
 
 
 /* =========================================
-   8. RESPONSIVE (CORRIGÉ POUR LE BOUTON FIXE)
+   8. RESPONSIVE
    ========================================= */
 @media (max-width: 600px) {
 
-    /* Conteneur du bouton sur mobile: Fixe et pleine largeur */
-    .desktop-btn-area {
-        /* On retire la taille max pour qu'il prenne la largeur du téléphone */
-        max-width: none; 
-        
-        /* C'EST ICI LA CLÉ : Le positionnement fixe sur mobile */
-        position: fixed;
-        bottom: 20px; /* Espace depuis le bas */
-        right: 20px;
-        left: 20px;
-        z-index: 100; /* Assure qu'il est au-dessus de la liste */
-        padding: 0; /* On retire le padding qui n'a plus lieu d'être */
-        text-align: center; /* On centre le bouton pour un meilleur look mobile */
-    }
-
-    .new-quest-btn {
-        /* On force le bouton à prendre toute la largeur de son conteneur fixe */
-        width: 100%;
-        padding: 12px 18px; /* On le rend plus grand pour le toucher */
-        font-size: 1.05rem;
-        /* On ajoute une ombre pour le faire "décoller" du fond */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+    .hero-title {
+        font-size: 2.5rem;
     }
 
     .hero-section {
         /* Ajout d'un espace en bas pour que la liste ne soit pas cachée par le bouton fixe */
         padding-bottom: 90px;
-    }
-    
-    .hero-title {
-        font-size: 2.5rem;
     }
     
     .quest-list {
@@ -680,10 +656,35 @@ textarea.form-input-pill {
         margin: 10px;
     }
     
+    /* --- CORRECTION POUR LE BOUTON FIXE EN BAS À DROITE --- */
+    .desktop-btn-area {
+        /* Positionnement Fixe en bas à droite */
+        position: fixed;
+        bottom: 20px; 
+        right: 20px; 
+        left: auto; /* Annule la contrainte de pleine largeur */
+        z-index: 100;
+        padding: 0;
+        
+        /* Assure que le bouton reste sur la droite */
+        width: auto; 
+        max-width: none;
+    }
+
+    .new-quest-btn {
+        /* On retire le width: 100% pour qu'il reprenne sa taille naturelle (pilule) */
+        width: auto; 
+        padding: 12px 18px; /* Taille pour mobile */
+        font-size: 1.05rem;
+        /* Ombre pour le faire flotter au-dessus de la liste */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+    }
+    /* -------------------------------------------------------- */
+    
     .form-actions-group {
         flex-direction: column;
         gap: 15px;
-        align-items: stretch; /* Étire les enfants sur mobile */
+        align-items: stretch; 
     }
     
     .scope-checkbox-wrapper {
@@ -698,6 +699,6 @@ textarea.form-input-pill {
     }
     
     .action-buttons-wrapper button {
-        flex: 1; /* Les boutons prennent 50% chacun */
+        flex: 1; 
     }
 }
