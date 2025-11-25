@@ -341,17 +341,20 @@ body {
     text-align: right; 
     z-index: 10;
     transition: opacity 0.3s, pointer-events 0.3s; 
+    
+    /* Ajout du padding-bottom pour éviter que le bouton flotte 
+       trop près de l'action de scroll quand la liste est courte sur PC */
+    padding-bottom: 50px; 
 }
 
 .new-quest-btn {
-    padding: 8px 18px; /* Taille réduite */
+    padding: 8px 18px; 
     border-radius: 50px;
     color: white;
     border: none;
-    font-size: 0.95rem; /* Taille réduite */
+    font-size: 0.95rem; 
     font-weight: 500;
     cursor: pointer;
-    /* Transition de couleur pour le bouton de soumission */
     transition: background-color 0.2s, opacity 0.2s; 
 }
 
@@ -632,8 +635,37 @@ textarea.form-input-pill {
    8. RESPONSIVE
    ========================================= */
 @media (max-width: 600px) {
+
+    .desktop-btn-area {
+        /* On retire la taille max pour qu'il prenne la largeur du téléphone */
+        max-width: none; 
+        
+        /* C'EST ICI LA CLÉ : Le positionnement fixe sur mobile */
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        z-index: 100; /* Assure qu'il est au-dessus de la liste */
+        padding: 0 0 0 0; /* On retire le padding-top/bottom qui n'a plus lieu d'être */
+        text-align: center; /* On centre le bouton pour un meilleur look mobile */
+    }
+
+    .new-quest-btn {
+        /* On force le bouton à prendre toute la largeur de son conteneur fixe */
+        width: 100%;
+        padding: 12px 18px; /* On le rend plus grand pour le toucher */
+        font-size: 1.05rem;
+        /* On peut ajouter une petite ombre pour le faire "décoller" du fond */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+    }
+
     .hero-title {
         font-size: 2.5rem;
+    }
+
+    .hero-section {
+        /* Ajout d'un espace en bas pour que la liste ne soit pas cachée par le bouton fixe */
+        padding-bottom: 90px;
     }
     
     .quest-list {
