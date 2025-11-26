@@ -528,32 +528,71 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 
 /* =========================================
-   8. RESPONSIVE
+   8. RESPONSIVE (CORRECTIF MOBILE)
    ========================================= */
 @media (max-width: 600px) {
-    .hero-title { font-size: 2.5rem; }
+    
+    /* 1. Ajustements Généraux */
+    .hero-title { font-size: 2.2rem; }
     .hero-section { padding-bottom: 90px; }
     .quest-list { max-width: 100%; padding: 0 5px; }
-    .task-form-content { width: 100%; margin: 10px; }
     
-    /* BOUTON FIXE EN BAS À DROITE */
+    /* 2. Optimisation du Panneau (Gagner de la place sur les bords) */
+    .content-panel {
+        padding: 15px; /* Réduit de 24px à 15px pour laisser plus de place à la grille */
+        width: 100%;
+    }
+
+    /* 3. CALENDRIER COMPACT */
+    .days-grid { 
+        gap: 2px; /* Espace minimal entre les jours */
+    }
+    
+    .weekdays-grid {
+        font-size: 0.7rem; /* Jours de la semaine plus petits */
+        margin-bottom: 8px;
+    }
+
+    .day-cell { 
+        min-height: 0; /* On retire la hauteur minimale forcée */
+        border-radius: 8px; /* Arrondi réduit */
+    }
+    
+    .day-number {
+        font-size: 0.75rem; /* Numéro du jour plus petit */
+        margin-bottom: 4px;
+    }
+
+    .day-orb { 
+        width: 10px; height: 10px; /* Orbe plus petite */
+    }
+    
+    /* Header du calendrier plus compact */
+    .calendar-header {
+        margin-bottom: 15px;
+    }
+    .calendar-header h2 {
+        font-size: 1.2rem;
+    }
+
+    /* 4. Formulaire Mobile (Pleine largeur) */
+    .task-form-content { width: 100%; margin: 10px; padding: 20px; }
+    .form-actions-group { flex-direction: column; gap: 15px; align-items: stretch; }
+    .scope-checkbox-wrapper { width: 100%; justify-content: center; margin-bottom: 5px; }
+    .action-buttons-wrapper { width: 100%; margin-left: 0; }
+    .action-buttons-wrapper button { flex: 1; }
+    
+    /* 5. Bouton Flottant (Reste inchangé) */
     .desktop-btn-area {
         position: fixed;
         bottom: 20px; right: 20px; left: auto;
         z-index: 100; padding: 0;
         width: auto; max-width: none;
     }
-
     .new-quest-btn {
         width: auto; padding: 12px 18px; font-size: 1.05rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
     }
-    
-    /* Formulaire Mobile */
-    .form-actions-group { flex-direction: column; gap: 15px; align-items: stretch; }
-    .scope-checkbox-wrapper { width: 100%; justify-content: center; margin-bottom: 5px; }
-    .action-buttons-wrapper { width: 100%; margin-left: 0; }
-    .action-buttons-wrapper button { flex: 1; }
 }
 
 
