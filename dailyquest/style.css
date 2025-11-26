@@ -113,22 +113,15 @@ body {
     transition: color 0.3s ease;
 }
 
-#period-toggle:hover {
-    opacity: 0.8;
-}
+#period-toggle:hover { opacity: 0.8; }
 
 /* Couleurs */
 .text-daily { color: #4285F4; } /* Bleu */
 .text-yearly { color: #9B72CB; } /* Violet */
 
 /* Animations Flip (Panneau Aéroport) */
-.flip-out {
-    animation: rotateOutDown 0.25s forwards ease-in;
-}
-
-.flip-in {
-    animation: rotateInDown 0.25s forwards ease-out;
-}
+.flip-out { animation: rotateOutDown 0.25s forwards ease-in; }
+.flip-in { animation: rotateInDown 0.25s forwards ease-out; }
 
 @keyframes rotateOutDown {
     from { transform: rotateX(0deg); opacity: 1; }
@@ -141,17 +134,48 @@ body {
 }
 
 /* =========================================
-   4. GESTION DES PANELS (General)
+   4. GESTION DES PANELS (DA Glassmorphism)
    ========================================= */
+
+/* --- Base Commune (Structure) --- */
 .content-panel {
     width: 100%;
     max-width: 600px;
     min-height: 200px; 
-    border-radius: 16px;
+    border-radius: 24px;
     
-    border: 2px dashed #e0e0e0; /* Temporaire pour le Summary */
     display: flex;
+    flex-direction: column;
     align-items: center;
+    padding: 24px; /* Espace interne */
+    
+    transition: all 0.3s ease;
+}
+
+/* --- PANEL 1: DAILY (Transparent / Flottant) --- */
+#tasks-panel {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+    /* On retire tout fond pour que les quêtes flottent au-dessus des particules */
+}
+
+/* --- PANEL 2: YEARLY (Carte Givrée / Glassmorphism) --- */
+#summary-panel {
+    /* Fond blanc laiteux pour la lisibilité de la grille */
+    background: rgba(255, 255, 255, 0.75); 
+    
+    /* Flou d'arrière-plan pour les particules */
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    
+    /* Bordures et Ombres douces */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 4px 24px -1px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
 }
 
 .placeholder-text {
@@ -198,7 +222,6 @@ body {
 .progress-bar-fill {
     height: 100%;
     width: 0%; 
-    /* Gradient Violet -> Bleu */
     background: linear-gradient(90deg, #9B72CB, #4285F4);
     transition: width 0.5s ease-in-out; 
 }
@@ -209,16 +232,10 @@ body {
     text-align: center;
 }
 
-
 /* Conteneur principal du panel Daily */
 #tasks-panel {
-    flex-direction: column;
-    justify-content: flex-start;
     gap: 20px;
     padding-bottom: 50px;
-    border: none;
-    
-    align-items: center; 
 }
 
 /* --- Liste des Quêtes --- */
@@ -226,7 +243,6 @@ body {
     list-style: none;
     width: 100%;
     max-width: 450px;
-    
     display: flex;
     flex-direction: column; 
     gap: 12px;
@@ -234,22 +250,36 @@ body {
 
 /* --- QUÊTES INDIVIDUELLES --- */
 .quest-item { 
+    /* Fond blanc plus opaque (85%) pour la lisibilité */
     background: rgba(255, 255, 255, 0.85);
+    
+    /* Le flou permet de lisser les particules qui passent derrière */
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    
     padding: 16px 24px;
     border-radius: 50px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    border: 1px solid #f1f3f4;
     
-    transition: all 0.4s ease-in-out;
+    /* Ombre légère pour l'effet de flottement */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 4px 24px -1px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+    
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     order: 0;
     animation: slideIn 0.3s ease-out;
-    
-    /* Rend la quête cliquable pour l'édition */
-    cursor: pointer; 
+    cursor: pointer;
+}
+
+.quest-item:hover {
+    background: rgba(255, 255, 255, 0.98);
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-color: #fff;
 }
 
 @keyframes slideIn {
@@ -266,23 +296,6 @@ body {
     margin-right: 15px;
 }
 
-/* --- DIFFÉRENCIATION DES COULEURS PAR TYPE DE QUÊTE (Border-Left) --- */
-.daily-type { /* Daily / Recurring */
-    border-left: 5px solid #4285F4; /* Blue */
-    padding-left: 19px; 
-}
-
-.weekly-type {
-    border-left: 5px solid #9B72CB; /* Violet */
-    padding-left: 19px;
-}
-
-.monthly-type {
-    border-left: 5px solid #FF80AB; /* Rose/Magenta */
-    padding-left: 19px;
-}
-
-
 /* Le bouton rond de validation */
 .check-btn {
     flex-shrink: 0;
@@ -295,9 +308,7 @@ body {
     display: flex; align-items: center; justify-content: center;
 }
 
-.check-btn:hover {
-    border-color: #4285F4;
-}
+.check-btn:hover { border-color: #4285F4; }
 
 /* --- État "Completed" (Check) --- */
 .quest-item.completed {
@@ -324,16 +335,14 @@ body {
     font-weight: bold;
     display: none;
 }
+.quest-item.completed .check-btn::after { display: block; }
 
-.quest-item.completed .check-btn::after {
-    display: block;
-}
 
 /* =========================================
-   6. BOUTON STATIQUE & MODAL CENTRÉ
+   6. BOUTONS & MODAL
    ========================================= */
 
-/* --- Bouton Statique Desktop (Seul Trigger) --- */
+/* --- Bouton Statique Desktop --- */
 .desktop-btn-area {
     width: 100%;
     max-width: 450px; 
@@ -341,50 +350,36 @@ body {
     text-align: right; 
     z-index: 10;
     transition: opacity 0.3s, pointer-events 0.3s; 
-    
-    /* Ajout du padding-bottom pour éviter que le bouton flotte 
-       trop près de l'action de scroll quand la liste est courte sur PC */
-    padding-bottom: 50px; 
 }
 
 .new-quest-btn {
-    padding: 8px 18px; 
+    padding: 10px 20px;
     border-radius: 50px;
     color: white;
     border: none;
-    font-size: 0.95rem; 
+    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s, opacity 0.2s; 
+    transition: background-color 0.2s, transform 0.2s; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+.new-quest-btn:active { transform: scale(0.95); }
 
-/* --- CLASSES DE COULEUR POUR LE BOUTON D'AJOUT --- */
-.daily-type-btn {
-    background-color: #4285F4; /* Blue */
-}
-.weekly-type-btn {
-    background-color: #9B72CB; /* Violet */
-}
-.monthly-type-btn {
-    background-color: #FF80AB; /* Rose/Magenta */
-}
+/* --- CLASSES DE COULEUR --- */
+.daily-type-btn { background-color: #4285F4; }
+.weekly-type-btn { background-color: #9B72CB; }
+.monthly-type-btn { background-color: #FF80AB; }
 
-
-/* --- Formulaire Modale (Centrage simple) --- */
+/* --- Formulaire Modale --- */
 .task-form {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     z-index: 998; 
-    
-    /* Cache le formulaire */
     background: rgba(255, 255, 255, 0); 
     opacity: 0;
     pointer-events: none; 
     transition: opacity 0.3s ease-out;
-    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -393,11 +388,9 @@ body {
 .task-form.open {
     opacity: 1;
     pointer-events: auto; 
-    /* Opacité réduite */
     background: rgba(255, 255, 255, 0.85); 
 }
 
-/* Contenu du formulaire centré */
 .task-form-content {
     position: relative; 
     background: white;
@@ -406,61 +399,35 @@ body {
     padding: 30px;
     width: 90%;
     max-width: 450px;
-    
-    /* Animation d'arrivée */
     transform: translateY(20px);
     transition: transform 0.3s ease-out;
 }
+.task-form.open .task-form-content { transform: translateY(0); }
+.task-form-content h2 { margin-bottom: 20px; }
 
-/* ESPACEMENT SOUS LE TITRE DU FORMULAIRE */
-.task-form-content h2 {
-    margin-bottom: 20px; 
-}
-
-
-.task-form.open .task-form-content {
-    transform: translateY(0);
-}
-
-/* Style du bouton de fermeture dans le formulaire */
 .close-form-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #888;
+    top: 15px; right: 15px;
+    background: none; border: none;
+    font-size: 2rem; color: #888;
     cursor: pointer;
-    z-index: 105; 
-    line-height: 1; 
-    padding: 0;
-    transition: color 0.2s;
+    line-height: 1; padding: 0;
 }
-.close-form-btn:hover {
-    color: #333;
-}
+.close-form-btn:hover { color: #333; }
 
-/* --- Styles Formulaire d'Ajout (Pills) --- */
-
+/* --- INPUTS DU FORMULAIRE --- */
 .quest-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
+    display: flex; flex-direction: column; gap: 20px; width: 100%;
 }
 
 .input-group-form label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: #444;
-    font-size: 0.95rem;
+    display: block; font-weight: 500; margin-bottom: 5px;
+    color: #444; font-size: 0.95rem;
 }
 
-/* Style spécifique pour le Date input */
+/* Input Date Icon Inversion */
 input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.5); 
+    filter: invert(0.5); cursor: pointer;
 }
 
 .form-input-pill {
@@ -472,31 +439,49 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-family: 'Outfit', sans-serif;
     outline: none;
     transition: border-color 0.2s;
+    background: #fafafa;
 }
 
 .form-input-pill:focus {
     border-color: #4285F4;
     box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+    background: #fff;
 }
 
-/* --- Sélecteurs Pill (Type de Quête et Jours) --- */
+/* Actions Group (Delete + Submit) */
+.form-actions-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
 
+.action-buttons-wrapper {
+    display: flex; gap: 10px; margin-left: auto;
+}
+
+.delete-btn {
+    background-color: #EA4335; /* Rouge */
+}
+.hidden-action-btn { display: none; }
+
+/* Scope (Apply to all) */
+.scope-checkbox-wrapper {
+    display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555;
+}
+.hidden-scope { display: none; }
+
+
+/* --- SÉLECTEURS PILL (Type & Jours) --- */
 .quest-type-selector .type-options,
 .recurrence-options .day-selector {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px; 
-    margin-top: 5px;
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px;
 }
 
-/* Masquer les inputs radio/checkbox natifs */
 .quest-type-selector input[type="radio"],
-.recurrence-options input[type="checkbox"] {
-    display: none;
-}
+.recurrence-options input[type="checkbox"] { display: none; }
 
-/* Style des labels comme des boutons pill */
-.type-label-pill {
+.type-label-pill, .day-label-pill {
     padding: 8px 15px;
     border: 1px solid #ddd;
     border-radius: 50px;
@@ -508,197 +493,237 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .day-label-pill {
-    /* RÉDUCTION DE TAILLE ET D'ESPACEMENT pour tenir sur une ligne */
-    padding: 6px 8px; 
-    border: 1px solid #ddd;
-    border-radius: 50px;
-    font-size: 0.8rem; 
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-    color: #555;
-    user-select: none;
-    line-height: 1; 
+    padding: 6px 8px; font-size: 0.8rem; line-height: 1;
 }
 
-/* État sélectionné par défaut pour les checkboxes (jours) */
 .recurrence-options input[type="checkbox"]:checked + label {
-    background-color: #4285F4;
-    border-color: #4285F4;
-    color: white;
+    background-color: #4285F4; border-color: #4285F4; color: white;
 }
 
-/* --- COULEURS SPÉCIFIQUES POUR LA FRÉQUENCE (Radio Buttons) --- */
-
-/* Daily / Periodic (Blue) */
+/* Couleurs Radio Buttons */
 .quest-type-selector #typeDaily:checked + label,
 .quest-type-selector #typeRecurring:checked + label {
-    background-color: #4285F4; 
-    border-color: #4285F4;
-    color: white;
+    background-color: #4285F4; border-color: #4285F4; color: white;
 }
-
-/* Weekly (Violet) */
 .quest-type-selector #typeWeekly:checked + label {
-    background-color: #9B72CB;
-    border-color: #9B72CB;
-    color: white;
+    background-color: #9B72CB; border-color: #9B72CB; color: white;
 }
-
-/* Monthly (Rose/Magenta) */
 .quest-type-selector #typeMonthly:checked + label {
-    background-color: #FF80AB;
-    border-color: #FF80AB;
-    color: white;
+    background-color: #FF80AB; border-color: #FF80AB; color: white;
 }
 
-
-/* Options de Récurrence (Masqué par défaut) */
 .recurrence-options {
-    overflow: hidden;
-    max-height: 100px;
+    overflow: hidden; max-height: 100px;
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 }
+.recurrence-options.hidden-recurrence { max-height: 0; opacity: 0; }
 
-.recurrence-options.hidden-recurrence {
-    max-height: 0;
-    opacity: 0;
-}
-
-/* Style spécifique pour la zone de texte Notes */
-textarea.form-input-pill {
-    resize: vertical; /* L'utilisateur peut agrandir la hauteur */
-    min-height: 60px;
-    border-radius: 20px; /* Coins un peu moins ronds que les inputs ligne */
-    font-family: 'Outfit', sans-serif;
-}
 
 /* =========================================
-   7. ACTIONS & SCOPE
+   7. BORDER COLORS PAR TYPE
    ========================================= */
-
-.form-actions-group {
-    display: flex;
-    align-items: center; /* Alignement vertical */
-    margin-top: 10px;
-    width: 100%; /* S'assurer que le conteneur prend toute la largeur */
-}
-
-/* Checkbox Scope (à gauche) */
-.scope-checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    color: #555;
-    cursor: pointer;
-    user-select: none;
-    background: #f8f9fa;
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: 1px solid #eee;
-    transition: opacity 0.3s;
-}
-
-.scope-checkbox-wrapper input {
-    cursor: pointer;
-    width: 16px; height: 16px;
-    accent-color: #202124; 
-}
-
-.hidden-scope {
-    display: none !important;
-}
-
-/* Wrapper pour les boutons (à droite) */
-.action-buttons-wrapper {
-    display: flex;
-    gap: 10px;
-    
-    /* Cela pousse le bloc tout à droite, que la checkbox soit présente ou non à gauche */
-    margin-left: auto; 
-}
-
-.delete-btn {
-    background-color: #DB4437; 
-}
-
-.delete-btn:hover {
-    background-color: #c5372d;
-}
-
-.hidden-action-btn {
-    display: none !important;
-}
+.daily-type { border-left: 5px solid #4285F4; padding-left: 19px; }
+.weekly-type { border-left: 5px solid #9B72CB; padding-left: 19px; }
+.monthly-type { border-left: 5px solid #FF80AB; padding-left: 19px; }
 
 
 /* =========================================
    8. RESPONSIVE
    ========================================= */
 @media (max-width: 600px) {
-
-    .hero-title {
-        font-size: 2.5rem;
-    }
-
-    .hero-section {
-        /* Ajout d'un espace en bas pour que la liste ne soit pas cachée par le bouton fixe */
-        padding-bottom: 90px;
-    }
+    .hero-title { font-size: 2.5rem; }
+    .hero-section { padding-bottom: 90px; }
+    .quest-list { max-width: 100%; padding: 0 5px; }
+    .task-form-content { width: 100%; margin: 10px; }
     
-    .quest-list {
-        max-width: 100%; 
-        padding: 0 5px; 
-    }
-
-    .task-form-content {
-        /* Pleine largeur sur mobile */
-        width: 100%;
-        margin: 10px;
-    }
-    
-    /* --- CORRECTION POUR LE BOUTON FIXE EN BAS À DROITE --- */
+    /* BOUTON FIXE EN BAS À DROITE */
     .desktop-btn-area {
-        /* Positionnement Fixe en bas à droite */
         position: fixed;
-        bottom: 20px; 
-        right: 20px; 
-        left: auto; /* Annule la contrainte de pleine largeur */
-        z-index: 100;
-        padding: 0;
-        
-        /* Assure que le bouton reste sur la droite */
-        width: auto; 
-        max-width: none;
+        bottom: 20px; right: 20px; left: auto;
+        z-index: 100; padding: 0;
+        width: auto; max-width: none;
     }
 
     .new-quest-btn {
-        /* On retire le width: 100% pour qu'il reprenne sa taille naturelle (pilule) */
-        width: auto; 
-        padding: 12px 18px; /* Taille pour mobile */
-        font-size: 1.05rem;
-        /* Ombre pour le faire flotter au-dessus de la liste */
+        width: auto; padding: 12px 18px; font-size: 1.05rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
     }
-    /* -------------------------------------------------------- */
     
-    .form-actions-group {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch; 
-    }
-    
-    .scope-checkbox-wrapper {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: 5px;
-    }
-    
-    .action-buttons-wrapper {
-        width: 100%;
-        margin-left: 0; 
-    }
-    
-    .action-buttons-wrapper button {
-        flex: 1; 
-    }
+    /* Formulaire Mobile */
+    .form-actions-group { flex-direction: column; gap: 15px; align-items: stretch; }
+    .scope-checkbox-wrapper { width: 100%; justify-content: center; margin-bottom: 5px; }
+    .action-buttons-wrapper { width: 100%; margin-left: 0; }
+    .action-buttons-wrapper button { flex: 1; }
+}
+
+
+/* =========================================
+   9. MODULE YEARLY (CALENDAR UI)
+   ========================================= */
+
+.calendar-wrapper {
+    width: 100%;
+    /* Pas de height fixe, le contenu pousse */
+    display: flex; flex-direction: column;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Header: Mois & Flèches */
+.calendar-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 25px; padding: 0 10px;
+}
+
+.calendar-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem; font-weight: 600;
+    color: #202124; margin: 0;
+    letter-spacing: -0.01em;
+}
+
+/* Boutons de navigation */
+.nav-arrow-btn {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    font-size: 1.1rem; color: #5f6368;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.nav-arrow-btn:hover {
+    background: #fff;
+    color: #4285F4;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 133, 244, 0.15);
+    border-color: rgba(66, 133, 244, 0.2);
+}
+.nav-arrow-btn:active { transform: translateY(0); box-shadow: none; }
+
+/* Jours de la semaine */
+.weekdays-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    text-align: center; margin-bottom: 12px;
+    font-weight: 600; color: #9aa0a6;
+    font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Grille principale */
+.days-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 8px; flex-grow: 1; 
+}
+
+/* Cellule individuelle */
+.day-cell {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    aspect-ratio: 1 / 1; 
+    border-radius: 12px;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.day-cell.empty { pointer-events: none; }
+
+.day-number {
+    font-size: 0.85rem; color: #5f6368;
+    margin-bottom: 6px; font-weight: 500;
+}
+
+/* L'Orbe (Point de couleur) */
+.day-orb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.day-cell:hover .day-orb { transform: scale(1.4); }
+
+/* --- COULEURS DES ORBES --- */
+
+/* Futur / Neutre */
+.day-orb.future {
+    background-color: rgba(0, 0, 0, 0.04);
+    border: none;
+}
+
+/* Pas de quête ce jour là (Vide) */
+.day-orb.no-quest {
+    background-color: transparent;
+    border: 2px solid #e0e0e0;
+    width: 14px; height: 14px; 
+}
+
+/* Raté (< 50%) - Rouge */
+.day-orb.bad {
+    background: #EA4335;
+    box-shadow: 0 2px 5px rgba(234, 67, 53, 0.3);
+}
+
+/* Moyen (50% - 99%) - Jaune */
+.day-orb.good {
+    background: #FBBC05;
+    box-shadow: 0 2px 5px rgba(251, 188, 5, 0.3);
+}
+
+/* Parfait (100%) - Vert Brillant */
+.day-orb.perfect {
+    background: #34A853;
+    box-shadow: 0 0 10px rgba(52, 168, 83, 0.4);
+    position: relative;
+}
+
+/* Petit effet glow pour le "Parfait" */
+.day-orb.perfect::after {
+    content: '';
+    position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 50%;
+    border: 1px solid rgba(52, 168, 83, 0.3);
+    animation: pulseOrb 2s infinite;
+}
+
+/* Aujourd'hui (Animation Pulse) */
+.day-orb.today-pulse { animation: pulseToday 2s infinite ease-in-out; }
+
+@keyframes pulseOrb {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes pulseToday {
+    0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(66, 133, 244, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+}
+
+/* Légende en bas */
+.calendar-legend {
+    margin-top: 25px;
+    display: flex; justify-content: center; gap: 20px;
+    font-size: 0.8rem; color: #666;
+}
+
+.legend-item { display: flex; align-items: center; gap: 6px; }
+
+.legend-item .dot {
+    width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+}
+
+.dot.legend-perfect { background: #34A853; box-shadow: 0 0 5px rgba(52, 168, 83, 0.4); }
+.dot.legend-good { background: #FBBC05; }
+.dot.legend-bad { background: #EA4335; }
+
+
+/* Responsive Calendar */
+@media (max-width: 600px) {
+    .days-grid { gap: 4px; }
+    .day-cell { min-height: 50px; }
+    .day-orb { width: 12px; height: 12px; }
 }
