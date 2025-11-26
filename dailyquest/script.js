@@ -3,7 +3,7 @@
 // ==========================================
 
 // TA CHAÎNE CRYPTÉE (fournie par l'utilisateur)
-const ENCRYPTED_CONFIG = "U2FsdGVkX1+9qOeXFwGxREnpDIPRZk9BoY9Dc/YR66FSQQPD9GevJaO/2fFE2loSPZWaPVK/FxiAR7ufW2Wm7Tmh9FZMwHaVZrsbz3Pl3CaUDfeP8yIoEtLLSkj7GNuc3Wi43ex3IVmFrDv9yI6smU3dYtL4et0GkXbvSMxS1EZg8hoybnVluealPUtn36TdKz+V5TW+JvrlrcgmeMmjELEuOBnWUJGaXqbjX6Gh1jRgwvN539OcmfPf+DKnmB7INeIS7I2wvqdykdoV8Bsq9aPqnGu8MDt7mxAaU9pBw3kSe4OOSl7jNu7CAFo0cKU8I2IcVRr/ndm9BS7OIxz+WKK2EeP8dgmbhJUQ4hAk3nNPZ5h0jGz/dG7Qyaz0BwAfQX1RhMkX6xcxYJS0jryTc/wK60+equijuILZ4idaTWAaMOMGI1ECMvex+l6pDedh";
+const ENCRYPTED_CONFIG = "U2FsdGVkX18mZec/cFVYe9asXI38d8kogEDARqxksKvt1xv7SM3K2yPa9OBFjZt0C9R4gd6ElKWawX3lTpFt0d8B3nLMgtibEW/VMawI1vb9EymX/9KqFn+jRCncgVT836j55eif4ItsGHEHMwjoU9WqcIC5jNusMXnt6uNcEF249C+A+KZ9RTPnFrfGmPHOhm7PMUCcZoOcxsiY1fynp+cOdRfInurnC+YAIACwPTqPhJdeHPFHiJyF6H0IP/JURMzwdJagCqYJvgQVa19rBGfcGjLEEOWaj7wN0DxY5wPsHsL96LXxn5LEXIPFFCDHOCDmdLBA3DP2dvDQZ5WMbGqwN42SNUqeZwVpPBKMFl+idGDK8b+1R8uTLgfDx3mQKjo5IcFmNZypUO9K/yfkI624YRJbI/AV7GCisx++8d6fJQXq/XvspjYTtBIdWJu+";
 
 // Variables globales qui seront définies après le décryptage
 let db;
