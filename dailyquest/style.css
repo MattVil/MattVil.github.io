@@ -1,3 +1,13 @@
+:root {
+    --bg-glass: rgba(255, 255, 255, 0.1);
+    --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+    /* UNIFIED PASTEL SUCCESS COLORS */
+    --color-bad: #F28B82;
+    --color-good: #FDD663;
+    --color-perfect: #66BB6A;
+}
+
 /* =========================================
    0. LOGIN
    ========================================= */
@@ -98,10 +108,12 @@ body {
    3. TITRE & ANIMATION 3D (Flip)
    ========================================= */
 .hero-title {
-    font-size: 3rem;
+    font-size: 5rem;
+    /* Significantly larger */
     line-height: 1.1;
     letter-spacing: -0.02em;
-    font-weight: 600;
+    font-weight: 800;
+    /* Extra Bold */
     margin-bottom: 60px;
     /* Espace avant les panels */
     user-select: none;
@@ -115,7 +127,17 @@ body {
     width: 100%;
 
     /* 3D : Profondeur pour la rotation */
+    /* 3D : Profondeur pour la rotation */
     perspective: 500px;
+
+    /* Manual Alignment Offset */
+    transform: translateX(-20px);
+
+    /* Stronger Shadow for Legibility */
+    text-shadow:
+        0 4px 15px rgba(255, 255, 255, 0.9),
+        0 8px 30px rgba(255, 255, 255, 0.6),
+        0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Le texte statique ("Quests") */
@@ -124,6 +146,12 @@ body {
     justify-self: start;
     /* Collé à GAUCHE de sa colonne */
     white-space: nowrap;
+}
+
+.highlight-month {
+    color: #9B72CB;
+    /* Default Purple */
+    font-weight: 800;
 }
 
 /* Le texte dynamique ("Daily" / "Yearly") */
@@ -262,20 +290,26 @@ body {
     gap: 10px;
     margin-bottom: 20px;
     padding-top: 10px;
+    margin-right: 15px;
+    /* Slight offset from right edge */
 }
 
 .progress-bar-bg {
     flex-grow: 1;
-    height: 10px;
-    background-color: #f1f3f4;
-    border-radius: 5px;
+    height: 16px;
+    /* Thicker */
+    background-color: rgba(241, 243, 244, 0.8);
+    /* Slightly transparent track */
+    border-radius: 50px;
     overflow: hidden;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* Inset shadow for the track/groove */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .progress-bar-fill {
     height: 100%;
     width: 0%;
+    /* Violet to Blue Gradient (Reverted) */
     background: linear-gradient(90deg, #9B72CB, #4285F4);
     transition: width 0.5s ease-in-out;
 }
@@ -310,9 +344,10 @@ body {
 
     /* Ombres et Bordures cohérentes avec le Calendrier */
     border: 1px solid rgba(255, 255, 255, 0.8);
+    /* Stronger Shadow for Pop */
     box-shadow:
-        0 4px 24px -1px rgba(0, 0, 0, 0.05),
-        0 0 0 1px rgba(0, 0, 0, 0.02);
+        0 4px 15px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.05);
 
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     order: 0;
@@ -818,17 +853,17 @@ textarea.form-input-pill {
    7. BORDER COLORS
    ========================================= */
 .daily-type {
-    border-left: 5px solid #4285F4;
+    border-left: 5px solid #4285F4 !important;
     padding-left: 19px;
 }
 
 .weekly-type {
-    border-left: 5px solid #9B72CB;
+    border-left: 5px solid #9B72CB !important;
     padding-left: 19px;
 }
 
 .monthly-type {
-    border-left: 5px solid #FF80AB;
+    border-left: 5px solid #FF80AB !important;
     padding-left: 19px;
 }
 
@@ -1020,20 +1055,20 @@ textarea.form-input-pill {
 
 /* Bad (< 50%) - Soft Red */
 .day-orb.bad {
-    background: radial-gradient(circle, rgba(234, 67, 53, 0.8) 0%, rgba(234, 67, 53, 0) 70%);
+    background: radial-gradient(circle, var(--color-bad) 0%, transparent 70%);
     box-shadow: none;
 }
 
 /* Good (>= 50%) - Soft Yellow */
 .day-orb.good {
-    background: radial-gradient(circle, rgba(251, 188, 5, 0.8) 0%, rgba(251, 188, 5, 0) 70%);
+    background: radial-gradient(circle, var(--color-good) 0%, transparent 70%);
     box-shadow: none;
 }
 
 /* Perfect (100%) - Soft Green/Blue Cyan mix for glass feel */
 .day-orb.perfect {
-    background: radial-gradient(circle, rgba(52, 168, 83, 0.8) 0%, rgba(52, 168, 83, 0) 70%);
-    box-shadow: 0 0 15px rgba(52, 168, 83, 0.2);
+    background: radial-gradient(circle, var(--color-perfect) 0%, transparent 70%);
+    box-shadow: 0 0 15px rgba(129, 201, 149, 0.2);
 }
 
 /* Pulse Animation for "Perfect" - Subtle Breathing */
@@ -1092,16 +1127,19 @@ textarea.form-input-pill {
     width: 40px;
     /* Smallest requested size */
     height: 40px;
-    border: 2px solid #9B72CB;
+    border: 2px solid var(--today-borderColor, #9B72CB);
+    /* Dynamic Color with Fallback */
     /* Thinner */
-    box-shadow: 0 0 8px rgba(155, 114, 203, 0.4);
+    box-shadow: 0 0 10px var(--today-borderColor, rgba(155, 114, 203, 0.4));
     background: transparent;
     border-radius: 40% 60% 70% 30% / 50% 60% 30% 60%;
     z-index: 100;
     pointer-events: none;
     animation: purpleOrbitReverse 12s linear infinite;
-    /* Slower, Reversed */
 }
+
+/* Slower, Reversed */
+
 
 /* Ensure text stays on top */
 /* Ensure text stays on top - FORCE GREY */
@@ -1189,39 +1227,38 @@ textarea.form-input-pill {
     color: #666;
 }
 
-/* Glassmorphism Legend Bar */
 .calendar-legend-gradient {
-    margin-top: 30px;
+    margin-top: 25px;
     width: 100%;
-    max-width: 320px;
-    /* Slightly wider */
+    max-width: 280px;
+    /* Largeur de la barre */
     align-self: center;
     display: flex;
     flex-direction: column;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
+    /* Increase gap for the larger/blurred bar */
 }
 
 .gradient-bar {
-    height: 12px;
-    /* Thicker pill */
+    height: 16px;
+    /* Even Thicker */
     width: 100%;
     border-radius: 50px;
-    /* Soft Blob Gradient (Red -> Yellow -> Green) */
-    background: linear-gradient(90deg, rgba(234, 67, 53, 0.7) 0%, rgba(251, 188, 5, 0.7) 50%, rgba(52, 168, 83, 0.7) 100%);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    /* Inner shadow for depth */
-    position: relative;
+    /* Soft Pastel Gradient */
+    background: linear-gradient(90deg, #F28B82 0%, #FDD663 50%, #81C995 100%);
+    /* Sunk / Inset Effect - Less Pronounced */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+    opacity: 1;
 }
-
-/* Optional: Add frosted overlay for texture if needed, but clean gradient works best with blobs */
 
 .emoji-labels {
     display: flex;
     justify-content: space-between;
-    padding: 0 5px;
-    font-size: 1.2rem;
+    padding: 0 2px;
+    font-size: 1.1rem;
     line-height: 1;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .legend-item {
@@ -1254,6 +1291,51 @@ textarea.form-input-pill {
    8. RESPONSIVE (CORRECTIF MOBILE)
    ========================================= */
 @media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        /* Resize for mobile */
+        margin-bottom: 40px;
+        grid-template-columns: 1fr;
+        /* Stack title elements */
+        gap: 5px;
+        text-align: center;
+        justify-items: center;
+        transform: none;
+        /* Reset visual offset */
+    }
+
+    .static-text {
+        justify-self: center;
+    }
+
+    #period-toggle {
+        justify-self: center;
+    }
+
+    .content-panel {
+        padding: 15px;
+    }
+
+    /* Fix Blob Visibility on Mobile */
+    .day-orb {
+        opacity: 0.8 !important;
+        /* Force higher opacity */
+        filter: blur(2px) !important;
+        /* Reduce blur for clarity on small screens */
+        width: 40px;
+        /* Adjust size to fit smaller cells */
+        height: 40px;
+    }
+
+    .day-cell.today::before {
+        width: 35px;
+        height: 35px;
+        border-width: 2px;
+    }
 
     /* 1. Ajustements Généraux */
     .hero-title {
@@ -1298,10 +1380,7 @@ textarea.form-input-pill {
         margin-bottom: 2px;
     }
 
-    .day-orb {
-        width: 10px;
-        height: 10px;
-    }
+
 
     .calendar-legend-gradient {
         margin-top: 20px;

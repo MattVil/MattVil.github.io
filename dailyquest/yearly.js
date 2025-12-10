@@ -80,7 +80,12 @@ const YearlyLogic = {
         const grid = document.getElementById('daysGrid');
         const label = document.getElementById('currentMonthLabel');
         const options = { month: 'long', year: 'numeric' };
-        label.innerText = this.currentDate.toLocaleDateString('en-US', options);
+        // label.innerText = this.currentDate.toLocaleDateString('en-US', options);
+
+        // Wrap Month in span for styling
+        const monthName = this.currentDate.toLocaleDateString('en-US', { month: 'long' });
+        const yearNum = this.currentDate.getFullYear();
+        label.innerHTML = `<span class="highlight-month">${monthName}</span> ${yearNum}`;
         grid.innerHTML = '<div class="loading-spinner">✨ Reading Logs...</div>';
 
         const year = this.currentDate.getFullYear();
@@ -94,7 +99,7 @@ const YearlyLogic = {
             const snapshot = await this.db.collection('daily_logs')
                 .where('date', '>=', startStr)
                 .where('date', '<', nextMonthStr)
-                .get();
+                .get({ source: 'server' });
 
             const logsByDate = {};
             snapshot.forEach(doc => { logsByDate[doc.id] = doc.data(); });
@@ -154,7 +159,19 @@ const YearlyLogic = {
 
             const dayCell = document.createElement('div');
             dayCell.className = 'day-cell';
-            if (isToday) dayCell.classList.add('today');
+            if (isToday) {
+                dayCell.classList.add('today');
+                if (log && log.stats && log.stats.total > 0) {
+                    const stats = log.stats;
+                    const ratio = stats.ratio !== undefined ? stats.ratio : (stats.score / 100);
+                    // Use the EXACT same color function as the blob
+                    const borderColor = this.getColorForRatio(ratio);
+                    dayCell.style.setProperty('--today-borderColor', borderColor);
+                } else {
+                    // Default Purple
+                    dayCell.style.setProperty('--today-borderColor', '#9B72CB');
+                }
+            }
             dayCell.style.cursor = "pointer";
 
             // Interaction : Clic pour aller à la vue Daily

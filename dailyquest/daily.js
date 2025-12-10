@@ -418,8 +418,9 @@ const DailyLogic = {
             const checkBtn = li.querySelector('.check-btn');
             checkBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                // Toggle classique (0 ou 1)
-                const newCount = isDone ? 0 : 1;
+                // Check CURRENT state from DOM, do not rely on 'isDone' closure variable
+                const isCurrentlyDone = li.classList.contains('completed');
+                const newCount = isCurrentlyDone ? 0 : 1;
                 this.updateQuestProgress(id, newCount);
             });
         }
@@ -640,7 +641,8 @@ const DailyLogic = {
         else if (selectedType === 'MONTHLY') colorClass = 'monthly-type-btn';
 
         el.submitQuestBtn.className = `new-quest-btn submit-form-btn ${colorClass}`;
-        el.desktopToggleFormBtn.className = `new-quest-btn ${colorClass}`;
+        // User requested New Quest button to stay blue (always default)
+        // el.desktopToggleFormBtn.className = `new-quest-btn ${colorClass}`;
     },
 
     handleEditClick: async function (templateId) {

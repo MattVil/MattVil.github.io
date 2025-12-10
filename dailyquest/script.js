@@ -28,8 +28,16 @@ window.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
 window.addEventListener('resize', () => { resize(); initParticles(); });
 
 function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+    // Set actual size in memory (scaled to account for extra pixel density)
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+
+    // Normalize coordinate system to use css pixels
+    ctx.scale(dpr, dpr);
+
+    width = window.innerWidth;
+    height = window.innerHeight;
     globeRadius = Math.min(width, height) * 0.45;
 }
 resize();
@@ -39,7 +47,7 @@ class Particle3D {
         this.theta = Math.random() * 2 * Math.PI;
         this.phi = Math.acos((Math.random() * 2) - 1);
         this.x = 0; this.y = 0; this.z = 0;
-        this.size = Math.random() * 1.5 + 1;
+        this.size = Math.random() * 3.5 + 1;
         const position = Math.random();
         const r = Math.floor(66 + (155 - 66) * position);
         const g = Math.floor(133 + (114 - 133) * position);
@@ -77,8 +85,26 @@ class Particle3D {
             }
         }
         const finalScreenX = x2D + width / 2; const finalScreenY = y2D + height / 2;
-        const alpha = Math.max(0.1, 1 - (this.z + globeRadius) / (2.5 * globeRadius));
-        ctx.fillStyle = this.color; ctx.globalAlpha = alpha;
+
+        // --- TITLE VISIBILITY LOGIC ---
+        // Title is approx at top center (x=0, y = -height/2 + ~150px) relative to center
+        // In screen coords: x = width/2, y = ~150
+        const titleX = width / 2;
+        const titleY = height * 0.15; // Approx 15% from top
+        const dxT = finalScreenX - titleX;
+        const dyT = finalScreenY - titleY;
+        const distTitle = Math.sqrt(dxT * dxT + dyT * dyT);
+
+        // Opacity Mask: If close to title, reduce opacity significantly
+        const titleSafeRadius = 250;
+        let alpha = Math.max(0.1, 1 - (this.z + globeRadius) / (2.5 * globeRadius));
+
+        if (distTitle < titleSafeRadius) {
+            const fadeFactor = distTitle / titleSafeRadius; // 0 (center) to 1 (edge)
+            alpha *= Math.pow(fadeFactor, 2); // Square for smoother drop
+        }
+
+        ctx.fillStyle = this.color; ctx.globalAlpha = Math.max(0.05, alpha); // Keep tiny bit visible
         ctx.beginPath(); ctx.arc(finalScreenX, finalScreenY, currentSize, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1.0;
     }
 }
