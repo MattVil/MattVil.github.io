@@ -1299,10 +1299,17 @@ textarea.form-input-pill {
         font-size: 2.5rem;
         /* Resize for mobile - Single Line */
         margin-bottom: 40px;
-        grid-template-columns: 1fr 1fr;
-        /* Force Side-by-Side */
-        gap: 5px;
+        /* Resize for mobile - Single Line */
+        margin-bottom: 40px;
+
+        /* FLEXBOX for tight centering */
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        /* Small consistent gap */
+
         align-items: center;
+        transform: none;
         transform: none;
         /* Reset visual offset */
     }
