@@ -25,7 +25,15 @@ const interactionRadius = 80; const pushStrength = 0.8;
 
 window.addEventListener('mousemove', (e) => { mouseX = e.clientX - width / 2; mouseY = e.clientY - height / 2; });
 window.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
-window.addEventListener('resize', () => { resize(); initParticles(); });
+// Mobile Scroll Fix: Only resize if WIDTH changes (ignore URL bar toggle)
+let lastWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+    if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        resize();
+        initParticles();
+    }
+});
 
 function resize() {
     const dpr = window.devicePixelRatio || 1;

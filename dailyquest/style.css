@@ -507,7 +507,7 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .new-quest-btn:active {
@@ -1296,14 +1296,13 @@ textarea.form-input-pill {
     }
 
     .hero-title {
-        font-size: 3.5rem;
-        /* Resize for mobile */
+        font-size: 2.5rem;
+        /* Resize for mobile - Single Line */
         margin-bottom: 40px;
-        grid-template-columns: 1fr;
-        /* Stack title elements */
+        grid-template-columns: 1fr 1fr;
+        /* Force Side-by-Side */
         gap: 5px;
-        text-align: center;
-        justify-items: center;
+        align-items: center;
         transform: none;
         /* Reset visual offset */
     }
@@ -1338,9 +1337,7 @@ textarea.form-input-pill {
     }
 
     /* 1. Ajustements Généraux */
-    .hero-title {
-        font-size: 2.2rem;
-    }
+    /* Duplicate rule removed/merged above */
 
     .hero-section {
         padding-bottom: 90px;
