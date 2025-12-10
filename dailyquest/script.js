@@ -3,8 +3,7 @@
 // Orchestration, Auth, Navigation, Particules
 // ==========================================
 
-// CONFIGURATION CRYPTÉE
-const ENCRYPTED_CONFIG = "U2FsdGVkX19OOtq6V9fRLJlziRY6kE1FYL35pi4u1EeQ5QvhBvbrEkauTxn0m1hwGSCTNH4ofifG3J9oHAguWyZpRQqBv4nJwnYV8bYPEGqVR0zS7SJQ4gw9ii0JStgkZ702RN6xd/IYlvTmldU9TTT6Vlt39zvZvHW2Q0+6oDHahc1BETvO0dy61N8qNJ6Et37Do5gKJ597d9zx3RuKo8ysE0Q7C/8t7ftY9h2bQpqzWUzJy7UY2NOk6PPXZKQbPAKqasZG6vTqsZcVCTtjZ8rVbMYOUKuhuI2Tzyn67LQpYZiBQF/MXqAGliT2lG7ph2pmWf2dRdFsergfx1nZRTWXhURi1E+NRANFTja9SWj5oxhH5aT4dz9B+PRHjtVQoCi9ZazjBvd7w3vYhtuFgq9oyGq0rXnKUqOjm5GJWr9DjdVNXi0XMiPrd5pQdgbA";
+const ENCRYPTED_CONFIG = "U2FsdGVkX18mZec/cFVYe9asXI38d8kogEDARqxksKvt1xv7SM3K2yPa9OBFjZt0C9R4gd6ElKWawX3lTpFt0d8B3nLMgtibEW/VMawI1vb9EymX/9KqFn+jRCncgVT836j55eif4ItsGHEHMwjoU9WqcIC5jNusMXnt6uNcEF249C+A+KZ9RTPnFrfGmPHOhm7PMUCcZoOcxsiY1fynp+cOdRfInurnC+YAIACwPTqPhJdeHPFHiJyF6H0IP/JURMzwdJagCqYJvgQVa19rBGfcGjLEEOWaj7wN0DxY5wPsHsL96LXxn5LEXIPFFCDHOCDmdLBA3DP2dvDQZ5WMbGqwN42SNUqeZwVpPBKMFl+idGDK8b+1R8uTLgfDx3mQKjo5IcFmNZypUO9K/yfkI624YRJbI/AV7GCisx++8d6fJQXq/XvspjYTtBIdWJu+";
 
 let db;
 
@@ -14,18 +13,16 @@ const passwordInput = document.getElementById('passwordInput');
 const loginBtn = document.getElementById('loginBtn');
 const loginError = document.getElementById('loginError');
 
-
 // ==========================================
-// 1. PARTICULES 3D (Défini en premier pour éviter les erreurs)
+// 1. PARTICULES 3D
 // ==========================================
 const canvas = document.getElementById('particle-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-let width, height, globeRadius; 
+let width, height, globeRadius;
 let mouseX = null, mouseY = null;
-const interactionRadius = 80; const pushStrength = 0.8; 
+const interactionRadius = 80; const pushStrength = 0.8;
 
-// Listeners Particules
 window.addEventListener('mousemove', (e) => { mouseX = e.clientX - width / 2; mouseY = e.clientY - height / 2; });
 window.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
 window.addEventListener('resize', () => { resize(); initParticles(); });
@@ -33,9 +30,8 @@ window.addEventListener('resize', () => { resize(); initParticles(); });
 function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    globeRadius = Math.min(width, height) * 0.45; 
+    globeRadius = Math.min(width, height) * 0.45;
 }
-// Init canvas size immediately
 resize();
 
 class Particle3D {
@@ -44,7 +40,7 @@ class Particle3D {
         this.phi = Math.acos((Math.random() * 2) - 1);
         this.x = 0; this.y = 0; this.z = 0;
         this.size = Math.random() * 1.5 + 1;
-        const position = Math.random(); 
+        const position = Math.random();
         const r = Math.floor(66 + (155 - 66) * position);
         const g = Math.floor(133 + (114 - 133) * position);
         const b = Math.floor(244 + (203 - 244) * position);
@@ -65,13 +61,13 @@ class Particle3D {
         this.x = x1; this.y = y2; this.z = z2;
     }
     draw() {
-        const perspective = width; 
+        const perspective = width;
         const scale = perspective / (perspective + this.z + globeRadius);
         let x2D = this.x * scale; let y2D = this.y * scale; let currentSize = this.size * scale;
 
         if (mouseX !== null && mouseY !== null) {
             const dx = x2D - mouseX; const dy = y2D - mouseY;
-            const distSq = dx*dx + dy*dy;
+            const distSq = dx * dx + dy * dy;
             if (distSq < interactionRadius * interactionRadius) {
                 const distance = Math.sqrt(distSq);
                 const force = (interactionRadius - distance) / interactionRadius;
@@ -100,7 +96,6 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-
 // ==========================================
 // 2. INITIALISATION DE L'APP
 // ==========================================
@@ -112,17 +107,11 @@ function initApp(decryptedConfig) {
         db = firebase.firestore();
         console.log("Firebase Connected.");
 
-        // INJECTION DE DÉPENDANCE : On passe la DB aux modules
-        if (typeof DailyLogic !== 'undefined') {
-            DailyLogic.init(db);
-        }
-        if (typeof YearlyLogic !== 'undefined') {
-            YearlyLogic.init(db);
-        }
+        if (typeof DailyLogic !== 'undefined') DailyLogic.init(db);
+        if (typeof YearlyLogic !== 'undefined') YearlyLogic.init(db);
 
-        // UI Start
         loginOverlay.classList.add('hidden-overlay');
-        initParticles(); // Maintenant Particle3D est bien défini
+        initParticles();
         animate();
         initNavigation();
 
@@ -134,46 +123,91 @@ function initApp(decryptedConfig) {
     }
 }
 
-
 // ==========================================
 // 3. NAVIGATION (Daily <-> Yearly)
 // ==========================================
+
+// Fonction Globale pour basculer vers une date précise (appelée depuis Yearly)
+window.switchToDailyDate = function (dateObj) {
+    const toggleBtn = document.getElementById('period-toggle');
+    const tasksPanel = document.getElementById('tasks-panel');
+    const summaryPanel = document.getElementById('summary-panel');
+
+    // 1. Charger la date dans le module Daily
+    if (typeof DailyLogic !== 'undefined') {
+        DailyLogic.setViewDate(dateObj);
+    }
+
+    // 2. Si on est déjà en mode Daily, on a fini (le DailyLogic a déjà refresh)
+    // Sinon, on bascule l'UI
+    if (summaryPanel.classList.contains('active-panel')) {
+        toggleBtn.classList.add('flip-out');
+
+        setTimeout(() => {
+            toggleBtn.classList.replace('text-yearly', 'text-daily');
+
+            summaryPanel.classList.remove('active-panel');
+            summaryPanel.classList.add('hidden-panel');
+
+            tasksPanel.classList.remove('hidden-panel');
+            tasksPanel.classList.add('active-panel');
+
+            toggleBtn.classList.remove('flip-out');
+            toggleBtn.classList.add('flip-in');
+            setTimeout(() => toggleBtn.classList.remove('flip-in'), 250);
+
+            // On met à jour le texte
+            toggleBtn.innerText = "Today's"; // Ou la date si ce n'est pas aujourd'hui
+            if (typeof DailyLogic !== 'undefined') DailyLogic.updateTitle();
+        }, 250);
+    }
+};
+
 function initNavigation() {
     const toggleBtn = document.getElementById('period-toggle');
     const tasksPanel = document.getElementById('tasks-panel');
     const summaryPanel = document.getElementById('summary-panel');
-    let isDailyMode = true; 
 
+    // Par défaut, on est sur Daily (Aujourd'hui)
     toggleBtn.classList.add('text-daily');
 
     toggleBtn.addEventListener('click', () => {
         if (toggleBtn.classList.contains('flip-out') || toggleBtn.classList.contains('flip-in')) return;
 
+        const isCurrentlyDaily = tasksPanel.classList.contains('active-panel');
         toggleBtn.classList.add('flip-out');
+
         setTimeout(() => {
-            isDailyMode = !isDailyMode;
-            toggleBtn.innerText = isDailyMode ? "Daily" : "Yearly";
-            
-            if (isDailyMode) {
-                toggleBtn.classList.replace('text-yearly', 'text-daily');
-                tasksPanel.classList.remove('hidden-panel');
-                tasksPanel.classList.add('active-panel');
-                summaryPanel.classList.remove('active-panel');
-                summaryPanel.classList.add('hidden-panel');
-            } else {
+            if (isCurrentlyDaily) {
+                // Aller vers YEARLY
+                toggleBtn.innerText = "Yearly";
                 toggleBtn.classList.replace('text-daily', 'text-yearly');
-                summaryPanel.classList.remove('hidden-panel');
-                summaryPanel.classList.add('active-panel');
+
                 tasksPanel.classList.remove('active-panel');
                 tasksPanel.classList.add('hidden-panel');
-                
-                // On notifie le module Yearly qu'on est prêt
+
+                summaryPanel.classList.remove('hidden-panel');
+                summaryPanel.classList.add('active-panel');
+
                 if (typeof YearlyLogic !== 'undefined') YearlyLogic.renderSummary();
+
+            } else {
+                // Aller vers DAILY (Retour à aujourd'hui par défaut si on clique sur Yearly)
+                if (typeof DailyLogic !== 'undefined') DailyLogic.resetToToday();
+
+                toggleBtn.classList.replace('text-yearly', 'text-daily');
+
+                summaryPanel.classList.remove('active-panel');
+                summaryPanel.classList.add('hidden-panel');
+
+                tasksPanel.classList.remove('hidden-panel');
+                tasksPanel.classList.add('active-panel');
             }
-            
+
             toggleBtn.classList.remove('flip-out');
             toggleBtn.classList.add('flip-in');
             setTimeout(() => toggleBtn.classList.remove('flip-in'), 250);
+
         }, 250);
     });
 }
@@ -186,8 +220,7 @@ function tryLogin(password) {
     try {
         const bytes = CryptoJS.AES.decrypt(ENCRYPTED_CONFIG, password);
         const originalText = bytes.toString(CryptoJS.enc.Utf8);
-        const config = JSON.parse(originalText); 
-        
+        const config = JSON.parse(originalText);
         localStorage.setItem('dailyQuestKey', password);
         initApp(config);
     } catch (error) {
@@ -197,9 +230,8 @@ function tryLogin(password) {
     }
 }
 
-// Auto-login check (Exécuté en dernier)
 const savedPassword = localStorage.getItem('dailyQuestKey');
 if (savedPassword) tryLogin(savedPassword);
 
-loginBtn.addEventListener('click', () => { if(passwordInput.value) tryLogin(passwordInput.value); });
+loginBtn.addEventListener('click', () => { if (passwordInput.value) tryLogin(passwordInput.value); });
 passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && passwordInput.value) tryLogin(passwordInput.value); });

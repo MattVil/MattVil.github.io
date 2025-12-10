@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
+
 <body>
 
     <canvas id="particle-canvas"></canvas>
@@ -19,14 +21,15 @@
             <h2>🔐 Security Check</h2>
             <p>Please enter your access password.</p>
             <input type="password" id="passwordInput" placeholder="Password" class="form-input-pill">
-            <button id="loginBtn" class="new-quest-btn daily-type-btn" style="width:100%; margin-top:15px;">Unlock App</button>
+            <button id="loginBtn" class="new-quest-btn daily-type-btn" style="width:100%; margin-top:15px;">Unlock
+                App</button>
             <p id="loginError" style="color: #DB4437; margin-top: 10px; display: none;">Wrong password!</p>
         </div>
     </div>
 
     <main class="hero-section">
         <h1 class="hero-title">
-            <span id="period-toggle" class="text-daily">Daily</span> 
+            <span id="period-toggle" class="text-daily">Daily</span>
             <span class="static-text">Quests</span>
         </h1>
 
@@ -39,7 +42,7 @@
             </div>
 
             <ul id="questList" class="quest-list"></ul>
-            
+
             <div id="desktopAddBtnArea" class="desktop-btn-area">
                 <button id="desktopToggleFormBtn" class="new-quest-btn daily-type-btn">New Quest</button>
             </div>
@@ -49,24 +52,20 @@
             <div class="placeholder-text">Yearly Summary Area</div>
         </div>
     </main>
-    
+
     <div id="taskForm" class="task-form">
         <div class="task-form-content">
             <button id="closeFormBtn" class="close-form-btn">×</button>
             <h2>Add New Quest</h2>
-            
+
             <form id="questAddForm" class="quest-form">
-                
-                <div class="input-group-form">
-                    <label for="questTitle">Quest Title</label>
-                    <input type="text" id="questTitle" required placeholder="Ex: Drink 2L of water..." class="form-input-pill">
-                </div>
 
                 <div class="input-group-form">
-                    <label for="questDate">Target Date</label>
-                    <input type="date" id="questDate" class="form-input-pill">
+                    <label for="questTitle">Quest Title</label>
+                    <input type="text" id="questTitle" required placeholder="Ex: Drink 2L of water..."
+                        class="form-input-pill">
                 </div>
-                
+
                 <div class="quest-type-selector">
                     <label>Frequency:</label>
                     <div class="type-options">
@@ -75,10 +74,10 @@
 
                         <input type="radio" name="questType" id="typeRecurring" value="RECURRING">
                         <label for="typeRecurring" class="type-label-pill daily-type-pill">Periodic</label>
-                        
+
                         <input type="radio" name="questType" id="typeWeekly" value="WEEKLY">
                         <label for="typeWeekly" class="type-label-pill weekly-type-pill">Weekly</label>
-                        
+
                         <input type="radio" name="questType" id="typeMonthly" value="MONTHLY">
                         <label for="typeMonthly" class="type-label-pill monthly-type-pill">Monthly</label>
                     </div>
@@ -87,31 +86,60 @@
                 <div id="recurrenceOptions" class="recurrence-options hidden-recurrence">
                     <label>Specific Days:</label>
                     <div class="day-selector">
-                        <input type="checkbox" id="day1" value="1" class="day-input"><label for="day1" class="day-label-pill">Mon</label>
-                        <input type="checkbox" id="day2" value="2" class="day-input"><label for="day2" class="day-label-pill">Tue</label>
-                        <input type="checkbox" id="day3" value="3" class="day-input"><label for="day3" class="day-label-pill">Wed</label>
-                        <input type="checkbox" id="day4" value="4" class="day-input"><label for="day4" class="day-label-pill">Thu</label>
-                        <input type="checkbox" id="day5" value="5" class="day-input"><label for="day5" class="day-label-pill">Fri</label>
-                        <input type="checkbox" id="day6" value="6" class="day-input"><label for="day6" class="day-label-pill">Sat</label>
-                        <input type="checkbox" id="day7" value="7" class="day-input"><label for="day7" class="day-label-pill">Sun</label>
+                        <input type="checkbox" id="day1" value="1" class="day-input"><label for="day1"
+                            class="day-label-pill">Mon</label>
+                        <input type="checkbox" id="day2" value="2" class="day-input"><label for="day2"
+                            class="day-label-pill">Tue</label>
+                        <input type="checkbox" id="day3" value="3" class="day-input"><label for="day3"
+                            class="day-label-pill">Wed</label>
+                        <input type="checkbox" id="day4" value="4" class="day-input"><label for="day4"
+                            class="day-label-pill">Thu</label>
+                        <input type="checkbox" id="day5" value="5" class="day-input"><label for="day5"
+                            class="day-label-pill">Fri</label>
+                        <input type="checkbox" id="day6" value="6" class="day-input"><label for="day6"
+                            class="day-label-pill">Sat</label>
+                        <input type="checkbox" id="day7" value="0" class="day-input"><label for="day7"
+                            class="day-label-pill">Sun</label>
                     </div>
                 </div>
 
                 <div class="input-group-form">
-                    <label for="questNotes">Notes</label>
-                    <textarea id="questNotes" rows="2" placeholder="Add details, instructions..." class="form-input-pill"></textarea>
+                    <label for="questDate">Target Date</label>
+                    <input type="date" id="questDate" class="form-input-pill">
+                </div>
+
+                <div class="advanced-toggle-wrapper">
+                    <button type="button" id="toggleAdvancedBtn" class="advanced-toggle-btn">
+                        <span class="toggle-icon">▶</span> Advanced Options
+                    </button>
+                </div>
+
+                <div id="advancedOptions" class="advanced-section hidden-advanced">
+                    <label for="questTarget">Daily Target: <span id="targetValue">1</span></label>
+                    <div class="slider-container">
+                        <input type="range" id="questTarget" min="1" max="5" value="1" step="1" class="form-slider">
+                    </div>
+
+                    <div class="input-group-form">
+                        <label for="questNotes">Notes</label>
+                        <textarea id="questNotes" rows="2" placeholder="Add details, instructions..."
+                            class="form-input-pill"></textarea>
+                    </div>
                 </div>
 
                 <div class="form-actions-group">
-                    
+
                     <div id="editScopeContainer" class="scope-checkbox-wrapper hidden-scope">
                         <input type="checkbox" id="editScopeCheckbox">
                         <label for="editScopeCheckbox">Apply to all</label>
                     </div>
 
                     <div class="action-buttons-wrapper">
-                        <button type="button" id="deleteQuestBtn" class="new-quest-btn delete-btn hidden-action-btn">Delete</button>
-                        <button type="submit" id="submitQuestBtn" class="new-quest-btn submit-form-btn daily-type-btn">Add Quest</button>
+                        <button type="button" id="deleteQuestBtn"
+                            class="new-quest-btn delete-btn hidden-action-btn">Delete</button>
+                        <button type="submit" id="submitQuestBtn"
+                            class="new-quest-btn submit-form-btn daily-type-btn">Add
+                            Quest</button>
                     </div>
                 </div>
 
@@ -121,10 +149,11 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-    
+
     <script src="daily.js"></script>
     <script src="yearly.js"></script>
-    
+
     <script src="script.js"></script>
 </body>
+
 </html>

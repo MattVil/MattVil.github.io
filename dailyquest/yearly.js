@@ -1,61 +1,66 @@
 // ==========================================
-// MODULE YEARLY (CALENDAR HEATMAP)
-// Gère l'affichage du calendrier et des stats
+// MODULE YEARLY (OPTIMIZED SNAPSHOT READER)
 // ==========================================
 
 const YearlyLogic = {
     db: null,
-    currentDate: new Date(), // Le mois actuellement affiché
+    currentDate: new Date(),
     
-    // Cache pour éviter de re-fetcher si on revient sur le même mois (optionnel, simple pour l'instant)
-    cache: {}, 
-
     init: function(database) {
         this.db = database;
-        console.log("Yearly Logic Initialized");
+        console.log("Yearly Logic Initialized (Reader Mode)");
     },
 
-    // Point d'entrée appelé par script.js quand on clique sur "Yearly"
+    getColorForRatio: function(ratio) {
+        const start = { r: 234, g: 67, b: 53 };   // Rouge (#EA4335)
+        const middle = { r: 251, g: 188, b: 5 };  // Jaune (#FBBC05)
+        const end = { r: 52, g: 168, b: 83 };     // Vert (#34A853)
+
+        let r, g, b;
+
+        if (ratio < 0.5) {
+            const t = ratio * 2; 
+            r = Math.round(start.r + (middle.r - start.r) * t);
+            g = Math.round(start.g + (middle.g - start.g) * t);
+            b = Math.round(start.b + (middle.b - start.b) * t);
+        } else {
+            const t = (ratio - 0.5) * 2;
+            r = Math.round(middle.r + (end.r - middle.r) * t);
+            g = Math.round(middle.g + (end.g - middle.g) * t);
+            b = Math.round(middle.b + (end.b - middle.b) * t);
+        }
+        return `rgb(${r}, ${g}, ${b})`;
+    },
+
     renderSummary: function() {
         if (!this.db) return;
+        this.currentDate = new Date(); // Reset à aujourd'hui à l'ouverture
         
-        // On construit la structure HTML de base si elle n'existe pas encore
         const container = document.getElementById('summary-panel');
         if (!container.querySelector('.calendar-header')) {
             this.buildSkeleton(container);
         }
-
-        // On charge les données du mois courant
         this.loadMonthData();
     },
 
-    // Crée le squelette HTML (Header + Grille vide)
     buildSkeleton: function(container) {
         container.innerHTML = `
             <div class="calendar-wrapper">
-                
                 <div class="calendar-header">
                     <button id="prevMonthBtn" class="nav-arrow-btn">←</button>
                     <h2 id="currentMonthLabel">Month Year</h2>
                     <button id="nextMonthBtn" class="nav-arrow-btn">→</button>
                 </div>
-
                 <div class="weekdays-grid">
                     <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                 </div>
-
-                <div id="daysGrid" class="days-grid">
-                    </div>
-                
-                <div class="calendar-legend">
-                    <span class="legend-item"><span class="dot legend-perfect"></span> Perfect</span>
-                    <span class="legend-item"><span class="dot legend-good"></span> Good</span>
-                    <span class="legend-item"><span class="dot legend-bad"></span> Missed</span>
+                <div id="daysGrid" class="days-grid"></div>
+                <div class="calendar-legend-gradient">
+                    <div class="gradient-bar"></div>
+                    <div class="emoji-labels"><span>💀</span><span>💧</span><span>🔥</span><span>🏆</span></div>
                 </div>
             </div>
         `;
-
-        // Listeners navigation
         document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
         document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
     },
@@ -65,144 +70,99 @@ const YearlyLogic = {
         this.loadMonthData();
     },
 
-    // Récupère les données et génère l'affichage
+    toLocalYMD: function(date) {
+        const d = new Date(date);
+        const offset = d.getTimezoneOffset() * 60000;
+        return new Date(d.getTime() - offset).toISOString().split('T')[0];
+    },
+
     loadMonthData: async function() {
         const grid = document.getElementById('daysGrid');
         const label = document.getElementById('currentMonthLabel');
-        
-        // Mise à jour du Label (ex: "November 2025")
         const options = { month: 'long', year: 'numeric' };
         label.innerText = this.currentDate.toLocaleDateString('en-US', options);
-        
-        // Loader visuel
-        grid.innerHTML = '<div class="loading-spinner">✨ Computing stars...</div>';
+        grid.innerHTML = '<div class="loading-spinner">✨ Reading Logs...</div>';
 
         const year = this.currentDate.getFullYear();
         const month = this.currentDate.getMonth();
-
-        // 1. Définir les bornes du mois
-        const firstDayOfMonth = new Date(year, month, 1);
-        const lastDayOfMonth = new Date(year, month + 1, 0);
-        
-        // Timestamp Firestore pour la requête
-        const startTs = firebase.firestore.Timestamp.fromDate(firstDayOfMonth);
-        const endTs = firebase.firestore.Timestamp.fromDate(new Date(year, month + 1, 1)); // Le 1er du mois suivant à 00:00
+        const firstDay = new Date(year, month, 1);
+        const startStr = this.toLocalYMD(firstDay);
+        const nextMonthStr = this.toLocalYMD(new Date(year, month + 1, 1)); 
 
         try {
-            // 2. Récupérer TOUS les Templates (pour savoir ce qu'on devait faire)
-            // Note: Idéalement on filtrerait ceux créés après la fin du mois, mais pour simplifier on prend tout
-            const templatesSnap = await this.db.collection('quest_templates').get();
-            const templates = templatesSnap.docs.map(doc => ({id: doc.id, ...doc.data()}));
-
-            // 3. Récupérer TOUTES les Instances complétées ce mois-ci
-            const instancesSnap = await this.db.collection('quest_instances')
-                .where('date', '>=', startTs)
-                .where('date', '<', endTs)
+            // Lecture optimisée : on ne lit que les logs existants
+            const snapshot = await this.db.collection('daily_logs')
+                .where('date', '>=', startStr)
+                .where('date', '<', nextMonthStr)
                 .get();
             
-            // Mapper les instances par jour : "2025-11-24" -> [Instance, Instance]
-            const instancesByDate = {};
-            instancesSnap.forEach(doc => {
-                const data = doc.data();
-                const dateStr = data.date.toDate().toISOString().split('T')[0];
-                if (!instancesByDate[dateStr]) instancesByDate[dateStr] = [];
-                instancesByDate[dateStr].push(data);
-            });
-
-            // 4. Construire la grille
-            this.renderGrid(year, month, templates, instancesByDate);
-
+            const logsByDate = {};
+            snapshot.forEach(doc => { logsByDate[doc.id] = doc.data(); });
+            this.renderGrid(year, month, logsByDate);
         } catch (error) {
-            console.error("Error loading monthly data:", error);
+            console.error("Error loading yearly:", error);
             grid.innerHTML = '<div class="error-msg">Error loading data.</div>';
         }
     },
 
-    renderGrid: function(year, month, templates, instancesByDate) {
+    renderGrid: function(year, month, logsByDate) {
         const grid = document.getElementById('daysGrid');
         grid.innerHTML = '';
-
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const firstDayObj = new Date(year, month, 1);
-        
-        // Ajustement pour commencer Lundi (JS getDay: Dimanche=0, on veut Lundi=0 pour l'affichage CSS, mais Lundi=1 en réalité)
-        // Mon=1, ... Sun=7. 
         let startDay = firstDayObj.getDay(); 
-        if (startDay === 0) startDay = 7; // Dimanche devient 7
+        if (startDay === 0) startDay = 7; 
 
-        // Créer les cases vides avant le 1er du mois
         for (let i = 1; i < startDay; i++) {
             const emptyCell = document.createElement('div');
             emptyCell.classList.add('day-cell', 'empty');
             grid.appendChild(emptyCell);
         }
 
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = this.toLocalYMD(new Date());
 
-        // Boucle sur chaque jour du mois
         for (let day = 1; day <= daysInMonth; day++) {
             const currentLoopDate = new Date(year, month, day);
-            // Force l'heure à midi pour éviter les problèmes de fuseau horaire lors de la conversion string
-            currentLoopDate.setHours(12, 0, 0, 0); 
+            const dateStr = this.toLocalYMD(currentLoopDate);
+            const log = logsByDate[dateStr];
             
-            const dateStr = currentLoopDate.toISOString().split('T')[0];
-            const dayOfWeek = currentLoopDate.getDay() === 0 ? 7 : currentLoopDate.getDay(); // 1-7
-
-            // --- CALCUL DU SCORE ---
-            // A. Combien de quêtes complétées ce jour-là ?
-            const completedCount = instancesByDate[dateStr] ? instancesByDate[dateStr].length : 0;
-
-            // B. Combien de quêtes POUVAIT-ON faire ce jour-là ? (Dénominateur)
-            let totalPossible = 0;
-            
-            // Si c'est dans le futur, on ne calcule pas
+            let orbClass = 'day-orb';
+            let orbStyle = '';
             const isFuture = dateStr > todayStr;
             const isToday = dateStr === todayStr;
 
-            if (!isFuture) {
-                templates.forEach(t => {
-                    // La quête doit avoir été créée avant ou ce jour là
-                    let startDateStr = "";
-                    if (t.start_date) startDateStr = t.start_date.toDate().toISOString().split('T')[0];
-                    if (startDateStr > dateStr) return; // Quête pas encore née
-
-                    // Vérifier Exception (si ce jour a été annulé/modifié pour ce template)
-                    if (t.exception_dates && t.exception_dates.includes(dateStr)) return;
-
-                    let isActiveToday = false;
-                    if (t.type === 'DAILY_ONLY') isActiveToday = true; // (Simplification: devrait vérifier la date exacte si c'est une unique)
-                    else if (t.type === 'WEEKLY' || t.type === 'MONTHLY') isActiveToday = true; // Simplification
-                    else if (t.type === 'RECURRING' && t.recurrence_rule.daysOfWeek.includes(dayOfWeek)) {
-                        isActiveToday = true;
-                    }
-
-                    if (isActiveToday) totalPossible++;
-                });
-            }
-
-            // --- DETERMINER LA CLASSE CSS ---
-            let statusClass = 'future';
-            if (!isFuture) {
-                if (totalPossible === 0) {
-                    statusClass = 'no-quest'; // Pas de quête ce jour là
-                } else {
-                    const ratio = completedCount / totalPossible;
-                    if (ratio >= 1) statusClass = 'perfect';
-                    else if (ratio >= 0.5) statusClass = 'good';
-                    else statusClass = 'bad';
+            if (isFuture) {
+                orbClass += ' future';
+            } else if (!log) {
+                orbClass += ' no-quest';
+            } else {
+                const stats = log.stats || { ratio: 0, score: 0 };
+                const ratio = stats.ratio !== undefined ? stats.ratio : (stats.score / 100);
+                if (stats.total === 0) orbClass += ' no-quest';
+                else {
+                    const color = this.getColorForRatio(ratio);
+                    orbStyle = `background-color: ${color}; box-shadow: 0 0 10px ${color}66;`;
+                    if (ratio >= 1) orbClass += ' perfect-glow';
                 }
             }
-            if(isToday) statusClass += ' today-pulse'; // Petit effet pour aujourd'hui
 
-            // Création de l'élément DOM
+            if (isToday) orbClass += ' today-pulse';
+
             const dayCell = document.createElement('div');
-            dayCell.className = `day-cell`;
+            dayCell.className = 'day-cell';
+            dayCell.style.cursor = "pointer";
             
+            // Interaction : Clic pour aller à la vue Daily
+            dayCell.onclick = () => {
+                if (typeof window.switchToDailyDate === 'function') {
+                    window.switchToDailyDate(currentLoopDate);
+                }
+            };
+
             dayCell.innerHTML = `
-                <div class="day-number">${day}</div>
-                <div class="day-orb ${statusClass}"></div>
+                <div class=\"day-number\">${day}</div>
+                <div class=\"${orbClass}\" style=\"${orbStyle}\"></div>
             `;
-            
             grid.appendChild(dayCell);
         }
     }
