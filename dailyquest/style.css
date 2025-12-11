@@ -375,8 +375,23 @@ body {
 .achievements-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    /* 2 columns on Desktop */
     grid-gap: 20px;
     width: 100%;
+}
+
+@media (max-width: 600px) {
+    .achievements-grid {
+        grid-template-columns: 1fr;
+        /* 1 column on Mobile */
+    }
+
+    /* On mobile, 'wide' or 'large' tiles just take full width naturally */
+    .tile-large,
+    .tile-wide,
+    .tile-tall {
+        grid-column: span 1 !important;
+    }
 }
 
 /* TILE STYLE ("Neumorphism" / Soft UI) */
@@ -1625,4 +1640,358 @@ textarea.form-input-pill {
         font-size: 1.05rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+}
+
+/* --- GLOBAL STATS TILE (Appended) --- */
+.global-stats-tile {
+    /* Overrides for tile-large: Use flex row */
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 !important;
+    /* Reset padding to handle internal split */
+    overflow: hidden;
+}
+
+/* --- WEEKLY WAVE CHART TILE --- */
+.weekly-chart-tile {
+    /* Identical min-height to other Large tiles to prevent huge height */
+    min-height: 200px;
+    max-height: 220px;
+    /* Constrain height */
+
+    /* Full width, column layout */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between;
+    padding: 24px !important;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+
+    /* Ensure spacing from previous tile - Explicit margin to guarantee consistency */
+    /* margin-top: 20px; REMOVED */
+}
+
+/* Force grid gap to handle spacing, but ensure tile itself doesn't overflow */
+
+.chart-header {
+    margin-bottom: 10px;
+    /* Reduced margin */
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    z-index: 2;
+}
+
+.chart-header h3 {
+    font-size: 1.1rem;
+    /* Slightly smaller title */
+    color: #4285F4;
+}
+
+.chart-subtitle {
+    font-size: 0.8rem;
+    color: #9aa0a6;
+    font-weight: 500;
+}
+
+.chart-container {
+    flex-grow: 1;
+    width: 100%;
+    position: relative;
+    /* Adjusted height constraints */
+    height: 100px;
+    min-height: 0;
+    /* Allow flex shrink */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+#weeklyWaveChart {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* SVG STYLES */
+.wave-path {
+    fill: url(#waveGradient);
+    stroke: #9B72CB;
+    stroke-width: 2;
+    filter: drop-shadow(0 4px 6px rgba(155, 114, 203, 0.2));
+}
+
+.chart-grid-line {
+    /* Full lighter and thinner gray lines */
+    stroke: rgba(0, 0, 0, 0.03);
+    stroke-width: 0.5;
+    stroke-dasharray: none;
+}
+
+/* LABELS */
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding: 0 5%;
+}
+
+.chart-labels span {
+    font-size: 0.70rem;
+    color: #9aa0a6;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* LEFT SECTION (1/3) */
+.global-total-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    /* Border removed as requested */
+    border-right: none;
+    height: 100%;
+}
+
+.big-total-number {
+    font-size: 4rem;
+    font-weight: 800;
+    color: #202124;
+    background: linear-gradient(135deg, #4285F4, #9B72CB);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-top: 10px;
+}
+
+/* RIGHT SECTION (2/3) */
+.global-details-section {
+    flex: 2;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    height: 100%;
+}
+
+/* Breakdown Row */
+.type-breakdown {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.breakdown-item {
+    display: flex;
+    flex-direction: column;
+    /* Stack name above number */
+    align-items: center;
+    gap: 4px;
+}
+
+.breakdown-label {
+    font-size: 0.85rem;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.breakdown-number {
+    font-size: 1.8rem;
+    /* Bigger number */
+    font-weight: 800;
+}
+
+/* Colors reused from existing classes or defined here */
+.text-daily {
+    color: #4285F4;
+}
+
+.text-weekly {
+    color: #9B72CB;
+}
+
+.text-monthly {
+    color: #FF80AB;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot.daily {
+    background-color: #4285F4;
+}
+
+.dot.weekly {
+    background-color: #9B72CB;
+}
+
+.dot.monthly {
+    background-color: #FF80AB;
+}
+
+/* Gauge Row */
+.global-average-container {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.average-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #5f6368;
+    font-weight: 500;
+}
+
+#averagePercent {
+    color: #9B72CB;
+    font-weight: 700;
+}
+
+.avg-progress-bg {
+    width: 100%;
+    height: 18px;
+    /* Thicker gauge (was 12px) */
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.avg-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #9B72CB, #4285F4);
+    border-radius: 50px;
+    transition: width 1s ease-out;
+}
+
+/* MOBILE RESPONSIVE (Stack Vertical) */
+@media (max-width: 600px) {
+    .global-stats-tile {
+        flex-direction: column !important;
+    }
+
+    .global-total-section {
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        /* Keep separator for vertical stack? User said remove gray line, maybe meant the vertical one. Let's keep a subtle horizontal divider for layout clarity on mobile, or remove it too if desired. I'll keep it subtle. */
+        padding: 20px;
+    }
+
+    .global-details-section {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .type-breakdown {
+        flex-wrap: nowrap;
+        /* Keep row on mobile if fits, or wrap */
+        gap: 10px;
+    }
+}
+
+/* --- HABITS TILE (Row 4) --- */
+.habits-tile {
+    grid-column: span 2;
+    /* Full width */
+    min-height: auto;
+    align-items: stretch;
+    /* Stack items */
+    gap: 15px;
+}
+
+.habits-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.habit-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+.habit-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.habit-count {
+    color: #4285F4;
+    font-weight: 700;
+}
+
+/* Progress Bar */
+.habit-progress-bg {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.habit-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #9B72CB, #4285F4);
+    /* Default gradient */
+    border-radius: 4px;
+    transition: width 1s ease-out;
+}
+
+/* --- ACHIEVED HABIT STYLE (Gold) --- */
+.habit-item.habit-achieved {
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+    border-color: #fceea7;
+    order: 99;
+    /* Push to bottom */
+    opacity: 0.8;
+}
+
+.habit-achieved .habit-name {
+    color: #bfa15f;
+    /* Gold-ish text */
+    text-decoration: none;
+    /* or line-through if retired? User said move to achieved */
+}
+
+.habit-achieved .habit-count {
+    color: #b8860b;
+}
+
+.habit-achieved .habit-progress-fill {
+    background: linear-gradient(90deg, #FFD700, #FDB931);
+    width: 100% !important;
+    /* Force full */
+}
+
+.empty-state {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 20px;
 }

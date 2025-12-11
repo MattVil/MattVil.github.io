@@ -62,41 +62,71 @@
 
             <div class="glass-panel">
                 <div class="achievements-grid">
-                    <!-- TILE 1: Large (Trend) -->
-                    <div class="stat-tile tile-large">
-                        <h3>Weekly Trend</h3>
-                        <div class="tile-content-placeholder">📈</div>
-                    </div>
-
-                    <!-- TILE 2: Small (Streak) -->
+                    <!-- TILE 1: Current Streak -->
                     <div class="stat-tile">
-                        <h3>Streak</h3>
+                        <h3>Current Streak</h3>
                         <div class="tile-content-placeholder">🔥</div>
                     </div>
 
-                    <!-- TILE 3: Small (Total) -->
+                    <!-- TILE 2: Best Streak -->
                     <div class="stat-tile">
-                        <h3>Total</h3>
-                        <div class="tile-content-placeholder">🏆</div>
-                    </div>
-
-                    <!-- TILE 4: Tall (Habits) -->
-                    <div class="stat-tile tile-tall">
-                        <h3>Hall of Fame</h3>
-                        <div class="tile-content-placeholder">🏅</div>
-                    </div>
-
-                    <!-- TILE 5: Wide (Upcoming) -->
-                    <div class="stat-tile tile-wide">
-                        <h3>Win Rate</h3>
-                        <div class="tile-content-placeholder">📊</div>
-                    </div>
-                    <!-- TILE 6: Standard -->
-                    <div class="stat-tile">
-                        <h3>Best</h3>
+                        <h3>Best Streak</h3>
                         <div class="tile-content-placeholder">💎</div>
                     </div>
-                </div>
+
+                    <!-- TILE 3: Global Stats (Full Width Row 2) -->
+                    <div class="stat-tile tile-large global-stats-tile">
+                        <!-- Left: Total Big Number -->
+                        <div class="global-total-section">
+                            <h3>Total Quests</h3>
+                            <div class="big-total-number" id="totalQuestsValue">0</div>
+                        </div>
+
+                        <!-- Right: Breakdown + Gauge -->
+                        <div class="global-details-section">
+                            <div class="type-breakdown">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Daily</span>
+                                    <span id="totalDaily" class="breakdown-number text-daily">0</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Weekly</span>
+                                    <span id="totalWeekly" class="breakdown-number text-weekly">0</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Monthly</span>
+                                    <span id="totalMonthly" class="breakdown-number text-monthly">0</span>
+                                </div>
+                            </div>
+
+                            <div class="global-average-container">
+                                <div class="average-labels">
+                                    <span>Average Completion</span>
+                                    <span id="averagePercent">0%</span>
+                                </div>
+                                <div class="avg-progress-bg">
+                                    <div class="avg-progress-fill" id="avgProgressFill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TILE 4: Weekly Wave Chart (Full Width Row 3) -->
+                    <div class="stat-tile tile-large weekly-chart-tile">
+                        <div class="chart-header">
+                            <h3>Average weekly completion</h3>
+                            <span class="chart-subtitle">Last 60 Days</span>
+                        </div>
+                        <div class="chart-container">
+                            <!-- SVG Chart will be injected here -->
+                            <svg id="weeklyWaveChart" preserveAspectRatio="none" viewBox="0 0 100 50"></svg>
+                            <!-- Labels -->
+                            <div class="chart-labels">
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End of .achievements-grid -->
+                <!-- Glass Panel ends here in original, wait. Line 130 was closing glass-panel? -->
             </div>
         </div>
     </main>
@@ -200,6 +230,11 @@
 
     <script src="daily.js"></script>
     <script src="yearly.js"></script>
+    <script src="achievements.js"></script>
+
+    <!-- NEW MODULES -->
+    <script src="particles.js"></script>
+    <script src="auth.js"></script>
 
     <script src="script.js"></script>
 </body>
