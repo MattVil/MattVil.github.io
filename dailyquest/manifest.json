@@ -1,0 +1,20 @@
+{
+  "name": "Daily Quest",
+  "short_name": "DailyQuest",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#0d0d12",
+  "icons": [
+    {
+      "src": "assets/logo.PNG",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo.PNG",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
