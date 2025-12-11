@@ -131,7 +131,57 @@ function animate() {
 }
 
 // ==========================================
-// 2. INITIALISATION DE L'APP
+// --- V2: ACHIEVEMENTS NAVIGATION --- This logic handles the switch between Yearly and Achievements
+
+const navArrowDown = document.getElementById('nav-arrow-down');
+const navArrowUp = document.getElementById('nav-arrow-up');
+const achievementsPanel = document.getElementById('achievements-panel');
+const periodToggle = document.getElementById('period-toggle');
+const staticText = document.querySelector('.static-text');
+const heroTitle = document.querySelector('.hero-title');
+const summaryPanel = document.getElementById('summary-panel');
+
+// DELEGATION: Listen on parent because #nav-arrow-down is re-created by yearly.js
+if (summaryPanel && navArrowUp) {
+    summaryPanel.addEventListener('click', (e) => {
+        const arrowBtn = e.target.closest('#nav-arrow-down');
+        if (arrowBtn) {
+            // Go DOWN to Achievements
+            summaryPanel.classList.add('hidden-panel');
+            summaryPanel.classList.remove('active-panel');
+
+            achievementsPanel.classList.remove('hidden-panel');
+            achievementsPanel.classList.add('active-panel');
+
+            // Visual Updates
+            heroTitle.classList.add('achievements-mode');
+            staticText.textContent = "Achievements";
+            alert("Welcome to Achievements! (Beta)"); // Temp verify
+            periodToggle.classList.add('hidden-panel');
+        }
+    });
+
+    navArrowUp.addEventListener('click', () => {
+        // Go UP to Yearly
+        achievementsPanel.classList.add('hidden-panel');
+        achievementsPanel.classList.remove('active-panel');
+
+        document.getElementById('summary-panel').classList.remove('hidden-panel');
+        document.getElementById('summary-panel').classList.add('active-panel');
+
+        // Visual Revert
+        heroTitle.classList.remove('achievements-mode');
+        staticText.textContent = "Quests";
+        periodToggle.classList.remove('hidden-panel');
+
+        // Ensure "Yearly" is visible text if we came from there (state check)
+        if (periodToggle.textContent.includes('Yearly')) {
+            periodToggle.textContent = 'Yearly';
+        }
+    });
+}
+
+// --- INITIALIZATION ---
 // ==========================================
 function initApp(decryptedConfig) {
     try {

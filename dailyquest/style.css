@@ -127,15 +127,87 @@ body {
     width: 100%;
 
     /* 3D : Profondeur pour la rotation */
-    /* 3D : Profondeur pour la rotation */
     perspective: 500px;
 
     /* Manual Alignment Offset */
-    transform: translateX(-20px);
+    transform: translateX(4px);
+}
 
-    /* Stronger Shadow for Legibility */
-    text-shadow:
-        0 4px 15px rgba(255, 255, 255, 0.9),
+/* --- NAVIGATION ARROWS (Modern Style) --- */
+.nav-arrow {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Soft shadow */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Bounce effect */
+    z-index: 20;
+    opacity: 0.8;
+}
+
+.nav-arrow:hover {
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 6px 16px rgba(66, 133, 244, 0.2);
+    opacity: 1;
+}
+
+.nav-arrow.down {
+    bottom: -60px;
+    /* Clearly separated from panel */
+}
+
+.nav-arrow.up {
+    top: -40px;
+    /* Raised to clear panel content */
+}
+
+/* Chevron Icon */
+.chevron {
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid #5f6368;
+    border-bottom: 2px solid #5f6368;
+    display: block;
+    transform: rotate(45deg);
+    /* Down */
+    margin-bottom: 3px;
+    transition: border-color 0.3s;
+}
+
+.nav-arrow.up .chevron {
+    transform: rotate(-135deg);
+    /* Up */
+    margin-bottom: -3px;
+}
+
+.nav-arrow:hover .chevron {
+    border-color: #4285F4;
+}
+
+/* HERO TITLE MODE: Achievements */
+.hero-title.achievements-mode .static-text {
+    color: #4285F4;
+    transition: color 0.5s ease;
+}
+
+/* Force centering when in achievements mode (only one word visible) */
+.hero-title.achievements-mode {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* Stronger Shadow for Legibility */
+.hero-title {
+    text-shadow: 0 4px 15px rgba(255, 255, 255, 0.9),
         0 8px 30px rgba(255, 255, 255, 0.6),
         0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -169,6 +241,10 @@ body {
 
 #period-toggle:hover {
     opacity: 0.8;
+}
+
+#period-toggle.hidden-panel {
+    display: none !important;
 }
 
 /* Couleurs */
@@ -226,6 +302,8 @@ body {
     max-width: 600px;
     min-height: 200px;
     border-radius: 24px;
+    position: relative;
+    /* Anchor for absolute arrows */
 
     display: flex;
     flex-direction: column;
@@ -244,9 +322,24 @@ body {
     box-shadow: none;
 }
 
-/* --- PANEL 2: YEARLY (Carte Givrée) --- */
-#summary-panel {
-    background: rgba(255, 255, 255, 0.75);
+/* --- PANEL 2: YEARLY & ACHIEVEMENTS (Container) --- */
+#summary-panel,
+#achievements-panel {
+    /* No background on parent, so arrow can be outside */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* The actual "White Tile" is now the wrapper inside */
+/* The actual "White Tile" is now the wrapper inside */
+
+/* 2a. Calendar Wrapper: Keeps the original "White Glass" look */
+.calendar-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    /* Slightly transparent white */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 
@@ -254,6 +347,89 @@ body {
     box-shadow:
         0 4px 24px -1px rgba(0, 0, 0, 0.05),
         0 0 0 1px rgba(0, 0, 0, 0.02);
+
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+}
+
+/* 2b. Achievements Panel: Light Neumorphism Base */
+.glass-panel {
+    background: #f6f8fa;
+    /* Even lighter off-white */
+    border: none;
+
+    /* Subtle inner/outer depth for the container */
+    /* box-shadow:
+        inset 10px 10px 20px #ecedf0,
+        inset -10px -10px 20px #ffffff; */
+
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+}
+
+
+
+/* --- ACHIEVEMENTS GRID (V2) --- */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    width: 100%;
+}
+
+/* TILE STYLE ("Neumorphism" / Soft UI) */
+.stat-tile {
+    background: #f6f8fa;
+    /* Match Panel Base */
+    border-radius: 30px;
+    padding: 24px;
+
+    /* Neumorphism: Lighter shadows for cleaner look */
+    /* Dark shadow is very subtle (#dbe1e8), Light shadow is pure white */
+    box-shadow:
+        10px 10px 20px #dbe1e8,
+        -10px -10px 20px #ffffff;
+
+    border: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    text-align: center;
+}
+
+/* Removed :hover movement as requested */
+
+.stat-tile h3 {
+    font-size: 0.9rem;
+    color: #5f6368;
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tile-content-placeholder {
+    font-size: 2.5rem;
+}
+
+/* TILE VARIANTS */
+.tile-large {
+    grid-column: span 2;
+    min-height: 200px;
+}
+
+.tile-wide {
+    grid-column: span 2;
+    min-height: 120px;
+}
+
+.tile-tall {
+    grid-row: span 2;
 }
 
 .hidden-panel {

@@ -59,8 +59,23 @@ const YearlyLogic = {
                     <div class="gradient-bar"></div>
                     <div class="emoji-labels"><span>💀</span><span>🌱</span><span>💪</span><span>🏆</span></div>
                 </div>
+            </div> <!-- End of calendar-wrapper (White Tile) -->
+            
+            <!-- DOWN ARROW: Go to Achievements (Outside the tile) -->
+            <div id="nav-arrow-down" class="nav-arrow down" title="Go to Achievements">
+                <span class="chevron"></span>
             </div>
         `;
+
+        // Re-attach event listeners for arrow (since it was re-created)
+        // Wait, the arrow listener is in script.js and attached on init.
+        // If we re-render this HTML, we lose the listener attached in script.js!
+        // We must re-attach the listener here or delegate it.
+        // Strategy: Delegate or re-attach. 
+        // For simplicity, let's verify if script.js attaches it once or if we need to expose a re-attach method.
+        // Actually script.js runs ONCE. If we overwrite HTML, the element is new, the listener is gone.
+        // Fix: Use Event Delegation on the container or re-bind.
+
         document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
         document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
     },
