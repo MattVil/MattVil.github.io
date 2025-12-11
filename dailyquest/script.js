@@ -1,6 +1,7 @@
 // ==========================================
-// MAIN CONTROLLER (SCRIPT.JS)
+// MAIN CONTROLLER
 // Orchestrates: Auth -> Init -> Navigation -> UI
+// Entry point for the application.
 // ==========================================
 
 let db;
@@ -14,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     Auth.init((config) => initApp(config));
 });
 
+/**
+ * Initializes the application after successful authentication.
+ * @param {Object} decryptedConfig - Firebase configuration object.
+ */
 function initApp(decryptedConfig) {
     try {
         // 1. Firebase
@@ -21,7 +26,6 @@ function initApp(decryptedConfig) {
             firebase.initializeApp(decryptedConfig);
         }
         db = firebase.firestore();
-        console.log("Firebase Connected.");
 
         // 2. Logic Modules
         if (typeof DailyLogic !== 'undefined') DailyLogic.init(db);
@@ -45,6 +49,9 @@ function initApp(decryptedConfig) {
 // 2. NAVIGATION LOGIC (Global Coordinator)
 // ==========================================
 
+/**
+ * Sets up global navigation listeners and arrow delegation.
+ */
 function initNavigation() {
     const toggleBtn = document.getElementById('period-toggle');
 
@@ -97,6 +104,7 @@ function initNavigation() {
 }
 
 // --- NAVIGATION ACTIONS ---
+// These functions manage the DOM classes to switch between panels.
 
 function switchToDaily() {
     const tasksPanel = document.getElementById('tasks-panel');
@@ -107,7 +115,7 @@ function switchToDaily() {
     if (typeof DailyLogic !== 'undefined') DailyLogic.resetToToday();
 
     // UI
-    toggleBtn.innerText = "Daily"; // simplified, logic will update if needed
+    toggleBtn.innerText = "Daily";
     toggleBtn.classList.replace('text-yearly', 'text-daily');
 
     summaryPanel.classList.remove('active-panel');

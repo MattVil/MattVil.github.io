@@ -1,23 +1,32 @@
 // ==========================================
-// MODULE DAILY QUESTS (FINAL STABLE VERSION + ADVANCED UI)
+// MODULE DAILY QUESTS
+// Core logic for managing daily, weekly, and monthly quests.
+// Handles CRUD operations, status hydration, and UI rendering.
 // ==========================================
 
+/**
+ * Main Logic Object for Daily Quests
+ * @namespace DailyLogic
+ */
 const DailyLogic = {
     db: null,
     viewDate: new Date(),
     elements: {},
 
-    // État local (pour les nouveaux systèmes : Target ID)
+    // Local State
     currentLogData: null,
     virtualTasks: [],
     templatesCache: {},
 
+    /**
+     * Initialize the module
+     * @param {Object} database - Firebase Firestore instance
+     */
     init: function (database) {
         this.db = database;
         this.cacheDOM();
         this.bindEvents();
         this.resetToToday();
-        console.log("Daily Logic Initialized (Stable + Advanced UI)");
     },
 
     cacheDOM: function () {
@@ -35,7 +44,7 @@ const DailyLogic = {
             submitQuestBtn: document.getElementById('submitQuestBtn'),
             deleteQuestBtn: document.getElementById('deleteQuestBtn'),
 
-            // Champs du formulaire
+            // Form Fields
             questTitle: document.getElementById('questTitle'),
             questDate: document.getElementById('questDate'),
             questNotes: document.getElementById('questNotes'),
@@ -46,7 +55,7 @@ const DailyLogic = {
             editScopeContainer: document.getElementById('editScopeContainer'),
             editScopeCheckbox: document.getElementById('editScopeCheckbox'),
 
-            // NOUVEAU : Advanced Options
+            // Advanced Options
             toggleAdvancedBtn: document.getElementById('toggleAdvancedBtn'),
             advancedOptions: document.getElementById('advancedOptions'),
             questTarget: document.getElementById('questTarget'),
@@ -57,8 +66,7 @@ const DailyLogic = {
     bindEvents: function () {
         const el = this.elements;
 
-        // --- BOUTON NEW QUEST (Correction Bug Reset) ---
-        // On reset le formulaire AVANT de l'ouvrir si c'est une nouvelle création
+        // --- NEW QUEST BUTTON ---
         el.desktopToggleFormBtn.addEventListener('click', () => {
             if (!el.taskForm.classList.contains('open')) {
                 this.resetFormToCreateMode();
@@ -100,14 +108,25 @@ const DailyLogic = {
         this.handleRecurrenceToggle();
     },
 
-    // --- UTILITAIRES DE DATE (Target ID System) ---
+    // --- DATE UTILITIES ---
+
+    /**
+     * Converts a date object to YYYY-MM-DD string in local time.
+     * @param {Date} date 
+     * @returns {string}
+     */
     toLocalYMD: function (date) {
         const d = new Date(date);
         const offset = d.getTimezoneOffset() * 60000;
         return new Date(d.getTime() - offset).toISOString().split('T')[0];
     },
 
-    // Génère l'ID unique de période (ex: "2025-W48" ou "2025-M11")
+    /**
+     * Generates a unique Period ID for Weekly/Monthly tracking.
+     * @param {Date} d - The date to check
+     * @param {string} type - 'WEEKLY' or 'MONTHLY'
+     * @returns {string|null} e.g. "2025-W48"
+     */
     getPeriodID: function (d, type) {
         const date = new Date(d);
         const year = date.getFullYear();
@@ -158,9 +177,15 @@ const DailyLogic = {
         }
     },
 
-    // --- HELPERS DE DONNÉES ---
+    // --- DATA HELPERS ---
+
+    /**
+     * Fetches quest instances for a specific date (Daily Logs).
+     * @param {Date} date 
+     * @returns {Map<string, number>} Map of TemplateID -> Count
+     */
     fetchDailyInstances: async function (date) {
-        // Normalisation STRICTE à minuit
+        // Strict normalization to midnight
         const midnight = new Date(date);
         midnight.setHours(0, 0, 0, 0);
 
@@ -169,26 +194,22 @@ const DailyLogic = {
             .where('date', '==', dateTimestamp)
             .get();
 
-        // Retourne une Map : TemplateID -> Count
         const completionMap = new Map();
         snapshot.forEach(doc => {
             const data = doc.data();
-            // Backward comp: si pas de 'count', on suppose 1
             const val = data.count || 1;
             completionMap.set(data.template_id, val);
         });
         return completionMap;
     },
 
-    // --- CHARGEMENT PRINCIPAL ---
+    // --- MAIN LOADING ---
     loadAndDisplayQuests: async function () {
         const el = this.elements;
         el.questList.innerHTML = '';
 
-        const dateStr = this.toLocalYMD(this.viewDate);
-
         try {
-            // 1. Charger les Templates (Source de Vérité)
+            // 1. Load Templates (Source of Truth)
             const templatesSnap = await this.db.collection('quest_templates')
                 .where('is_active', '==', true)
                 .get();
@@ -198,13 +219,14 @@ const DailyLogic = {
                 this.templatesCache[doc.id] = doc.data();
             });
 
+            // 2. Generate Virtual List based on Recurrence rules
             let tasksToRender = await this.generateVirtualListCandidates();
 
-            // 2. Hydratation du statut (Check Completion)
+            // 3. Hydrate Status (Check db for completion)
             const validationMap = await this.fetchDailyInstances(this.viewDate);
             tasksToRender = this.hydrateWithTemplateStatus(tasksToRender, validationMap);
 
-            // 3. Rendu
+            // 4. Render
             this.renderTasks(tasksToRender);
 
         } catch (error) {
@@ -213,10 +235,11 @@ const DailyLogic = {
         }
     },
 
-    // --- CHECK STATUS (Vérifie si la quête est faite pour sa période) ---
+    /**
+     * Combines Template Logic with Actual Instances to determine status.
+     */
     hydrateWithTemplateStatus: function (tasks, validationMap) {
         return tasks.map(task => {
-            // Récupérer le modèle pour connaitre le target
             const template = this.templatesCache[task.id];
             const target = template?.completion_target || 1;
             const current = validationMap ? (validationMap.get(task.id) || 0) : 0;
@@ -231,7 +254,7 @@ const DailyLogic = {
                 };
             }
 
-            // Si pas de date de validation -> Pending
+            // For Weekly/Monthly, checking persistence field in Template
             if (!template || !template.last_completed_at) {
                 return { ...task, status: 'pending', current_count: 0, target_count: target };
             }
@@ -245,8 +268,6 @@ const DailyLogic = {
 
             const viewDate = this.viewDate;
 
-            // TODO: Adaptation possible pour Weekly/Monthly multi-val plus tard
-            // Pour l'instant, on garde la logique binaire simple pour Weekly/Monthly
             const isDoneInCurrentPeriod = (
                 (task.type === 'WEEKLY' && this.getPeriodID(lastDoneDate, 'WEEKLY') === this.getPeriodID(viewDate, 'WEEKLY')) ||
                 (task.type === 'MONTHLY' && this.getPeriodID(lastDoneDate, 'MONTHLY') === this.getPeriodID(viewDate, 'MONTHLY'))
@@ -256,7 +277,7 @@ const DailyLogic = {
                 const isToday = this.toLocalYMD(lastDoneDate) === this.toLocalYMD(viewDate);
                 return {
                     ...task,
-                    status: isToday ? 'completed' : 'completed_previously',
+                    status: isToday ? 'completed' : 'completed_previously', // darker check if done previously
                     current_count: target,
                     target_count: target
                 };
@@ -266,10 +287,10 @@ const DailyLogic = {
         });
     },
 
-    // --- GÉNÉRATION VIRTUELLE (LOGIQUE D'APPARITION) ---
+    // --- VIRTUAL LIST GENERATOR ---
     generateVirtualListCandidates: async function () {
         const viewDateStr = this.toLocalYMD(this.viewDate);
-        const dayOfWeek = this.viewDate.getDay() === 0 ? 0 : this.viewDate.getDay(); // 0 pour Dimanche
+        const dayOfWeek = this.viewDate.getDay() === 0 ? 0 : this.viewDate.getDay(); // 0 = Sun
         const candidates = [];
 
         const currentViewWeekID = this.getPeriodID(this.viewDate, 'WEEKLY');
@@ -278,6 +299,7 @@ const DailyLogic = {
         Object.keys(this.templatesCache).forEach(id => {
             const t = this.templatesCache[id];
 
+            // Exception handling (Deleted instances)
             if (t.exception_dates && t.exception_dates.includes(viewDateStr)) return;
 
             let shouldInclude = false;
@@ -287,19 +309,19 @@ const DailyLogic = {
                 const tDate = t.start_date.toDate();
                 if (this.toLocalYMD(tDate) === viewDateStr) shouldInclude = true;
             }
-            // 2. RECURRING (Habitudes infinies)
+            // 2. RECURRING
             else if (t.type === 'RECURRING') {
                 const tDateStr = this.toLocalYMD(t.start_date.toDate());
                 if (t.recurrence_rule?.daysOfWeek?.includes(dayOfWeek)) {
                     if (tDateStr <= viewDateStr) shouldInclude = true;
                 }
             }
-            // 3. WEEKLY (Target ID Check)
+            // 3. WEEKLY
             else if (t.type === 'WEEKLY') {
                 const targetID = t.target_period || this.getPeriodID(t.start_date.toDate(), 'WEEKLY');
                 if (targetID === currentViewWeekID) shouldInclude = true;
             }
-            // 4. MONTHLY (Target ID Check)
+            // 4. MONTHLY
             else if (t.type === 'MONTHLY') {
                 const targetID = t.target_period || this.getPeriodID(t.start_date.toDate(), 'MONTHLY');
                 if (targetID === currentViewMonthID) shouldInclude = true;
@@ -312,15 +334,15 @@ const DailyLogic = {
         return candidates;
     },
 
-    // --- STATISTIQUES (Nouvelle fonctionnalité pour Yearly) ---
+    // --- STATS UPDATE ---
+    /**
+     * Recalculates daily score and persists to 'daily_logs'.
+     */
     updateDailyStats: async function (date) {
         try {
             const dateStr = this.toLocalYMD(date);
-
-            // On ne met à jour que si c'est la date visualisée
             if (dateStr !== this.toLocalYMD(this.viewDate)) return;
 
-            // On recalcule tout pour la journée
             const validationMap = await this.fetchDailyInstances(date);
             let tasks = await this.generateVirtualListCandidates();
             tasks = this.hydrateWithTemplateStatus(tasks, validationMap);
@@ -333,7 +355,7 @@ const DailyLogic = {
 
             const score = Math.round(ratio * 100);
 
-            // Ecriture dans daily_logs
+            // Access main stats collection
             await this.db.collection('daily_logs').doc(dateStr).set({
                 date: dateStr,
                 stats: {
@@ -345,17 +367,16 @@ const DailyLogic = {
                 updated_at: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
 
-            console.log(`Stats updated for ${dateStr}: ${completed}/${total} (${score}%)`);
         } catch (error) {
             console.error("Error updating stats:", error);
         }
     },
 
-    // --- RENDU UI (TRIÉ) ---
+    // --- UI RENDERING ---
     renderTasks: function (tasks) {
         this.elements.questList.innerHTML = '';
 
-        // Tri : Daily > Weekly > Monthly
+        // Sort: Daily/Recurring > Weekly > Monthly
         const typePriority = { 'DAILY_ONLY': 1, 'RECURRING': 1, 'WEEKLY': 2, 'MONTHLY': 3 };
         tasks.sort((a, b) => (typePriority[a.type] || 4) - (typePriority[b.type] || 4));
 
@@ -366,7 +387,6 @@ const DailyLogic = {
 
         tasks.forEach(task => {
             const isDone = task.status === 'completed' || task.status === 'completed_previously';
-            // On passe les counts pour l'affichage multi
             this.createQuestElement(task.id, task.title, isDone, task.type, task.current_count, task.target_count);
         });
 
@@ -386,10 +406,10 @@ const DailyLogic = {
         else if (type === 'MONTHLY') typeClass = 'monthly-type';
         li.classList.add(typeClass);
 
-        // Contenu Gauche
+        // HTML Content
         let html = `<span class="quest-text">${title}</span>`;
 
-        // Contenu Droite (Boutons)
+        // Buttons (One Check or Multi-Steps)
         if (targetCount > 1) {
             html += `<div class="multi-check-container">`;
             for (let i = 1; i <= targetCount; i++) {
@@ -409,7 +429,6 @@ const DailyLogic = {
             btns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    // Live Calculation from DOM to avoid stale closures
                     const step = parseInt(btn.dataset.step);
                     this.handleMultiValidation(id, step);
                 });
@@ -418,7 +437,6 @@ const DailyLogic = {
             const checkBtn = li.querySelector('.check-btn');
             checkBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                // Check CURRENT state from DOM, do not rely on 'isDone' closure variable
                 const isCurrentlyDone = li.classList.contains('completed');
                 const newCount = isCurrentlyDone ? 0 : 1;
                 this.updateQuestProgress(id, newCount);
@@ -426,7 +444,7 @@ const DailyLogic = {
         }
 
         li.addEventListener('click', (e) => {
-            // Empêcher l'édition si on clique sur les boutons
+            // Prevent edit if clicking valid buttons
             if (e.target.classList.contains('mini-check-btn') || e.target.classList.contains('check-btn')) return;
             this.handleEditClick(id);
         });
@@ -434,21 +452,14 @@ const DailyLogic = {
         this.elements.questList.appendChild(li);
     },
 
-    // Refonte Toggle -> Update General
+    /**
+     * Core update logic. optimistically updates UI, then writes DB.
+     */
     updateQuestProgress: async function (questId, newCount) {
-        // 1. Optimistic UI (Complexe avec multi-boutons, on recharge pour l'instant la liste des boutons localement ?)
-        // Pour faire simple et robuste : on touche pas au DOM complexe ici, on laisse le reload partiel se faire si besoin
-        // Mais pour garder le "0 flickr", on peut tricher.
-
-        // MàJ Visuelle Optimiste
+        // 1. Optimistic UI
         const li = this.elements.questList.querySelector(`[data-quest-id="${questId}"]`);
         if (li) {
-            // Update class completed globale ?
-            // On a besoin de savoir si newCount >= target ?
-            // Difficile sans repasser les args. On va faire confiance au reload rapide ou faire un patch simple.
-
-            // Hack UX: On force le reload de la liste dans ce cas complexe pour l'instant OU on patch les classes.
-            // On va patcher les classes des mini-boutons.
+            // Update Mini Buttons
             const miniBtns = li.querySelectorAll('.mini-check-btn');
             miniBtns.forEach(btn => {
                 const step = parseInt(btn.dataset.step);
@@ -456,12 +467,12 @@ const DailyLogic = {
                 else btn.classList.remove('checked');
             });
 
-            // Check global ? (On a besoin du target, on va deviner via le nombre de boutons)
+            // Update Global Item Status
             const target = miniBtns.length || 1;
             if (newCount >= target) li.classList.add('completed');
             else li.classList.remove('completed');
 
-            // Cas simple check-btn
+            // Simple Check Button
             const bigBtn = li.querySelector('.check-btn');
             if (bigBtn) {
                 if (newCount > 0) li.classList.add('completed');
@@ -471,7 +482,7 @@ const DailyLogic = {
 
         this.updateProgress();
 
-        // 2. Data Prep
+        // 2. Data Persistence (Firestore)
         const dateToSave = new Date(this.viewDate);
         dateToSave.setHours(0, 0, 0, 0);
         const currentTimestamp = firebase.firestore.Timestamp.fromDate(dateToSave);
@@ -489,7 +500,7 @@ const DailyLogic = {
                     template_id: questId,
                     date: currentTimestamp,
                     count: newCount,
-                    is_completed: true, // Legacy field, toujours true si count > 0
+                    is_completed: true,
                     updated_at: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -500,37 +511,33 @@ const DailyLogic = {
                     await this.db.collection('quest_instances').add(data);
                 }
             } else {
-                // DELETE (Count 0)
+                // DELETE (Count 0 means removed)
                 if (!instanceQuery.empty) {
                     await this.db.collection('quest_instances').doc(instanceQuery.docs[0].id).delete();
                 }
             }
 
-            // --- FIX WEEKLY/MONTHLY PERSISTENCE ---
-            // Update the template's last_completed_at field if completed
+            // --- RECURRING/WEEKLY LOGIC ---
+            // Update the template's 'last_completed_at' field if completed
             const template = this.templatesCache[questId];
             if (template) {
                 const target = template.completion_target || 1;
                 const isCompleted = newCount >= target;
 
                 if (isCompleted) {
-                    // Update DB
                     await this.db.collection('quest_templates').doc(questId).update({
                         last_completed_at: firebase.firestore.FieldValue.serverTimestamp()
                     });
-                    // Update Local Cache for Stats
-                    template.last_completed_at = new Date();
+                    template.last_completed_at = new Date(); // Cache update
                 } else {
-                    // RESET persistence if unchecked
                     await this.db.collection('quest_templates').doc(questId).update({
                         last_completed_at: null
                     });
-                    // Update Local Cache (Clear date)
                     template.last_completed_at = null;
                 }
             }
 
-            // 3. Stats Check
+            // 3. Update Stats Calculation
             await this.updateDailyStats(this.viewDate);
 
         } catch (error) {
@@ -539,29 +546,20 @@ const DailyLogic = {
     },
 
     handleMultiValidation: function (id, step) {
-        // Logic dynamic: Check DOM for current optimistic state
+        // UI Check Logic
         const li = this.elements.questList.querySelector(`[data-quest-id="${id}"]`);
         if (!li) return;
 
-        // Count how many buttons are currently checked in the DOM
         const activeBtns = li.querySelectorAll('.mini-check-btn.checked');
         const currentVisualCount = activeBtns.length;
 
-        // Toggle logic: If we click the step equal to current count, we decrement (deselect last)
-        // Otherwise we set to the clicked step.
+        // Toggle: if clicking active step, decrement. Else set to step.
         let newCount = step;
         if (currentVisualCount === step) {
             newCount = step - 1;
         }
 
         this.updateQuestProgress(id, newCount);
-    },
-
-    // OBSOLETE mais gardé pour éviter crash si appel externe (refactor complet)
-    toggleQuest: function (questId) {
-        // Redirige vers updateProgress (toggle binaire 0/1 par défaut si appelé)
-        // Mais théoriquement notre UI ne l'appelle plus.
-        console.warn("toggleQuest deprecated called");
     },
 
     updateProgress: function (completed, total) {
@@ -585,7 +583,7 @@ const DailyLogic = {
         this.elements.progressEmoji.innerText = emoji;
     },
 
-    // --- FORMULAIRE ---
+    // --- FORM HANDLING ---
 
     toggleForm: function () {
         const el = this.elements;
@@ -613,14 +611,14 @@ const DailyLogic = {
 
         document.getElementById('typeDaily').checked = true;
 
-        // --- RESET UI ADVANCED ---
+        // Reset Advanced Options
         if (this.elements.advancedOptions) {
             this.elements.advancedOptions.classList.add('hidden-advanced');
             this.elements.advancedOptions.classList.remove('visible-advanced');
             this.elements.toggleAdvancedBtn.classList.remove('open');
         }
 
-        this.elements.questTarget.value = 1; // Default
+        this.elements.questTarget.value = 1;
         if (this.elements.targetValue) this.elements.targetValue.innerText = "1";
 
         this.handleRecurrenceToggle();
@@ -641,8 +639,6 @@ const DailyLogic = {
         else if (selectedType === 'MONTHLY') colorClass = 'monthly-type-btn';
 
         el.submitQuestBtn.className = `new-quest-btn submit-form-btn ${colorClass}`;
-        // User requested New Quest button to stay blue (always default)
-        // el.desktopToggleFormBtn.className = `new-quest-btn ${colorClass}`;
     },
 
     handleEditClick: async function (templateId) {
@@ -689,12 +685,10 @@ const DailyLogic = {
                 el.editScopeContainer.classList.add('hidden-scope');
             }
 
-            // Multi Valid Value
             const val = template.completion_target || 1;
             el.questTarget.value = val;
             if (el.targetValue) el.targetValue.innerText = val;
 
-            // On ouvre sans reset
             this.toggleForm();
         } catch (error) { console.error("Error loading edit:", error); }
     },
@@ -717,7 +711,7 @@ const DailyLogic = {
         const type = document.querySelector('input[name="questType"]:checked').value;
         const dateString = el.questDate.value;
         const notes = el.questNotes.value;
-        const targetCount = parseInt(el.questTarget.value) || 1; // Read value
+        const targetCount = parseInt(el.questTarget.value) || 1;
 
         const targetDate = new Date(dateString);
         targetDate.setHours(0, 0, 0, 0);
@@ -733,7 +727,7 @@ const DailyLogic = {
             title: title, notes: notes, type: type, is_active: true,
             start_date: isNaN(targetDate.getTime()) ? null : firebase.firestore.Timestamp.fromDate(targetDate),
             target_period: targetPeriod,
-            completion_target: targetCount, // Save field
+            completion_target: targetCount,
             recurrence_rule: { daysOfWeek: type === 'RECURRING' ? recurrenceDays : [] },
             exception_dates: this.currentEditTemplateData ? this.currentEditTemplateData.exception_dates || [] : []
         };
@@ -770,9 +764,7 @@ const DailyLogic = {
             }
 
             await this.loadAndDisplayQuests();
-            // Force Toggle Form explicitly here
             this.toggleForm();
-            // Wait for stats update but don't block UI if it fails
             this.updateDailyStats(this.viewDate).catch(err => console.error("Stats update warning:", err));
         } catch (error) {
             console.error("Error submit:", error);

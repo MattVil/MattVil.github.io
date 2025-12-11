@@ -1,8 +1,13 @@
 // ==========================================
-// ACHIEVEMENTS MODULE
-// Handles calculation, storage, and display of stats
+// MODULE ACHIEVEMENTS
+// Handles calculation, storage, and display of user statistics,
+// gamification elements (streaks), and visualization charts.
 // ==========================================
 
+/**
+ * Main Logic Object for Achievements
+ * @namespace AchievementsLogic
+ */
 const AchievementsLogic = {
     db: null,
 
@@ -12,14 +17,20 @@ const AchievementsLogic = {
         bestStreak: 0
     },
 
+    /**
+     * Initialize the module
+     * @param {Object} database - Firebase Firestore instance
+     */
     init: function (database) {
         this.db = database;
-        console.log("Achievements Logic Initialized");
     },
 
     // --- MAIN RENDER ---
+
+    /**
+     * Orchestrates the rendering of the entire Achievements panel.
+     */
     renderPanel: async function () {
-        // Find DOM elements
         const container = document.querySelector('.achievements-grid');
         if (!container) return;
 
@@ -36,7 +47,6 @@ const AchievementsLogic = {
             if (doc.exists) {
                 this.statsCache = { ...this.statsCache, ...doc.data() };
             } else {
-                console.log("No stats found, initializing...");
                 await this.recalculateAll();
             }
         } catch (e) {
@@ -59,6 +69,11 @@ const AchievementsLogic = {
         await this.saveStats();
     },
 
+    /**
+     * Calculates the current continuous streak of perfect days (100% completion).
+     * Iterates backwards from today (or yesterday if today is pending).
+     * @returns {number} The streak count in days.
+     */
     calculateCurrentStreak: async function () {
         const logsSnap = await this.db.collection('daily_logs')
             .orderBy('date', 'desc')
@@ -81,18 +96,18 @@ const AchievementsLogic = {
         let checkDate = new Date();
         checkDate.setHours(0, 0, 0, 0);
 
+        // Check last 365 days (max streak cap logical)
         for (let i = 0; i < 365; i++) {
             const dateStr = checkDate.toISOString().split('T')[0];
             const log = dateList.find(l => l.date === dateStr);
 
             if (i === 0) {
-                // TODAY
+                // TODAY: If 100%, it counts. If not, it doesn't break streak yet.
                 if (log && log.stats && log.stats.score === 100) {
                     streak++;
                 }
-                // Else: Streak pending
             } else {
-                // PAST DAYS
+                // PAST DAYS: Must be 100% or streak ends.
                 if (log && log.stats && log.stats.score === 100) {
                     streak++;
                 } else {
@@ -242,8 +257,11 @@ const AchievementsLogic = {
     },
 
     // --- HABITS (PERIODIC) LOGIC ---
+    /**
+     * Calculates streaks for Recurring Tasks (Habits).
+     * @returns {Array} List of habit objects with {id, title, streak, emoji}
+     */
     calculateHabitStreaks: async function () {
-        console.log("Calculating Habit Streaks...");
         try {
             // 1. Get all RECURRING templates
             const templatesSnap = await this.db.collection('quest_templates')
@@ -251,7 +269,6 @@ const AchievementsLogic = {
                 .get();
 
             if (templatesSnap.empty) {
-                console.log("No recurring templates found.");
                 return [];
             }
 
@@ -267,8 +284,6 @@ const AchievementsLogic = {
                 const targetDays = recurrence.length > 0 ? recurrence : [0, 1, 2, 3, 4, 5, 6];
 
                 // 2. Get completed instances for this template
-                // SIMPLIFIED QUERY: Avoid complex index ID+Status+Date+Desc
-                // We fetch all completed instances for this ID and sort in memory.
                 const instancesSnap = await this.db.collection('quest_instances')
                     .where('template_id', '==', tId)
                     .where('status', '==', 'COMPLETED')
@@ -289,8 +304,7 @@ const AchievementsLogic = {
                     const dayIndex = checkDate.getDay();
                     const dateStr = checkDate.toISOString().split('T')[0];
 
-                    // Is this a target day?
-                    // Ensure type safety strings vs ints
+                    // Psuedo-recurrence match
                     const isTarget = targetDays.some(d => parseInt(d) === dayIndex);
 
                     if (isTarget) {
@@ -321,7 +335,7 @@ const AchievementsLogic = {
 
             await Promise.all(promises);
 
-            // Sort logic
+            // Sort logic: Ongoing (Streak < 30) first, then Achieved (Streak >= 30)
             habits.sort((a, b) => {
                 const aAchieved = a.streak >= 30;
                 const bAchieved = b.streak >= 30;
@@ -332,7 +346,6 @@ const AchievementsLogic = {
                 return b.streak - a.streak;
             });
 
-            console.log("Habits calculated:", habits);
             return habits;
 
         } catch (e) {

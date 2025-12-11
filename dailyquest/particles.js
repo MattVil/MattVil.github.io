@@ -27,7 +27,6 @@ const ParticleSystem = {
         this.resize();
         this.initParticles();
         this.animate();
-        console.log("Particle System Initialized");
     },
 
     bindEvents: function () {

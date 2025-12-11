@@ -1,20 +1,30 @@
 // ==========================================
 // MODULE YEARLY (OPTIMIZED SNAPSHOT READER)
+// Handles the "GitHub Style" heatmap visualization.
 // ==========================================
 
+/**
+ * Logic for the Yearly Calendar / Heatmap
+ * @namespace YearlyLogic
+ */
 const YearlyLogic = {
     db: null,
     currentDate: new Date(),
 
     init: function (database) {
         this.db = database;
-        console.log("Yearly Logic Initialized (Reader Mode)");
     },
 
+    /**
+     * Calculates the color for a day cell based on completion ratio.
+     * Gradients from Red (0%) -> Yellow (50%) -> Green (100%).
+     * @param {number} ratio - Completion ratio (0.0 to 1.0)
+     * @returns {string} CSS rgb string
+     */
     getColorForRatio: function (ratio) {
-        const start = { r: 234, g: 67, b: 53 };   // Rouge (#EA4335)
-        const middle = { r: 251, g: 188, b: 5 };  // Jaune (#FBBC05)
-        const end = { r: 52, g: 168, b: 83 };     // Vert (#34A853)
+        const start = { r: 234, g: 67, b: 53 };   // Red (#EA4335)
+        const middle = { r: 251, g: 188, b: 5 };  // Yellow (#FBBC05)
+        const end = { r: 52, g: 168, b: 83 };     // Green (#34A853)
 
         let r, g, b;
 
@@ -32,9 +42,13 @@ const YearlyLogic = {
         return `rgb(${r}, ${g}, ${b})`;
     },
 
+    /**
+     * Renders the summary panel (Yearly View).
+     * Resets date to current month on open.
+     */
     renderSummary: function () {
         if (!this.db) return;
-        this.currentDate = new Date(); // Reset à aujourd'hui à l'ouverture
+        this.currentDate = new Date(); // Reset to today on open
 
         const container = document.getElementById('summary-panel');
         if (!container.querySelector('.calendar-header')) {
@@ -67,15 +81,6 @@ const YearlyLogic = {
             </div>
         `;
 
-        // Re-attach event listeners for arrow (since it was re-created)
-        // Wait, the arrow listener is in script.js and attached on init.
-        // If we re-render this HTML, we lose the listener attached in script.js!
-        // We must re-attach the listener here or delegate it.
-        // Strategy: Delegate or re-attach. 
-        // For simplicity, let's verify if script.js attaches it once or if we need to expose a re-attach method.
-        // Actually script.js runs ONCE. If we overwrite HTML, the element is new, the listener is gone.
-        // Fix: Use Event Delegation on the container or re-bind.
-
         document.getElementById('prevMonthBtn').addEventListener('click', () => this.changeMonth(-1));
         document.getElementById('nextMonthBtn').addEventListener('click', () => this.changeMonth(1));
     },
@@ -95,7 +100,6 @@ const YearlyLogic = {
         const grid = document.getElementById('daysGrid');
         const label = document.getElementById('currentMonthLabel');
         const options = { month: 'long', year: 'numeric' };
-        // label.innerText = this.currentDate.toLocaleDateString('en-US', options);
 
         // Wrap Month in span for styling
         const monthName = this.currentDate.toLocaleDateString('en-US', { month: 'long' });
@@ -110,7 +114,7 @@ const YearlyLogic = {
         const nextMonthStr = this.toLocalYMD(new Date(year, month + 1, 1));
 
         try {
-            // Lecture optimisée : on ne lit que les logs existants
+            // Optimized Read: fetch only daily logs for this month range
             const snapshot = await this.db.collection('daily_logs')
                 .where('date', '>=', startStr)
                 .where('date', '<', nextMonthStr)
@@ -189,7 +193,7 @@ const YearlyLogic = {
             }
             dayCell.style.cursor = "pointer";
 
-            // Interaction : Clic pour aller à la vue Daily
+            // Interaction: Click to Go to Daily View
             dayCell.onclick = () => {
                 if (typeof window.switchToDailyDate === 'function') {
                     window.switchToDailyDate(currentLoopDate);
