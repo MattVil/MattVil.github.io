@@ -2,7 +2,7 @@
 
 **Daily Quest** is a personal task management application designed to gamify your daily life. It focuses on visual feedback, streak building, and aesthetic simplicity to help you build habits and track your consistent progress.
 
-![Demo Walkthrough](demo.webp)
+![Demo Walkthrough](assets/demo.gif)
 
 ![Project Status](https://img.shields.io/badge/Status-Beta-blue)
 
@@ -29,14 +29,16 @@
 
 ```
 /
-├── index.html          # Main application entry point
-├── style.css           # Global styles and responsive design
-├── script.js           # Main controller (Init -> Auth -> Nav)
-├── daily.js            # Core Logic: Daily Quest Management
-├── yearly.js           # Core Logic: Yearly Calendar & Heatmap
-├── achievements.js     # Core Logic: Stats, Charts, Habits
-├── auth.js             # Authentication Module
-├── particles.js        # Visual Effects Module
+├── assets/             # Images and global assets
+│   └── demo.gif        # Demo recording
+├── css/
+│   └── style.css       # Global styles
+├── docs/               # Documentation & Handover
+├── js/                 # Logic modules
+│   ├── script.js       # Main controller
+│   ├── daily.js        # Daily logic
+│   └── ...             # Other modules
+├── index.html          # Main entry point
 └── README.md           # This file
 ```
 
