@@ -376,6 +376,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    /* Ensure absolute children stay within panel */
 
     padding: 24px;
     /* Adjust padding to constrain content within a nice width, visually matching max-width 600px */
@@ -1777,6 +1779,7 @@ textarea.form-input-pill {
     /* 5. Bouton Flottant (Scoped to its panel) */
     .desktop-btn-area {
         position: absolute;
+        /* Reverting to absolute just to be sure it's correct */
         bottom: 20px;
         right: 20px;
         left: auto;
