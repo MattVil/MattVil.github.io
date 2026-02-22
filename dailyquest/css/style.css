@@ -2315,11 +2315,13 @@ textarea.form-input-pill {
     margin: 0;
     /* Hide arrows */
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .timer-time-input::-webkit-outer-spin-button,
 .timer-time-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    appearance: none;
     margin: 0;
 }
 

@@ -9,14 +9,17 @@
 ## 🚀 Features
 
 *   **Daily Quests**: Create and track daily tasks.
-*   **Recurring Habits**: special support for Weekly, Monthly, and flexible Recurring quests (e.g., Mon/Wed/Fri).
+*   **Recurring Habits**: Special support for Weekly, Monthly, and flexible Recurring quests (e.g., Mon/Wed/Fri).
+*   **Focus Timer**: Built-in minimalist Pomodoro timer that automatically activates a deep-focus Dark Mode.
+*   **Quick Notes**: A dedicated panel for capturing fast ideas and snippets securely.
+*   **Fluid Navigation**: Smooth horizontal swipe mechanics unifying the app's 5 major panels with dynamic headers.
 *   **Streak System**: Visual "Heat" streaks for perfect days and specific habit tracking.
 *   **Visual Feedback**:
-    *   **Particle Effects**: Satisfying confetti upon quest completion.
+    *   **Particle Effects**: Satisfying interactive 3D particle canvas mapping states (Focus, Success, Neutral).
     *   **Progress Bars**: Dynamic emojis (🌱 -> 🏆) based on daily completion %,
     *   **Dashboard**: Weekly wave charts, global stats, and "Best Streak" tracking.
 *   **Encrypted Auth**: Simple, client-side encryption for personal use (single-user focus).
-*   **Mobile Responsive**: Optimized for both desktop and mobile views.
+*   **Mobile First Responsive**: PWA optimized layout for both desktop web and mobile application use.
 
 ## 🛠️ Technology Stack
 
@@ -35,9 +38,11 @@
 │   └── style.css       # Global styles
 ├── docs/               # Documentation & Handover
 ├── js/                 # Logic modules
-│   ├── script.js       # Main controller
-│   ├── daily.js        # Daily logic
-│   └── ...             # Other modules
+│   ├── script.js       # Main app controller & routing
+│   ├── daily.js        # Core quest logic
+│   ├── timer.js        # Pomodoro module
+│   ├── notes.js        # Quick notes module
+│   └── particles.js    # Canvas 3D engine
 ├── index.html          # Main entry point
 └── README.md           # This file
 ```
@@ -60,7 +65,6 @@ Since this is a client-side application using Firebase:
 
 ## 🤝 Future Plans
 
-*   **Pomodoro Timer**: (Next Priority) Integrated focus timer for quests.
 *   **Hall of Fame**: A dedicated section for your longest-running habits.
 *   **Advanced Options**: Subtasks and specific "Anti-Habits".
 *   **Native Mobile App**: Potential wrapper for iOS/Android.

@@ -1,8 +1,8 @@
 # 📘 Daily Quest - Project Handover Documentation
 
-**Version:** 1.0.0 (Beta Release)
-**Date:** December 11, 2025
-**Author:** Engineering Team (Antigravity)
+**Version:** 1.1.0 (Integration Release)
+**Date:** February 2026
+**Author:** MattVil
 
 ---
 
@@ -33,7 +33,22 @@ The core interface where users manage their day-to-day operations.
 *   **Progress Bar**: A top bar that fills up as "Score" increases. Uses a 0-100 scale where each quest contributes equally.
 *   **Feedback Loop**: Completing a quest triggers the `ParticleSystem` (confetti) and updates emojis (e.g., "🌱" -> "🔥").
 
-### 2.2. Yearly Overview (Heatmap)
+### 2.2. Focus Timer (Pomodoro)
+A distraction-free zone for deep work.
+
+![Focus Timer](assets/screenshot_timer.png)
+
+*   **Aesthetics**: Giant typography with soft glow. Activation triggers a global "Dark Mode" and turns the particle canvas a deep, focused orange.
+*   **Functionality**: 5m, 25m, 50m presets with automatic state resolution (success -> green ambiance).
+
+### 2.3. Quick Notes
+A secure, fast scratchpad.
+
+![Quick Notes](assets/screenshot_notes.png)
+
+*   **Functionality**: Instant CRUD operations syncing to Firestore in real-time. Unobtrusive floating button scoped strictly to its panel.
+
+### 2.4. Yearly Overview (Heatmap)
 A "GitHub-style" visualization of productivity over time.
 
 ![Yearly Heatmap](assets/screenshot_yearly.png)
@@ -45,7 +60,7 @@ A "GitHub-style" visualization of productivity over time.
     *   🟢 > 80% Coverage
 *   **Orbs**: Each day is represented by an animated "Orb" (`.day-orb`). The animation timing is randomized in `yearly.js` to create an organic "breathing" effect.
 
-### 2.3. Achievements Panel
+### 2.5. Achievements Panel
 A dedicated statistics view for long-term progression.
 
 ![Achievements Panel](assets/screenshot_achievements.png)
@@ -68,8 +83,9 @@ The system follows a bespoke **Model-View-Controller (MVC)** pattern implemented
 1.  **`script.js` (Controller)**: The entry point. Handles the "Router" (Navigation logic) and orchestrates initialization.
 2.  **`auth.js` (Security Layer)**: Decrypts the Firebase Config using a user-provided password.
 3.  **`daily.js` (Business Logic)**: Manages Quest state, Optimistic UI updates, and writes to `quest_instances`.
-4.  **`achievements.js` (Analytics)**: Complex aggregation queries for streaks and charts.
-5.  **`particles.js` (Visual Engine)**: A standalone 3D particle system running on an HTML5 Canvas overlay.
+4.  **`timer.js` & `notes.js` (Extensions)**: Modular logic files managing the Pomodoro state and Quick Notes synchronization.
+5.  **`achievements.js` (Analytics)**: Complex aggregation queries for streaks and charts.
+6.  **`particles.js` (Visual Engine)**: A standalone 3D particle system managing thematic ambient light (Focus, Success, default).
 
 ### 3.2. Data Flow
 1.  **Hydration**: On load, `DailyLogic` fetches today's quests, while `YearlyLogic` fetches a lightweight snapshot of the month's scores.
@@ -125,6 +141,15 @@ Used for the Heatmap to avoid fetching thousands of instances.
     "completed": 4,
     "score": 80
   }
+```
+
+#### `quick_notes`
+Secure, fast-syncing scratchpad items.
+```json
+{
+  "id": "uuid",
+  "content": "Buy milk...",
+  "updated_at": "Timestamp" // Used for sorting
 }
 ```
 
@@ -153,11 +178,7 @@ To further enhance the product, the following features are proposed for the V2 r
 1.  **Hall of Fame 🏛️**
     *   A dedicated view for "Retired" or "Mastered" habits (30+ days).
 2.  **Advanced Options ⚙️**
-    *   **Timers**: Pomodoro integration directly in the quest card.
     *   **Subtasks**: Checklist within a quest.
 3.  **Social Mode 👯**
     *   "Accountability Partner": Share a read-only view of your streak with a friend.
 
----
-
-*Prepared for Client Review - December 2025*
