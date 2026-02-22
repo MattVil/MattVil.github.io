@@ -223,15 +223,20 @@ function updateHeaderForPanel(index, direction = 1) {
     const staticText = document.querySelector('.static-text');
     const heroTitle = document.querySelector('.hero-title');
 
-    // Prevent spam animation if it's already animating
-    if (heroTitle.classList.contains('fade-out-left') || heroTitle.classList.contains('fade-out-right') || heroTitle.classList.contains('fade-in-left') || heroTitle.classList.contains('fade-in-right')) return;
+    // Clear any ongoing animations to prevent desync during fast scrolling
+    if (window.titleAnimOut) clearTimeout(window.titleAnimOut);
+    if (window.titleAnimIn) clearTimeout(window.titleAnimIn);
+
+    heroTitle.classList.remove('fade-out-left', 'fade-out-right', 'fade-in-left', 'fade-in-right');
+    // Force DOM reflow to restart animation instantly
+    void heroTitle.offsetWidth;
 
     const fadeOutClass = direction === 1 ? 'fade-out-left' : 'fade-out-right';
     const fadeInClass = direction === 1 ? 'fade-in-right' : 'fade-in-left';
 
     heroTitle.classList.add(fadeOutClass);
 
-    setTimeout(() => {
+    window.titleAnimOut = setTimeout(() => {
         // Update Title Output automatically via config
         toggleBtn.innerText = config.title;
         toggleBtn.className = config.titleClass;
@@ -254,7 +259,7 @@ function updateHeaderForPanel(index, direction = 1) {
         heroTitle.classList.remove(fadeOutClass);
         heroTitle.classList.add(fadeInClass);
 
-        setTimeout(() => {
+        window.titleAnimIn = setTimeout(() => {
             heroTitle.classList.remove(fadeInClass);
         }, 200);
 

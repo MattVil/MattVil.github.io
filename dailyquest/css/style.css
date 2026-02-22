@@ -1774,9 +1774,9 @@ textarea.form-input-pill {
         flex: 1;
     }
 
-    /* 5. Bouton Flottant */
+    /* 5. Bouton Flottant (Scoped to its panel) */
     .desktop-btn-area {
-        position: fixed;
+        position: absolute;
         bottom: 20px;
         right: 20px;
         left: auto;
