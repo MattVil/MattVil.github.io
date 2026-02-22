@@ -31,6 +31,7 @@ function initApp(decryptedConfig) {
         if (typeof DailyLogic !== 'undefined') DailyLogic.init(db);
         if (typeof YearlyLogic !== 'undefined') YearlyLogic.init(db);
         if (typeof AchievementsLogic !== 'undefined') AchievementsLogic.init(db);
+        if (typeof NotesLogic !== 'undefined') NotesLogic.init(db);
 
         // 3. Visuals
         ParticleSystem.init();
@@ -46,187 +47,229 @@ function initApp(decryptedConfig) {
 }
 
 // ==========================================
-// 2. NAVIGATION LOGIC (Global Coordinator)
+// 2. NAVIGATION LOGIC (Swipe & Scroll)
 // ==========================================
 
+// Global Configuration
+const defaultPanelId = 'tasks-panel';
+
+const panelConfig = [
+    {
+        id: 'timer-panel',
+        title: 'Focus',
+        titleClass: 'text-focus', /* White title */
+        subtitle: 'Timer',
+        isAchievementsMode: true /* To center the title like achievements */
+    },
+    {
+        id: 'notes-panel',
+        title: 'Quick',
+        titleClass: 'text-quick',
+        subtitle: 'Notes',
+        isAchievementsMode: false
+    },
+    {
+        id: 'tasks-panel',
+        title: 'Daily',
+        titleClass: 'text-daily',
+        subtitle: 'Quests',
+        isAchievementsMode: false
+    },
+    {
+        id: 'summary-panel',
+        title: 'Yearly',
+        titleClass: 'text-yearly',
+        subtitle: 'Quests',
+        isAchievementsMode: false
+    },
+    {
+        id: 'achievements-panel',
+        title: 'Yearly', // Keeps structure for animation
+        titleClass: 'hidden-panel',
+        subtitle: 'Achievements',
+        isAchievementsMode: true
+    }
+];
+
+// Flat array for quick index lookups based on DOM IDs
+const panels = panelConfig.map(config => config.id);
+let currentPanelIndex = panels.indexOf(defaultPanelId);
+
 /**
- * Sets up global navigation listeners and arrow delegation.
+ * Sets up global navigation listeners and horizontal scroll observer.
  */
 function initNavigation() {
+    const carousel = document.getElementById('main-carousel');
     const toggleBtn = document.getElementById('period-toggle');
+    const staticText = document.querySelector('.static-text');
+    const heroTitle = document.querySelector('.hero-title');
 
-    // Default State
-    toggleBtn.classList.add('text-daily');
+    const leftBtn = document.getElementById('nav-btn-left');
+    const rightBtn = document.getElementById('nav-btn-right');
 
-    // --- MAIN TOGGLE (Daily <-> Yearly) ---
-    toggleBtn.addEventListener('click', () => {
-        // Prevent spam clicks during animation
-        if (toggleBtn.classList.contains('flip-out') || toggleBtn.classList.contains('flip-in')) return;
+    // 1. Reorder DOM nodes based on config
+    panelConfig.forEach(config => {
+        const el = document.getElementById(config.id);
+        if (el) carousel.appendChild(el);
+    });
 
-        // Determine current state based on active panel
-        const tasksPanel = document.getElementById('tasks-panel');
-        const isCurrentlyDaily = tasksPanel.classList.contains('active-panel');
+    // 2. Snap to default panel immediately (No animation)
+    const targetPanel = document.getElementById(defaultPanelId);
+    if (targetPanel) {
+        // Force layout recalc
+        carousel.scrollLeft = targetPanel.offsetLeft - carousel.offsetLeft;
+    }
 
-        // Animate
-        toggleBtn.classList.add('flip-out');
+    // Default State Initialization
+    updateHeaderForPanel(currentPanelIndex);
+
+    // --- INTERSECTION OBSERVER FOR SWIPE/SCROLL ---
+    const observerOptions = {
+        root: carousel,
+        rootMargin: '0px',
+        threshold: 0.6 // Trigger when 60% of the panel is visible
+    };
+
+    const panelObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const visiblePanelId = entry.target.id;
+                const newIndex = panels.indexOf(visiblePanelId);
+
+                if (newIndex !== currentPanelIndex && newIndex !== -1) {
+                    const direction = newIndex > currentPanelIndex ? 1 : -1;
+                    currentPanelIndex = newIndex;
+                    updateHeaderForPanel(newIndex, direction);
+                    updateDesktopButtons(newIndex);
+
+                    // Dynamic Dark Mode for Timer Panel
+                    if (visiblePanelId === 'timer-panel') {
+                        document.body.classList.add('dark-mode');
+                        if (typeof ParticleSystem !== 'undefined') ParticleSystem.setTheme('dark');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        if (typeof ParticleSystem !== 'undefined') ParticleSystem.setTheme('default');
+
+                        // Auto-reset timer if it was in the success state (finished) and user swiped away
+                        const tc = document.querySelector('.timer-container');
+                        if (typeof Timer !== 'undefined' && tc && tc.classList.contains('success')) {
+                            Timer.resetTimer();
+                        }
+                    }
+
+                    // Trigger panel-specific logic if needed when coming into view
+                    if (newIndex === 1 && typeof YearlyLogic !== 'undefined') YearlyLogic.renderSummary();
+                    if (newIndex === 2 && typeof AchievementsLogic !== 'undefined') AchievementsLogic.renderPanel();
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe all panels
+    panels.forEach(panelId => {
+        const el = document.getElementById(panelId);
+        if (el) panelObserver.observe(el);
+    });
+
+    // --- DESKTOP BUTTON NAVIGATION ---
+    if (leftBtn && rightBtn) {
+        leftBtn.addEventListener('click', () => {
+            if (currentPanelIndex > 0) {
+                scrollToPanel(currentPanelIndex - 1);
+            }
+        });
+
+        rightBtn.addEventListener('click', () => {
+            if (currentPanelIndex < panels.length - 1) {
+                scrollToPanel(currentPanelIndex + 1);
+            }
+        });
+    }
+
+    // Main header click logic has been removed to prevent erratic jumping.
+}
+
+function scrollToPanel(index) {
+    if (index >= 0 && index < panels.length) {
+        const carousel = document.getElementById('main-carousel');
+        const targetPanel = document.getElementById(panels[index]);
+        if (carousel && targetPanel) {
+            // Scroll the carousel horizontally without affecting vertical page scroll
+            carousel.scrollTo({
+                left: targetPanel.offsetLeft - carousel.offsetLeft,
+                behavior: 'smooth'
+            });
+        }
+    }
+}
+
+function updateDesktopButtons(index) {
+    const leftBtn = document.getElementById('nav-btn-left');
+    const rightBtn = document.getElementById('nav-btn-right');
+
+    if (leftBtn) {
+        leftBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
+    }
+    if (rightBtn) {
+        rightBtn.style.visibility = index === panels.length - 1 ? 'hidden' : 'visible';
+    }
+}
+
+function updateHeaderForPanel(index, direction = 1) {
+    if (index < 0 || index >= panelConfig.length) return;
+
+    const config = panelConfig[index];
+    const toggleBtn = document.getElementById('period-toggle');
+    const staticText = document.querySelector('.static-text');
+    const heroTitle = document.querySelector('.hero-title');
+
+    // Prevent spam animation if it's already animating
+    if (heroTitle.classList.contains('fade-out-left') || heroTitle.classList.contains('fade-out-right') || heroTitle.classList.contains('fade-in-left') || heroTitle.classList.contains('fade-in-right')) return;
+
+    const fadeOutClass = direction === 1 ? 'fade-out-left' : 'fade-out-right';
+    const fadeInClass = direction === 1 ? 'fade-in-right' : 'fade-in-left';
+
+    heroTitle.classList.add(fadeOutClass);
+
+    setTimeout(() => {
+        // Update Title Output automatically via config
+        toggleBtn.innerText = config.title;
+        toggleBtn.className = config.titleClass;
+        staticText.textContent = config.subtitle;
+
+        // Apply Achievements specific layouts
+        if (config.isAchievementsMode) {
+            heroTitle.classList.add('achievements-mode');
+        } else {
+            heroTitle.classList.remove('achievements-mode');
+        }
+
+        // Trigger Panel-Specific visual updates
+        if (config.id === 'tasks-panel') {
+            if (typeof DailyLogic !== 'undefined') DailyLogic.resetToToday();
+            if (typeof DailyLogic !== 'undefined') DailyLogic.updateTitle();
+        }
+
+        // Animation Reset
+        heroTitle.classList.remove(fadeOutClass);
+        heroTitle.classList.add(fadeInClass);
 
         setTimeout(() => {
-            if (isCurrentlyDaily) {
-                switchToYearly();
-            } else {
-                switchToDaily();
-            }
+            heroTitle.classList.remove(fadeInClass);
+        }, 200);
 
-            // Animation Reset
-            toggleBtn.classList.remove('flip-out');
-            toggleBtn.classList.add('flip-in');
-            setTimeout(() => toggleBtn.classList.remove('flip-in'), 250);
-
-        }, 250);
-    });
-
-    // --- DELEGATION FOR DYNAMIC ARROWS ---
-    // Achievements -> Yearly (Up Arrow)
-    // Yearly -> Achievements (Down Arrow) is handled in YearlyLogic or below if static
-
-    // We attach global listeners for the navigation arrows to avoid losing them on re-renders
-    document.body.addEventListener('click', (e) => {
-        // Down Arrow (Yearly -> Achievements)
-        if (e.target.closest('#nav-arrow-down')) {
-            switchToAchievements();
-        }
-
-        // Up Arrow (Achievements -> Yearly)
-        if (e.target.closest('#nav-arrow-up')) {
-            switchToYearlyFromAchievements();
-        }
-    });
-}
-
-// --- NAVIGATION ACTIONS ---
-// These functions manage the DOM classes to switch between panels.
-
-function switchToDaily() {
-    const tasksPanel = document.getElementById('tasks-panel');
-    const summaryPanel = document.getElementById('summary-panel');
-    const toggleBtn = document.getElementById('period-toggle');
-
-    // Logic
-    if (typeof DailyLogic !== 'undefined') DailyLogic.resetToToday();
-
-    // UI
-    toggleBtn.innerText = "Daily";
-    toggleBtn.classList.replace('text-yearly', 'text-daily');
-
-    summaryPanel.classList.remove('active-panel');
-    summaryPanel.classList.add('hidden-panel');
-
-    tasksPanel.classList.remove('hidden-panel');
-    tasksPanel.classList.add('active-panel');
-
-    // Ensure Title is correct
-    if (typeof DailyLogic !== 'undefined') DailyLogic.updateTitle();
-}
-
-function switchToYearly() {
-    const tasksPanel = document.getElementById('tasks-panel');
-    const summaryPanel = document.getElementById('summary-panel');
-    const toggleBtn = document.getElementById('period-toggle');
-
-    // Logic
-    if (typeof YearlyLogic !== 'undefined') YearlyLogic.renderSummary();
-
-    // UI
-    toggleBtn.innerText = "Yearly";
-    toggleBtn.classList.replace('text-daily', 'text-yearly');
-
-    tasksPanel.classList.remove('active-panel');
-    tasksPanel.classList.add('hidden-panel');
-
-    summaryPanel.classList.remove('hidden-panel');
-    summaryPanel.classList.add('active-panel');
-}
-
-function switchToAchievements() {
-    const summaryPanel = document.getElementById('summary-panel');
-    const achievementsPanel = document.getElementById('achievements-panel');
-    const heroTitle = document.querySelector('.hero-title');
-    const staticText = document.querySelector('.static-text');
-    const periodToggle = document.getElementById('period-toggle');
-
-    // UI Switch
-    summaryPanel.classList.add('hidden-panel');
-    summaryPanel.classList.remove('active-panel');
-
-    achievementsPanel.classList.remove('hidden-panel');
-    achievementsPanel.classList.add('active-panel');
-
-    if (typeof AchievementsLogic !== 'undefined') AchievementsLogic.renderPanel();
-
-    // Hero Transformation
-    heroTitle.classList.add('achievements-mode');
-    staticText.textContent = "Achievements";
-    periodToggle.classList.add('hidden-panel');
-}
-
-function switchToYearlyFromAchievements() {
-    const summaryPanel = document.getElementById('summary-panel');
-    const achievementsPanel = document.getElementById('achievements-panel');
-    const heroTitle = document.querySelector('.hero-title');
-    const staticText = document.querySelector('.static-text');
-    const periodToggle = document.getElementById('period-toggle');
-
-    // UI Switch
-    achievementsPanel.classList.add('hidden-panel');
-    achievementsPanel.classList.remove('active-panel');
-
-    summaryPanel.classList.remove('hidden-panel');
-    summaryPanel.classList.add('active-panel');
-
-    // Hero Revert
-    heroTitle.classList.remove('achievements-mode');
-    staticText.textContent = "Quests";
-    periodToggle.classList.remove('hidden-panel');
-
-    // Ensure text is consistent
-    if (periodToggle.textContent.includes('Yearly')) {
-        periodToggle.textContent = 'Yearly';
-    }
+    }, 200);
 }
 
 
 // --- CROSS-MODULE HELPERS ---
 // Called by Yearly Calendar to jump to a specific date
 window.switchToDailyDate = function (dateObj) {
-    const toggleBtn = document.getElementById('period-toggle');
-    const tasksPanel = document.getElementById('tasks-panel');
-    const summaryPanel = document.getElementById('summary-panel');
-
     // 1. Set Date
     if (typeof DailyLogic !== 'undefined') {
         DailyLogic.setViewDate(dateObj);
     }
 
-    // 2. Switch View (only if not already there)
-    if (!tasksPanel.classList.contains('active-panel')) {
-
-        toggleBtn.classList.add('flip-out');
-
-        setTimeout(() => {
-            toggleBtn.classList.replace('text-yearly', 'text-daily');
-
-            summaryPanel.classList.remove('active-panel');
-            summaryPanel.classList.add('hidden-panel');
-
-            tasksPanel.classList.remove('hidden-panel');
-            tasksPanel.classList.add('active-panel');
-
-            toggleBtn.classList.remove('flip-out');
-            toggleBtn.classList.add('flip-in');
-            setTimeout(() => toggleBtn.classList.remove('flip-in'), 250);
-
-            // Update Title
-            if (typeof DailyLogic !== 'undefined') DailyLogic.updateTitle();
-        }, 250);
-    }
+    // 2. Switch View via scroll
+    scrollToPanel(0);
 };

@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Daily Quests</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=5.4">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0d0d12">
     <link rel="icon" type="image/png" href="assets/logo.PNG">
@@ -32,12 +31,79 @@
     </div>
 
     <main class="hero-section">
-        <h1 class="hero-title">
-            <span id="period-toggle" class="text-daily">Daily</span>
-            <span class="static-text">Quests</span>
-        </h1>
+        <div class="hero-header">
+            <button id="nav-btn-left" class="nav-btn desktop-only" aria-label="Previous panel"
+                style="visibility: hidden;">
+                <span class="chevron left"></span>
+            </button>
+            <h1 class="hero-title">
+                <span id="period-toggle" class="text-daily">Daily</span>
+                <span class="static-text">Quests</span>
+            </h1>
+            <button id="nav-btn-right" class="nav-btn desktop-only" aria-label="Next panel">
+                <span class="chevron right"></span>
+            </button>
+        </div>
 
-        <div id="tasks-panel" class="content-panel active-panel">
+        <div class="carousel-container" id="main-carousel">
+
+            <!-- New Dynamically Ordered Empty Panels -->
+            <div id="timer-panel" class="content-panel" style="position: relative;">
+                <div class="timer-container"
+                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; position: absolute; inset: 0;">
+
+                    <div class="timer-circle-wrapper"
+                        style="position: relative; width: 250px; height: 250px; display: flex; align-items: center; justify-content: center; z-index: 10;">
+                        <!-- Very minimalist circle or wave bg placeholder -->
+                        <div class="timer-bg-anim"></div>
+
+                        <!-- Display centered inside the wrapper with editable input -->
+                        <div class="timer-display-wrapper" style="position: relative; z-index: 15;">
+                            <input type="number" id="timerMinInput" class="timer-time-input" value="25" min="0"
+                                max="99">
+                            <span class="timer-colon">:</span>
+                            <input type="number" id="timerSecInput" class="timer-time-input" value="00" min="0"
+                                max="59">
+                        </div>
+
+                        <!-- Controls are anchored below the wrapper, bringing them closer without disrupting the true vertical center of the screen -->
+                        <div
+                            style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 15px; width: max-content; margin-top: -10px;">
+
+                            <div class="timer-duration-selector" style="display: flex; gap: 10px;">
+                                <button class="duration-btn" data-time="5">5m</button>
+                                <button class="duration-btn active" data-time="25">25m</button>
+                                <button class="duration-btn" data-time="50">50m</button>
+                            </div>
+
+                            <div class="timer-controls" style="display: flex; gap: 20px;">
+                                <button id="startTimerBtn" class="timer-action-btn">Start</button>
+                                <button id="resetTimerBtn" class="timer-action-btn"
+                                    style="background: transparent; border: 1px solid rgba(0,0,0,0.1); color: #5f6368;">Reset</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="notes-panel" class="content-panel">
+            <div class="glass-panel notes-inner-panel">
+                <div class="notes-list-vertical" id="notesList">
+                    <!-- Notes will be dynamically injected here -->
+                </div>
+
+                <!-- Floating Action Button Area (Like Daily Quests) -->
+                <div style="width: 100%; text-align: right; padding-top: 10px; z-index: 10;">
+                    <button id="addNoteBtn" class="new-quest-btn daily-type-btn">New Note</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Panels -->
+        <div id="tasks-panel" class="content-panel">
             <div class="progress-container">
                 <span id="progressEmoji" class="progress-emoji">😴</span>
                 <div class="progress-bar-bg">
@@ -52,17 +118,12 @@
             </div>
         </div>
 
-        <div id="summary-panel" class="content-panel hidden-panel">
+        <div id="summary-panel" class="content-panel">
             <div class="placeholder-text">Yearly Summary Area</div>
-            <!-- DOWN ARROW: Go to Achievements -->
-            <div id="nav-arrow-down" class="nav-arrow down" title="Go to Achievements">↓</div>
         </div>
 
-        <div id="achievements-panel" class="content-panel hidden-panel">
-            <!-- UP ARROW: Go back to Yearly (Outside the tile) -->
-            <div id="nav-arrow-up" class="nav-arrow up" title="Back to Calendar">
-                <span class="chevron"></span>
-            </div>
+        <div id="achievements-panel" class="content-panel">
+            <!-- UP ARROW: Removed for swipe navigation -->
 
             <div class="glass-panel">
                 <div class="achievements-grid">
@@ -133,6 +194,8 @@
                 <!-- Glass Panel ends here in original, wait. Line 130 was closing glass-panel? -->
             </div>
         </div>
+
+        </div> <!-- End of .carousel-container -->
     </main>
 
     <div id="taskForm" class="task-form">
@@ -229,18 +292,42 @@
         </div>
     </div>
 
+    <!-- NOTES FORM (MODAL) -->
+    <div id="noteFormModal" class="task-form">
+        <div class="task-form-content">
+            <button id="closeNoteFormBtn" class="close-form-btn">×</button>
+            <h2 id="noteFormTitle">Add Quick Note</h2>
+
+            <form id="quickNoteForm" class="quest-form">
+                <input type="hidden" id="noteId">
+                <div class="note-input-container" style="margin-bottom: 20px;">
+                    <textarea id="noteContentInput" class="note-form-textarea clean-textarea"
+                        placeholder="What's on your mind?..." required></textarea>
+                </div>
+                <div class="action-buttons-wrapper">
+                    <button type="button" id="deleteNoteBtn"
+                        class="new-quest-btn delete-btn hidden-action-btn">Delete</button>
+                    <button type="submit" id="saveNoteBtn" class="new-quest-btn submit-form-btn daily-type-btn">Save
+                        Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 
     <!-- MODULES -->
-    <script src="js/auth.js"></script>
-    <script src="js/daily.js"></script>
-    <script src="js/yearly.js"></script>
-    <script src="js/achievements.js"></script>
-    <script src="js/particles.js"></script>
+    <script src="js/auth.js?v=2.0"></script>
+    <script src="js/daily.js?v=2.0"></script>
+    <script src="js/yearly.js?v=2.0"></script>
+    <script src="js/achievements.js?v=2.0"></script>
+    <script src="js/notes.js?v=2.6"></script>
+    <script src="js/timer.js?v=1.6"></script>
+    <script src="js/particles.js?v=2.2"></script>
 
     <!-- MAIN CONTROL -->
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=3.2"></script>
 </body>
 
 </html>

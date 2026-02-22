@@ -60,8 +60,9 @@ Since this is a client-side application using Firebase:
 
 ## 🤝 Future Plans
 
+*   **Pomodoro Timer**: (Next Priority) Integrated focus timer for quests.
 *   **Hall of Fame**: A dedicated section for your longest-running habits.
-*   **Advanced Options**: Subtasks, Timers, and specific "Anti-Habits".
+*   **Advanced Options**: Subtasks and specific "Anti-Habits".
 *   **Native Mobile App**: Potential wrapper for iOS/Android.
 
 ---

@@ -12,6 +12,7 @@ const ParticleSystem = {
     mouseX: null,
     mouseY: null,
     animationId: null,
+    currentTheme: 'default', // 'default' or 'dark'
 
     // Constants
     interactionRadius: 80,
@@ -62,6 +63,12 @@ const ParticleSystem = {
         this.globeRadius = Math.min(this.width, this.height) * 0.45;
     },
 
+    setTheme: function (themeName) {
+        this.currentTheme = themeName;
+        // Re-initialize colors immediately
+        this.particles.forEach(p => p.updateColor(themeName));
+    },
+
     initParticles: function () {
         this.particles = [];
         for (let i = 0; i < this.particleCount; i++) {
@@ -94,15 +101,35 @@ class Particle3D {
         this.x = 0; this.y = 0; this.z = 0;
         this.size = Math.random() * 3.5 + 1;
 
-        const position = Math.random();
-        const r = Math.floor(66 + (155 - 66) * position);
-        const g = Math.floor(133 + (114 - 133) * position);
-        const b = Math.floor(244 + (203 - 244) * position);
-        this.color = `rgb(${r},${g},${b})`;
+        this.originalColorPosition = Math.random();
+        this.updateColor(this.system.currentTheme);
 
         this.driftSpeed = Math.random() * 0.02 + 0.005;
         this.driftPhase = Math.random() * Math.PI * 2;
         this.driftRange = Math.random() * 30 + 10;
+    }
+
+    updateColor(theme) {
+        if (theme === 'dark') {
+            // Whiteish with slight blue tint
+            const r = Math.floor(200 + Math.random() * 55);
+            const g = Math.floor(200 + Math.random() * 55);
+            const b = 255;
+            this.color = `rgb(${r},${g},${b})`;
+        } else if (theme === 'success') {
+            // Vibrant Green for timer completion
+            const r = Math.floor(52 + Math.random() * 50);  // 52-102
+            const g = Math.floor(168 + Math.random() * 87); // 168-255
+            const b = Math.floor(83 + Math.random() * 50);  // 83-133
+            this.color = `rgb(${r},${g},${b})`;
+        } else {
+            // Original Blue to Purple gradient
+            const position = this.originalColorPosition;
+            const r = Math.floor(66 + (155 - 66) * position);
+            const g = Math.floor(133 + (114 - 133) * position);
+            const b = Math.floor(244 + (203 - 244) * position);
+            this.color = `rgb(${r},${g},${b})`;
+        }
     }
 
     update(rotationX, rotationY, time) {
